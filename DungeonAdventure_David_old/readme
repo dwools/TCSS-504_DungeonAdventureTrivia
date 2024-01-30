@@ -1,0 +1,29 @@
+Team member names...
+- Andrew Innes
+- Aubree Payne
+- David Woolston
+
+Time it took each person to work on assignment...
+- Andrew Innes: 30 hours
+- Aubree Payne: 21 hours
+- David Woolston: 50
+
+What each person worked on...
+- Andrew Innes: Created DungeonAdventure and related tests, DungeonASCII, and created a couple helper methods within dungeon,
+  Room, and Adventurer
+- Aubree Payne: Uploaded assignment breakdown to GitHub, created code for Adventurer class, Room Class, and HealthPotion class, 
+  and started the draft for UML diagram.
+- David Woolston: Created Dungeon class, DungeonFactory class, and related tests. Created a few drawing methods inside Room.
+
+Any shortcomings/concerns the project has:
+- Aubree Payne: Because there were so many variations on how to do this assignment it was a bit difficult to get help.
+- Andrew Innes: Code could have been more modular and efficient in places. Coordination and dependencies posed some challenges at times.
+- David Woolston: The maze does not randomize the locations of entrance and exit. Accessing a list of content on a per-room basis is difficult. The game does not monitor player's location in the maze. Maze generation slows significantly when door probability is <50%, despite implementing an imporoved traversal strategy.
+
+Any other information you might think is useful for grading:
+- Extra Credit: Created difficulty option at the beginning
+- Extra Credit: Creative game loop and exit handling methods
+- Typing ADVENTURE will show the full map at any time
+
+
+
