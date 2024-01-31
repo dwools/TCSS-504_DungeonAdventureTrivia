@@ -1,19 +1,20 @@
 import random
 
+
 """Creates the room class with constructors self, healing, vision, pit"""
 class Room:
     """init function includes all features a room could have"""
     def __init__(self, row, column):
-        self.__row = row
-        self.__column = column
-        self.__northdoor = False
-        self.__eastdoor = False
-        self.__westdoor = False
-        self.__southdoor = False
-        # self.__entrance = False
+        self.row = row
+        self.column = column
+        self.northdoor = False
+        self.eastdoor = False
+        self.westdoor = False
+        self.southdoor = False
+        # self.entrance = False
         # self.exit = False
         # self.blocked = False
-        self.__entered = False
+        self.entered = False
         # self.empty_room = False
         # self.multiple_items = False
         # self.pit = False
@@ -21,19 +22,19 @@ class Room:
         # self.vision = False
         # self.pillars = False
         # self.pillar_type = None
-        self.__items = []
+        self.items = []
         # self.healingpoints = random.randint(5, 15) if self.healing else 0
 
     def __str__(self, is_current=False):
         room_design = ''
-        if self.__northdoor == True:
+        if self.northdoor == True:
             room_design += '* _ *'
         else:
             room_design += '*****'
 
         room_design += '\n'
 
-        if self.__westdoor == True:
+        if self.westdoor == True:
             room_design += '| '
         else:
             room_design += '* '
@@ -41,22 +42,22 @@ class Room:
         if is_current:
             room_design += "#"
         else:
-            item_count = len(self.__items)
+            item_count = len(self.items)
             if item_count == 0:
                 room_design += " "
             elif item_count == 1:
-                room_design += f'{self.__items[0]}'
+                room_design += f'{self.items[0]}'
             else:
                 room_design += "M"
 
-        if self.__eastdoor == True:
+        if self.eastdoor == True:
             room_design += ' |'
         else:
             room_design += ' *'
 
         room_design += '\n'
 
-        if self.__southdoor == True:
+        if self.southdoor == True:
             room_design += '* _ *'
         else:
             room_design += '*****'
@@ -64,67 +65,68 @@ class Room:
         return room_design
 
     def __repr__(self):
-        return self.__str__()
+        return self.str()
 
 
-    def __place_item(self, item):
-        self.__items.append(item)
+    def place_item(self, item):
+        self.items.append(item)
 
-    def __remove_item(self, item):
-        self.__items.remove(item)
+    def remove_item(self, item):
+        self.items.remove(item)
 
-    def __set_entered(self):
-        self.__entered = True
+    def set_entered(self):
+        self.entered = True
 
-    def __draw_top(self):
-        if self.__northdoor == True:
+    def draw_top(self):
+        if self.northdoor == True:
             print('*   *', end='')
         else:
             print('*****', end='')
 
-    def __draw_bottom(self):
-        if self.__southdoor == True:
+    def draw_bottom(self):
+        if self.southdoor == True:
             print('*   *', end='')
         else:
             print('*****', end='')
 
-    def __draw_middle(self, is_current=False):
-        if self.__westdoor == True:
-            print(' ', end='')
+    def draw_middle(self, is_current=False):
+        if self.westdoor == True:
+            print('  ', end='')
         else:
             print('* ', end='')
 
         if is_current:
             print("#", end="")
         else:
-            item_count = len(self.__items)
+            item_count = len(self.items)
             if item_count == 0:
                 print(" ", end="")
             elif item_count == 1:
-                print(self.__items[0], end="")
+                print(self.items[0], end="")
             else:
                 print("M", end="")
 
-        if self.__eastdoor == True:
+        if self.eastdoor == True:
             print('  ', end='')
         else:
             print(' *', end='')
 
-    def __draw(self):
-        self.__draw_top()
+    def draw(self):
+        self.draw_top()
         print()
-        self.__draw_middle()
+        self.draw_middle()
         print()
-        self.__draw_bottom()
+        self.draw_bottom()
 
 
 
 if __name__ == "__main__":
     room = Room(0, 0)
-    room.__eastdoor = True
-    room.__southdoor = True
+    room.eastdoor = True
+    room.southdoor = True
     print()
     print(room)
+    room.draw()
 
 
 
