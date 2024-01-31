@@ -189,6 +189,6 @@ class Maze:
 
 m1 = Maze(4, 4)
 m1.generate()
-m1.print()
-m1.place_items()
+# m1.print()
+# m1.place_items()
 m1.draw((0, 0))
