@@ -7,10 +7,10 @@ class Room:
     def __init__(self, row, column):
         self.row = row
         self.column = column
-        self.northdoor = False
-        self.eastdoor = False
-        self.westdoor = False
-        self.southdoor = False
+        self.__northdoor = False
+        self.__eastdoor = False
+        self.__westdoor = False
+        self.__southdoor = False
         # self.entrance = False
         # self.exit = False
         # self.blocked = False
@@ -67,6 +67,29 @@ class Room:
     def __repr__(self):
         return self.str()
 
+    def get_northdoor(self):
+        return self.__northdoor
+
+    def get_southdoor(self):
+        return self.__southdoor
+
+    def get_eastdoor(self):
+        return self.__eastdoor
+
+    def get_westdoor(self):
+        return self.__westdoor
+
+    def set_northdoor(self, param):
+        self.__northdoor = param
+
+    def set_southdoor(self, param):
+        self.__southdoor = param
+
+    def set_eastdoor(self, param):
+        self.__eastdoor = param
+
+    def set_westdoor(self, param):
+        self.__westdoor = param
 
     def place_item(self, item):
         self.items.append(item)
@@ -74,23 +97,26 @@ class Room:
     def remove_item(self, item):
         self.items.remove(item)
 
+    def get_entered(self):
+        return self.__entered
+
     def set_entered(self):
         self.entered = True
 
     def draw_top(self):
-        if self.northdoor == True:
+        if self.__northdoor == True:
             print('*   *', end='')
         else:
             print('*****', end='')
 
     def draw_bottom(self):
-        if self.southdoor == True:
+        if self.__southdoor == True:
             print('*   *', end='')
         else:
             print('*****', end='')
 
     def draw_middle(self, is_current=False):
-        if self.westdoor == True:
+        if self.__westdoor == True:
             print('  ', end='')
         else:
             print('* ', end='')
@@ -106,10 +132,26 @@ class Room:
             else:
                 print("M", end="")
 
-        if self.eastdoor == True:
+        if self.__eastdoor == True:
             print('  ', end='')
         else:
             print(' *', end='')
+
+    # def draw_maze(self, maze, rows, columns):
+    #     """
+    #     Draws a maze map
+    #     """
+    #     for i in range(rows):
+    #         for j in range(columns):
+    #             maze[i][j].__draw_top()
+    #         print()
+    #         for j in range(columns):
+    #             maze[i][j].__draw_middle()
+    #         print()
+    #         for j in range(columns):
+    #             maze[i][j].__draw_bottom()
+    #         print()
+
 
     def draw(self):
         self.draw_top()

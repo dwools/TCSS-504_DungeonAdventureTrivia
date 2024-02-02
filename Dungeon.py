@@ -1,5 +1,6 @@
 import random
 from Room import Room
+from collections import deque
 
 class Maze:
 
@@ -44,31 +45,28 @@ class Maze:
         if column == self.columns - 1:
             self.eastdoor = False
 
-    def neighbor_doors(self, row, column):
-        """Ensure that if a room has a northdoor, the northern neighbor has a complementary southdoor, etc."""
-        if row > 0 and self.maze[row - 1][column].southdoor == True:
-            self.maze[row][column].northdoor = True
-        if column > 0 and self.maze[row][column - 1].eastdoor == True:
-            self.maze[row][column].westdoor = True
-        if row > self.rows - 1 and self.maze[row + 1][column].northdoor == True:
-            self.maze[row][column].southdoor = True
-        if column > self.columns - 1 and self.maze[row][column + 1].westdoor == True:
-            self.maze[row][column].eastdoor = True
-
     def create_doors(self, row, column):
-        """Open complementary doors to neighboring open doors, then run random number generator to open other doors."""
-        if row > 0:
-            if random.randint(1, 100) <= 100:
-                self.maze[row][column].northdoor = True
-        if column > 0:
-            if random.randint(1, 100) <= 100:
-                self.maze[row][column].westdoor = True
+        """
+        1.Ensure that if a room has a northdoor, the northern neighbor has a complementary southdoor, etc.
+        2.Open complementary doors to neighboring open doors, then run random number generator to open other doors.
+
+        :param row:
+        :param column:
+        :return:
+        """
+
+
+        if row > 0 and self.maze[row - 1][column].get_southdoor() == True:
+            self.maze[row][column].set_northdoor(True)
+        if column > 0 and self.maze[row][column - 1].get_eastdoor() == True:
+            self.maze[row][column].set_westdoor(True)
+
         if row < self.rows - 1:
-            if random.randint(1, 100) <= 100:
-                self.maze[row][column].southdoor = True
+            if random.randint(1, 100) <= 50:
+                self.maze[row][column].set_southdoor(True)
         if column < self.columns - 1:
-            if random.randint(1, 100) <= 100:
-                self.maze[row][column].eastdoor = True
+            if random.randint(1, 100) <= 50:
+                self.maze[row][column].set_eastdoor(True)
 
     def is_valid_room(self, row, column):
         """
@@ -76,47 +74,6 @@ class Maze:
         """
         return 0 <= row < self.rows and 0 <= column < self.columns
 
-    def traverse(self, row, column, traversed=False):
-        """
-        Traverses maze to ensure all rooms are accessible.
-        """
-        maze_area = self.rows * self.columns
-        curr = self.maze[0][0]
-        room_count = 1
-
-        while room_count < maze_area:
-            if curr.entered == True:
-                return False
-            else:
-            # Try moving south
-                if curr.southdoor == True:
-                    if curr.entered == False:
-                        curr.set_entered()
-                        room_count += 1
-                    curr = self.maze[row + 1][column]
-
-                # Try moving east
-                if curr.eastdoor == True:
-                    if curr.entered == False:
-                        curr.set_entered()
-                        room_count += 1
-                    curr = self.maze[row][column + 1]
-
-                # Try moving north
-                if curr.northdoor == True:
-                    if curr.entered == False:
-                        curr.set_entered()
-                        room_count += 1
-                    curr = self.maze[row - 1][column]
-
-                # Try moving west
-                if curr.westdoor == True:
-                    if curr.entered == False:
-                        curr.set_entered()
-                        room_count += 1
-                    curr = self.maze[row][column - 1]
-
-        return traversed
 
 
 
@@ -135,28 +92,73 @@ class Maze:
                 self.maze[i][j].draw_bottom()
             print()
 
-
-
-            
-
     def generate_maze(self):
-        pass
-
-    def set_items(self):
-        pass
-    def set_pillars(self):
-        pass
-    def main(self):
         self.maze = []
         for i in range(self.rows):
             self.maze.append([])
             for j in range(self.columns):
                 self.maze[-1].append(Room(i, j))
-                self.neighbor_doors(i, j)
                 self.create_doors(i, j)
+        return self.maze
 
-        self.draw_maze()
+    def generate_and_traverse(self):
+        self.generate_maze()
+        self.traverse()
+    def set_items(self):
+        pass
+    def set_pillars(self):
+        pass
+
+    def traverse(self):
+        """
+        Traverses maze to ensure all rooms are accessible.
+        """
+        row = 0
+        column = 0
+        curr = self.maze[0][0]
+        not_yet_visited = deque()
+        not_yet_visited.append((curr, row, column))     # This is a tuple by definition with the ()
+
+
+        while len(not_yet_visited) > 0:
+            curr, row, column = not_yet_visited.popleft()
+            if row == self.rows - 1 and column == self.columns - 1:
+                return True
+
+            if curr.entered == True:
+                continue
+
+            else:
+                curr.set_entered()
+                
+                # Try moving south
+                if curr.get_southdoor() == True:
+                    not_yet_visited.append((self.maze[row + 1][column], row + 1, column))
+
+                # Try moving east
+                if curr.get_eastdoor() == True:
+                    not_yet_visited.append((self.maze[row][column + 1], row, column + 1))
+
+                # Try moving north
+                if curr.get_northdoor() == True:
+                    not_yet_visited.append((self.maze[row - 1][column], row - 1, column))
+
+                # Try moving west
+                if curr.get_westdoor() == True:
+                    not_yet_visited.append((self.maze[row][column - 1], row, column - 1))
+
+        return False
+
+
+
+    def main(self):
+        self.generate_maze()
+        if self.traverse() == True:
+            self.draw_maze()
+        else:
+            self.main()
+
 
 if __name__ == "__main__":
-    maze = Maze(1, 3)
+    maze = Maze(15, 20)
     maze.main()
