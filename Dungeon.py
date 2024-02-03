@@ -7,6 +7,9 @@ class Maze:
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
+        self.dungeon_output_file = open("dungeon.txt", 'w')
+        self.main()
+
 
 
     def __str__(self):
@@ -74,6 +77,27 @@ class Maze:
 
 
 
+    def write_dungeon_output(self):
+        '''
+        write dungeon_output file
+        :return:
+        '''
+        maze_design = ''
+        for i in range(self.rows):
+            for j in range(self.columns):
+                maze_design += self.maze[i][j].draw_top_gui()
+            maze_design += '\n'
+            for j in range(self.columns):
+                maze_design += self.maze[i][j].draw_middle_gui()
+            maze_design += '\n'
+            for j in range(self.columns):
+                maze_design += self.maze[i][j].draw_bottom_gui()
+        self.dungeon_output_file.write(maze_design)
+        return self.dungeon_output_file
+
+    # def get_dungeon_output_file(self):
+    #     self.write_dungeon_output()
+    #     return self.dungeon_output_file
 
     def draw_maze(self):
         """
@@ -81,13 +105,13 @@ class Maze:
         """
         for i in range(self.rows):
             for j in range(self.columns):
-                self.maze[i][j].draw_top()
+                self.maze[i][j].draw_top_gui()
             print()
             for j in range(self.columns):
-                self.maze[i][j].draw_middle()
+                self.maze[i][j].draw_middle_gui()
             print()
             for j in range(self.columns):
-                self.maze[i][j].draw_bottom()
+                self.maze[i][j].draw_bottom_gui()
             print()
 
     def generate_maze(self):
@@ -185,6 +209,8 @@ class Maze:
         self.generate_maze()
         if self.traverse() == True:
             self.draw_maze()
+            self.write_dungeon_output()
+            # self.dungeon_output_file.close()
         else:
             self.main()
 

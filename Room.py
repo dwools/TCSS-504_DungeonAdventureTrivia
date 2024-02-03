@@ -27,14 +27,14 @@ class Room:
 
     def __str__(self, is_current=False):
         room_design = ''
-        if self.northdoor == True:
+        if self.__northdoor == True:
             room_design += '* _ *'
         else:
             room_design += '*****'
 
         room_design += '\n'
 
-        if self.westdoor == True:
+        if self.__westdoor == True:
             room_design += '| '
         else:
             room_design += '* '
@@ -50,14 +50,14 @@ class Room:
             else:
                 room_design += "M"
 
-        if self.eastdoor == True:
+        if self.__eastdoor == True:
             room_design += ' |'
         else:
             room_design += ' *'
 
         room_design += '\n'
 
-        if self.southdoor == True:
+        if self.__southdoor == True:
             room_design += '* _ *'
         else:
             room_design += '*****'
@@ -103,39 +103,133 @@ class Room:
     def set_entered(self):
         self.entered = True
 
-    def draw_top(self):
+    # def draw_top(self):
+    #     if self.__northdoor == True:
+    #         print('* _ *', end='')
+    #     else:
+    #         print('*****', end='')
+    #
+    # def draw_bottom(self):
+    #     if self.__southdoor == True:
+    #         print('* _ *', end='')
+    #     else:
+    #         print('*****', end='')
+    #
+    # def draw_middle(self, is_current=False):
+    #     if self.__westdoor == True:
+    #         print('| ', end='')
+    #     else:
+    #         print('* ', end='')
+    #
+    #     if is_current:
+    #         print("#", end="")
+    #     else:
+    #         item_count = len(self.items)
+    #         if item_count == 0:
+    #             print(" ", end="")
+    #         elif item_count == 1:
+    #             print(self.items[0], end="")
+    #         else:
+    #             print("M", end="")
+    #
+    #     if self.__eastdoor == True:
+    #         print(' |', end='')
+    #     else:
+    #         print(' *', end='')
+
+    def draw_gui(self):
+        room_design = ''
         if self.__northdoor == True:
-            print('* _ *', end='')
+            room_design += 'f'
         else:
-            print('*****', end='')
+            room_design += 'n'
 
-    def draw_bottom(self):
-        if self.__southdoor == True:
-            print('* _ *', end='')
-        else:
-            print('*****', end='')
+        room_design += '\n'
 
-    def draw_middle(self, is_current=False):
         if self.__westdoor == True:
-            print('| ', end='')
+            room_design += 'f'
         else:
-            print('* ', end='')
+            room_design += 'w'
 
-        if is_current:
-            print("#", end="")
+        # if is_current:
+        #     room_design += "#"
+        # else:
+        item_count = len(self.items)
+        if item_count == 0:
+            room_design += "f"
+        elif item_count == 1:
+            room_design += f'{self.items[0]}'
         else:
-            item_count = len(self.items)
-            if item_count == 0:
-                print(" ", end="")
-            elif item_count == 1:
-                print(self.items[0], end="")
-            else:
-                print("M", end="")
+            room_design += "M"
 
         if self.__eastdoor == True:
-            print(' |', end='')
+            room_design += 'f'
         else:
-            print(' *', end='')
+            room_design += 'w'
+
+        room_design += '\n'
+
+        if self.__southdoor == True:
+            room_design += 'f'
+        else:
+            room_design += 'w'
+
+        room_design += '\n'
+        return room_design
+
+
+    def draw_top_gui(self):
+        top_design = ''
+        if self.__northdoor == True:
+            top_design += 'f'
+            print('f', end='')
+        else:
+            top_design += 'n'
+            print('n', end='')
+        return top_design
+
+    def draw_bottom_gui(self):
+        bottom_design = ''
+        if self.__southdoor == True:
+            bottom_design += 'f'
+            print('f', end='')
+        else:
+            bottom_design += 'w'
+            print('w', end='')
+        return bottom_design
+
+    def draw_middle_gui(self, is_current=False):
+        middle_design = ''
+        if self.__westdoor == True:
+            middle_design += 'f'
+            print('f', end='')
+        else:
+            middle_design += 'w'
+            print('w', end='')
+
+        # if is_current:
+        #     print("#", end="")
+        # else:
+        item_count = len(self.items)
+        if item_count == 0:
+            middle_design += 'f'
+            print("f", end="")
+        elif item_count == 1:
+            middle_design += f'{self.items[0]}'
+            # print(self.items[0], end="")
+        else:
+            middle_design += 'M'
+            # print("M", end="")
+
+        if self.__eastdoor == True:
+            middle_design += 'f'
+            # print('f', end='')
+        else:
+            middle_design += 'w'
+            # print('w', end='')
+        return middle_design
+
+
 
     # def draw_maze(self, maze, rows, columns):
     #     """
