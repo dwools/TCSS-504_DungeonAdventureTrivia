@@ -105,19 +105,19 @@ class Room:
 
     def draw_top(self):
         if self.__northdoor == True:
-            print('*   *', end='')
+            print('* _ *', end='')
         else:
             print('*****', end='')
 
     def draw_bottom(self):
         if self.__southdoor == True:
-            print('*   *', end='')
+            print('* _ *', end='')
         else:
             print('*****', end='')
 
     def draw_middle(self, is_current=False):
         if self.__westdoor == True:
-            print('  ', end='')
+            print('| ', end='')
         else:
             print('* ', end='')
 
@@ -133,7 +133,7 @@ class Room:
                 print("M", end="")
 
         if self.__eastdoor == True:
-            print('  ', end='')
+            print(' |', end='')
         else:
             print(' *', end='')
 

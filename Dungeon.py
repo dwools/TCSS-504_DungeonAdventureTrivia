@@ -34,16 +34,16 @@ class Maze:
         return neighbors
         
     
-    def close_edges(self, row, column):
-        """Ensure that edges do not have outside doors."""
-        if row == 0:
-            self.northdoor = False
-        if column == 0:
-            self.westdoor = False
-        if row == self.rows - 1:
-            self.southdoor = False
-        if column == self.columns - 1:
-            self.eastdoor = False
+    # def close_edges(self, row, column):
+    #     """Ensure that edges do not have outside doors."""
+    #     if row == 0:
+    #         self.northdoor = False
+    #     if column == 0:
+    #         self.westdoor = False
+    #     if row == self.rows - 1:
+    #         self.southdoor = False
+    #     if column == self.columns - 1:
+    #         self.eastdoor = False
 
     def create_doors(self, row, column):
         """
@@ -54,8 +54,6 @@ class Maze:
         :param column:
         :return:
         """
-
-
         if row > 0 and self.maze[row - 1][column].get_southdoor() == True:
             self.maze[row][column].set_northdoor(True)
         if column > 0 and self.maze[row][column - 1].get_eastdoor() == True:
@@ -130,7 +128,7 @@ class Maze:
 
             else:
                 curr.set_entered()
-                
+
                 # Try moving south
                 if curr.get_southdoor() == True:
                     not_yet_visited.append((self.maze[row + 1][column], row + 1, column))
@@ -148,7 +146,39 @@ class Maze:
                     not_yet_visited.append((self.maze[row][column - 1], row, column - 1))
 
         return False
-
+    # def traverse(self, row, col, room_count=0):
+    #     """
+    #     Traverses maze to ensure all rooms are accessible. If not, a new randomized maze is generated.
+    #     """
+    #     if not self.is_valid_room(row, col):
+    #         # Invalid room, can't proceed in this direction
+    #         return False, room_count
+    #
+    #     # Avoid revisiting the same room
+    #     if self.maze[row][col].entered:
+    #         return False, room_count
+    #
+    #     self.maze[row][col].set_entered()
+    #     room_count += 1
+    #
+    #     # Check for exit conditions
+    #     if room_count == ((self.rows) * (self.columns)):
+    #         return True, room_count
+    #
+    #     # Try moving in all four directions: south, east, north, west
+    #     found_exit, room_count = self.traverse(row + 1, col, room_count) if self.maze[row][col].get_southdoor() else (
+    #     False, room_count)
+    #     if not found_exit:
+    #         found_exit, room_count = self.traverse(row, col + 1, room_count) if self.maze[row][col].get_eastdoor() else (
+    #         False, room_count)
+    #     if not found_exit:
+    #         found_exit, room_count = self.traverse(row - 1, col, room_count) if row > 0 and self.maze[row][
+    #             col].get_northdoor() else (False, room_count)
+    #     if not found_exit:
+    #         found_exit, room_count = self.traverse(row, col - 1, room_count) if col > 0 and self.maze[row][
+    #             col].get_westdoor() else (False, room_count)
+    #
+    #     return found_exit, room_count
 
 
     def main(self):
