@@ -57,7 +57,7 @@ class DungeonAdventure(Maze):
 
         # Player location (need to somehow associate with the Adventurer Class)
 
-        player_image = pg.image.load(a.south_knight)
+        player_image = pg.image.load(a.south_priestess)
 
         player_rect = pg.Rect(25, 25, player_image.get_width(),
                               player_image.get_height())
@@ -162,19 +162,19 @@ class DungeonAdventure(Maze):
             player_movement = [0, 0]
             if self.moving_east:
                 player_movement[0] += 2
-                player_image = pg.image.load(a.east_knight)
+                player_image = pg.image.load(a.east_priestess)
 
             if self.moving_west:
                 player_movement[0] -= 2
-                player_image = pg.image.load(a.west_knight)
+                player_image = pg.image.load(a.west_priestess)
 
             if self.moving_north:
                 player_movement[1] -= 2
-                player_image = pg.image.load(a.north_knight)
+                player_image = pg.image.load(a.north_priestess)
 
             if self.moving_south:
                 player_movement[1] += 2
-                player_image = pg.image.load(a.south_knight)
+                player_image = pg.image.load(a.south_priestess)
 
             player_rect, collisions = move(player_rect, player_movement, tile_rects)
             display.blit(player_image, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
