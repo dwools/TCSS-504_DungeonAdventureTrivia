@@ -216,5 +216,5 @@ class Maze:
 
 
 if __name__ == "__main__":
-    maze = Maze(15, 20)
+    maze = Maze(45, 60) # (15hx20w) x 3
     maze.main()

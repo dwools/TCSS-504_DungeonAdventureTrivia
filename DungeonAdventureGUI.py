@@ -6,6 +6,7 @@ import sys
 # Import project files
 
 import config as c
+from audio_config import Audio
 import Room
 from Dungeon import Maze
 
@@ -37,10 +38,10 @@ At the conclusion of the game, display the entire Dungeon
 class DungeonAdventure(Maze):
 
     def __init__(self):
-        super().__init__(15, 20)
+        super().__init__(45, 60)
 
     def run(self):
-        pg.mixer.pre_init(44100, -16, 2, 512) # Initializing the audio file to remove it's delay
+        pg.mixer.pre_init(44100, -16, 2, 512)  # Initializing the audio file to remove its delay
         pg.init()
         clock = pg.time.Clock()
         pg.display.set_caption(f"Dungeon Adventure")
@@ -49,7 +50,7 @@ class DungeonAdventure(Maze):
 
         scroll = [0, 0]
 
-        display = pg.Surface((640, 480)) # (640, 480)
+        display = pg.Surface((640, 480))  # (640, 480)
 
         # Player location (need to somehow associate with the Adventurer Class)
 
@@ -62,27 +63,25 @@ class DungeonAdventure(Maze):
         bottom_wall_image = pg.image.load('assets/Environment/Dungeon Prison/Assets/bottom_wall.png')
         upper_wall_image = pg.image.load('assets/Environment/Dungeon Prison/Assets/upper_wall.png')
         floor1_image = pg.image.load('assets/Environment/Dungeon Prison/Assets/floor1.png')
-        north_left_door_image = pg.image.load('assets/Environment/Dungeon Prison/Assets/upper_left_door.png')
-        north_right_door_image = pg.image.load('assets/Environment/Dungeon Prison/Assets/upper_right_door.png')
         TILE_SIZE = bottom_wall_image.get_width()
 
         # Audio
-        background_audio = pg.mixer.music.load('assets/audio/theme_foret.mp3') # loading in the audio file
-        background_audio = pg.mixer.music.play(-1) # loops indefinitely
-        background_audio = pg.mixer.music.set_volume(0.0) # scale of 0->1
+        background_audio = pg.mixer.music.load('assets/audio/theme_forest.mp3')  # loading in the audio file
+        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        background_audio = pg.mixer.music.set_volume(0.0)  # scale of 0->1
 
         # Map 20w x 15h
-        def load_map(path):
-            f = open(path + '.txt', 'r')
-            data = f.read()
-            f.close()
+        def load_map():
+            file = open('dungeon.txt', 'r')
+            data = file.read()
+            file.close()
             data = data.split('\n')
-            room_map = []
+            dungeon_map = []
             for row in data:
-                room_map.append((list(row)))
-            return room_map
+                dungeon_map.append((list(row)))
+            return dungeon_map
 
-        room_map = load_map('dungeon')  # c.game_map
+        dungeon_map = load_map()
 
         def collision_test(rect, tiles):
 
@@ -143,7 +142,7 @@ class DungeonAdventure(Maze):
             tile_rects = []
 
             y = 0
-            for row in room_map:
+            for row in dungeon_map:
 
                 x = 0
                 for tile in row:
@@ -158,15 +157,6 @@ class DungeonAdventure(Maze):
                     elif tile == "w":  # Wall (for east, west, south walls)
                         display.blit(bottom_wall_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-
-
-                    # elif tile == "4":  # North Left Door
-                    #     display.blit(north_left_door_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-                    #     tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-                    #
-                    # elif tile == "5":  # North Right Door
-                    #     display.blit(north_right_door_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-                    #     tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     x += 1
                 y += 1
@@ -219,13 +209,10 @@ class DungeonAdventure(Maze):
                         interacting = True
                         print("Interacting!")
 
-                    if event.key == K_m:
-                        display_map = True
-                        print(f"map={room_map}")
-
                     if event.key == K_p:
                         paused = True
                         print(f"The game is paused")
+                        # call the pause menu UI here
 
                 if event.type == KEYUP:
 
@@ -243,14 +230,6 @@ class DungeonAdventure(Maze):
 
                     if event.key == K_e:
                         interacting = False
-
-                    if event.key == K_m:
-                        display_map = False
-                        print("Hiding the map")
-
-                    if event.key == K_p:
-                        paused = False
-                        print("Resuming the game!")
 
             surf = pg.transform.scale(display, c.WINDOW_SIZE)
             screen.blit(surf, (0, 0))
