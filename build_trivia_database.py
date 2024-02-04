@@ -154,16 +154,16 @@ def main():
         create_astronomy_trivia(conn, astronomy_trivia_9)
         create_astronomy_trivia(conn, astronomy_trivia_10)
 
-        elapids_trivia_1 = ('1', 'There are 8 continents', 'FALSE')
-        elapids_trivia_2 = ('2', 'Mount Everest is the highest mountain in the world', 'TRUE')
-        elapids_trivia_3 = ('3', 'Every country in the world has a rectangular flag', 'FALSE')
-        elapids_trivia_4 = ('4', 'Florida is the southernmost state in the US', 'FALSE')
-        elapids_trivia_5 = ('5', 'It snows in Hawaii', 'TRUE')
-        elapids_trivia_6 = ('6', 'The highest mountain in the US is in Colorado', 'FALSE')
-        elapids_trivia_7 = ('7', 'Switzerland is landlocked', 'TRUE')
-        elapids_trivia_8 = ('8', 'Sydney is the capital of Australia', 'False')
-        elapids_trivia_9 = ('9', 'New Zealand has more sheep than people', 'TRUE')
-        elapids_trivia_10 = ('10', 'The flag of Canada has a maple leaf on it', 'TRUE')
+        elapids_trivia_1 = ('1', 'The king cobra, the most longest and largest venomous snake in the world, in addition to envenomation, will also constrict small prey.', 'FALSE')
+        elapids_trivia_2 = ('2', 'The black mamba causes the most human fatalities per year out of any snake species.', 'FALSE')
+        elapids_trivia_3 = ('3', 'The inland taipan, the most venomous snake in the world by venom toxicity, is native to Africa.', 'FALSE')
+        elapids_trivia_4 = ('4', 'Most elapids predominantly produce a neurotoxic venom, as compared to vipers which produce a predominantly hemotoxic venom.', 'TRUE')
+        elapids_trivia_5 = ('5', 'Out of the four recognized extant mamba species - the black mamba, the western green mamba, the eastern green mamba, and the Jameson\'s mamba - three are arboreal (tree dwelling).', 'TRUE')
+        elapids_trivia_6 = ('6', 'Elapids have proteroplyphous fangs, which are fixed, perpendicular to the jaw, and smaller than the solenoglyphous fangs (which are three times larger and hinged to fold parallel to the jaw when closed) found in vipers.', 'TRUE')
+        elapids_trivia_7 = ('7', 'Turtle-headed sea snakes, due to a specialized diet of fish egs, have only vestigial (small remnants of a once more significant characteristic) fangs and do not produce venom.', 'TRUE')
+        elapids_trivia_8 = ('8', 'All species of the genus Naja (true cobras) can spray jets of venom through modified, forward-facing holes in their fangs.', 'FALSE')
+        elapids_trivia_9 = ('9', 'Western green mambas are sexually dimorphic; females are usually a drab olive brown, and males are vibrant green with blue or black scale edges. ', 'FALSE')
+        elapids_trivia_10 = ('10', 'The yellow-lipped sea krait (also known as the banded sea krait) is the second most venomous snake in the world by venom toxicity.', 'FALSE')
         create_elapids_trivia(conn, elapids_trivia_1)
         create_elapids_trivia(conn, elapids_trivia_2)
         create_elapids_trivia(conn, elapids_trivia_3)
@@ -174,7 +174,6 @@ def main():
         create_elapids_trivia(conn, elapids_trivia_8)
         create_elapids_trivia(conn, elapids_trivia_9)
         create_elapids_trivia(conn, elapids_trivia_10)
-
 
 
 if __name__ == '__main__':
