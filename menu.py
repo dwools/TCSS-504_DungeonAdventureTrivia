@@ -2,7 +2,7 @@ import pygame as pg
 import config as c
 
 
-class Menu():
+class Menu:
 
     def __init__(self, game):
         self.game = game
@@ -15,7 +15,7 @@ class Menu():
         self.cursor_offset = - 300
 
     def draw_cursor(self):
-        self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y)
+        self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y, 'red')
 
     def blit_screen(self):
         window_surface = pg.transform.scale(self.game.display, c.WINDOW_SIZE)
@@ -31,8 +31,9 @@ class MainMenu(Menu):
         '''
         Menu.__init__(self, game)
         self.state = "Start Game"
-        self.start_x, self.start_y = self.middle_width, self.middle_height
-        self.how_to_play_x, self.how_to_play_y = self.middle_width, self.middle_height + 100
+        self.start_x, self.start_y = self.middle_width, self.middle_height - 100
+        self.how_to_play_x, self.how_to_play_y = self.middle_width, self.middle_height
+        self.load_game_x, self.load_game_y = self.middle_width, self.middle_height + 100
         self.options_x, self.options_y = self.middle_width, self.middle_height + 200
         self.credits_x, self.credits_y = self.middle_width, self.middle_height + 300
         self.cursor_rect.midtop = (self.start_x + self.cursor_offset, self.start_y)
@@ -43,12 +44,14 @@ class MainMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
+
             self.game.display.fill(c.PURPLE)
-            self.game.draw_text('Main Menu', 20, self.middle_width, self.middle_height - 250)
-            self.game.draw_text('Start Game', 20, self.start_x, self.start_y)
-            self.game.draw_text('How To Play', 20, self.how_to_play_x, self.how_to_play_y)
-            self.game.draw_text('Options', 20, self.options_x, self.options_y)
-            self.game.draw_text('Credits', 20, self.credits_x, self.credits_y)
+            self.game.draw_text('Dungeon Adventure', 20, self.middle_width, self.middle_height - 250, pg.color.Color('forestgreen'))
+            self.game.draw_text('Start Game', 20, self.start_x, self.start_y, self.game.font_color)
+            self.game.draw_text('How To Play', 20, self.how_to_play_x, self.how_to_play_y, self.game.font_color)
+            self.game.draw_text('Load Game', 20, self.load_game_x, self.load_game_y, self.game.font_color)
+            self.game.draw_text('Options', 20, self.options_x, self.options_y, self.game.font_color)
+            self.game.draw_text('Credits', 20, self.credits_x, self.credits_y, self.game.font_color)
             self.draw_cursor()
             self.blit_screen()
             clock.tick(13)
@@ -60,6 +63,10 @@ class MainMenu(Menu):
                 self.state = 'How To Play'
 
             elif self.state == 'How To Play':
+                self.cursor_rect.midtop = (self.load_game_x + self.cursor_offset, self.load_game_y)
+                self.state = 'Load Game'
+
+            elif self.state == 'Load Game':
                 self.cursor_rect.midtop = (self.options_x + self.cursor_offset, self.options_y)
                 self.state = 'Options'
 
@@ -80,9 +87,13 @@ class MainMenu(Menu):
                 self.cursor_rect.midtop = (self.start_x + self.cursor_offset, self.start_y)
                 self.state = 'Start Game'
 
-            elif self.state == 'Options':
+            elif self.state == 'Load Game':
                 self.cursor_rect.midtop = (self.how_to_play_x + self.cursor_offset, self.how_to_play_y)
                 self.state = 'How To Play'
+
+            elif self.state == 'Options':
+                self.cursor_rect.midtop = (self.load_game_x + self.cursor_offset, self.load_game_y)
+                self.state = 'Load Game'
 
             elif self.state == 'Credits':
                 self.cursor_rect.midtop = (self.options_x + self.cursor_offset, self.options_y)
@@ -93,6 +104,7 @@ class MainMenu(Menu):
         self.move_cursor()
 
         if self.game.interacting:
+
             if self.state == 'Start Game':
                 self.game.playing = True
                 self.run_display = False
@@ -107,3 +119,11 @@ class MainMenu(Menu):
             elif self.state == 'Credits':
                 print("Credits")
 
+
+class OptionsMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.state = "Options"
+
+    def display_menu(self):
+        pass

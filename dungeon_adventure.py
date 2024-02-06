@@ -61,6 +61,7 @@ class DungeonAdventure(Maze):
 
         # Config
         self.font = c.dungeon_font
+        self.font_color = c.WHITE
         self.PURPLE = c.PURPLE
         self.BLACK = c.BLACK
         self.WHITE = c.WHITE
@@ -74,7 +75,7 @@ class DungeonAdventure(Maze):
 
         player_image = pg.image.load(a.south_knight)
 
-        player_rect = pg.Rect(25, 25, player_image.get_width(),
+        player_rect = pg.Rect(15, 15, player_image.get_width(),
                               player_image.get_height())
 
         # Textures
@@ -257,9 +258,9 @@ class DungeonAdventure(Maze):
                 if event.key == K_e or event.key == K_RETURN:
                     self.interacting = False
 
-    def draw_text(self, text, size, x, y):
+    def draw_text(self, text, size, x, y, font_color):
         font = pg.font.Font(self.font, size)
-        text_surface = font.render(text, True, self.WHITE)
+        text_surface = font.render(text, True, font_color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x/2, y/2)
         self.display.blit(text_surface, text_rect)
