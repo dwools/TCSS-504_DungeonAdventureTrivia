@@ -9,6 +9,7 @@ import config as c
 import assets as a
 import Room
 from Dungeon import Maze
+from menu import MainMenu
 
 """
 Contains the main logic for playing the game
@@ -38,26 +39,40 @@ At the conclusion of the game, display the entire Dungeon
 class DungeonAdventure(Maze):
 
     def __init__(self):
+        pg.init()
         super().__init__(15, 20)
 
+        # Controls
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
-        self.running, self.playing = True, False
+        self.interacting, self.left_clicked = False, False
+        self.mouse_position = pg.event.get(pg.mouse.get_pos())
+
+        # Game Status
+        self.running, self.playing, self.paused = True, False, False
+        self.current_menu = MainMenu(self)
+
+        # Window Setup
+        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
+        self.WINDOW_SIZE = c.WINDOW_SIZE
+        self.display = pg.Surface((640, 480))  # (640w, 480h)
+        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
+
+        self.scroll = [0, 0]
+
+        # Config
+        self.font = c.dungeon_font
+        self.PURPLE = c.PURPLE
+        self.BLACK = c.BLACK
+        self.WHITE = c.WHITE
 
     def game_loop(self):
         pg.mixer.pre_init(44100, -16, 2, 512)  # Initializing the audio file to remove its delay
-        pg.init()
         clock = pg.time.Clock()
         pg.display.set_caption(f"Dungeon Adventure")
 
-        screen = pg.display.set_mode(c.WINDOW_SIZE, 0, 32)
-
-        scroll = [0, 0]
-
-        display = pg.Surface((640, 480))  # (640, 480)
-
         # Player location (need to somehow associate with the Adventurer Class)
 
-        player_image = pg.image.load(a.north_knight)
+        player_image = pg.image.load(a.south_knight)
 
         player_rect = pg.Rect(25, 25, player_image.get_width(),
                               player_image.get_height())
@@ -120,21 +135,22 @@ class DungeonAdventure(Maze):
                     collision_types['top'] = True
             return rect, collision_types
 
-        display_map = False
-
-        interacting = False
-
-        paused = False
-
         while self.running:  # Game Loop
 
-            display.fill(c.PURPLE)  # Screen Background
+            # Check for player input
+            self.check_events()
 
-            scroll[0] += (player_rect.x - scroll[0] - 160)
-            scroll[1] += (player_rect.y - scroll[1] - 120)
+            # get current Mouse position
+            self.mouse_position = pg.mouse.get_pos()
 
-            scroll[0] += 1
-            scroll[1] += 1
+            # Reset the screen Background
+            self.display.fill(self.PURPLE)
+
+            # Basically the camera tracking/ following the player sprite
+            self.scroll[0] += (player_rect.x - self.scroll[0] - 160)
+            self.scroll[1] += (player_rect.y - self.scroll[1] - 120)
+            self.scroll[0] += 1
+            self.scroll[1] += 1
 
             # List containing tiles where collisions occur
             tile_rects = []
@@ -146,14 +162,16 @@ class DungeonAdventure(Maze):
                 for tile in row:
 
                     if tile == "f":  # floor
-                        display.blit(floor_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                        self.display.blit(floor_image, (x * TILE_SIZE - self.scroll[0], y * TILE_SIZE - self.scroll[1]))
 
                     elif tile == "n":  # North Wall (A separate north wall looks better in the GUI)
-                        display.blit(upper_wall_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                        self.display.blit(upper_wall_image,
+                                          (x * TILE_SIZE - self.scroll[0], y * TILE_SIZE - self.scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     elif tile == "w":  # Wall (for east, west, south walls)
-                        display.blit(bottom_wall_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                        self.display.blit(bottom_wall_image,
+                                          (x * TILE_SIZE - self.scroll[0], y * TILE_SIZE - self.scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     x += 1
@@ -162,11 +180,11 @@ class DungeonAdventure(Maze):
             player_movement = [0, 0]
             if self.moving_east:
                 player_movement[0] += 2
-                player_image = pg.image.load(a.north_knight)
+                player_image = pg.image.load(a.east_knight)
 
             if self.moving_west:
                 player_movement[0] -= 2
-                player_image = pg.image.load(a.north_knight)
+                player_image = pg.image.load(a.west_knight)
 
             if self.moving_north:
                 player_movement[1] -= 2
@@ -174,14 +192,13 @@ class DungeonAdventure(Maze):
 
             if self.moving_south:
                 player_movement[1] += 2
-                player_image = pg.image.load(a.north_knight)
+                player_image = pg.image.load(a.south_knight)
 
             player_rect, collisions = move(player_rect, player_movement, tile_rects)
-            display.blit(player_image, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
-            self.check_events()
+            self.display.blit(player_image, (player_rect.x - self.scroll[0], player_rect.y - self.scroll[1]))
 
-            surf = pg.transform.scale(display, c.WINDOW_SIZE)
-            screen.blit(surf, (0, 0))
+            window_surface = pg.transform.scale(self.display, self.WINDOW_SIZE)
+            self.screen.blit(window_surface, (0, 0))
             pg.display.update()  # Update the Display
             clock.tick(60)  # set the FPS
 
@@ -189,8 +206,8 @@ class DungeonAdventure(Maze):
         for event in pg.event.get():  # Event Loop
 
             if event.type == QUIT:  # Check for window quit
-                pg.quit()  # Stop pygame
-                sys.exit()  # Stop running
+                self.running, self.playing = False, False
+                self.current_menu.run_display = False
 
             if event.type == KEYDOWN:
 
@@ -211,13 +228,17 @@ class DungeonAdventure(Maze):
                     print("Moving East")
 
                 if event.key == K_e:
-                    interacting = True
+                    self.interacting = True
                     print("Interacting!")
 
                 if event.key == K_p:
-                    paused = True
-                    print(f"The game is paused")
+                    self.paused = True
+                    print("The game is paused")
                     # call the pause menu UI here
+
+                if event.key == K_RETURN:
+                    self.interacting = True
+                    print("option selected")
 
             if event.type == KEYUP:
 
@@ -233,8 +254,15 @@ class DungeonAdventure(Maze):
                 if event.key == K_d or K_RIGHT:
                     self.moving_east = False
 
-                if event.key == K_e:
-                    interacting = False
+                if event.key == K_e or event.key == K_RETURN:
+                    self.interacting = False
+
+    def draw_text(self, text, size, x, y):
+        font = pg.font.Font(self.font, size)
+        text_surface = font.render(text, True, self.WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x/2, y/2)
+        self.display.blit(text_surface, text_rect)
 
 
 if __name__ == "__main__":

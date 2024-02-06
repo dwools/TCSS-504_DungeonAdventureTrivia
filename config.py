@@ -11,4 +11,4 @@ WHITE = (255, 255, 255)
 PURPLE = (11, 0, 11)
 
 # FONT
-dungeon_font = '8-BIT WONDER.TTF'
+dungeon_font = 'assets/Fonts/8-BIT WONDER.TTF'
