@@ -10,6 +10,8 @@ class Maze:
         self.dungeon_output_file = open("dungeon.txt", 'w')
         self.main()
 
+                # self.create_doors(i, j)
+
 
 
     def __str__(self):
@@ -20,21 +22,40 @@ class Maze:
         self.neighbor_doors(row, column)
         return Room(row, column)
 
-    def get_neighbors(self, row, column):
+    def get_neighbors(self, curr, visited):
         neighbors = []
-        if row > 0:
-            north_neighbor = self.maze[row - 1][column]
-            neighbors.append(north_neighbor)
-        if row < self.rows:
-            south_neighbor = self.maze[row + 1][column]
-            neighbors.append(south_neighbor)
-        if column > 0:
-            west_neighbor = self.maze[row][column - 1]
-            neighbors.append(west_neighbor)
-        if column < self.columns:
-            east_neighbor = self.maze[row][column + 1]
-            neighbors.append(east_neighbor)
+        if curr.get_row() > 0 and not self.maze[curr.get_row() - 1][curr.get_column()] in visited:  # not north edge
+            neighbors.append(self.maze[curr.get_row() - 1][curr.get_column()])
+
+        if curr.get_row() < self.rows - 1 and not self.maze[curr.get_row() + 1][curr.get_column()] in visited:
+            neighbors.append(self.maze[curr.get_row() + 1][curr.get_column()])
+
+        if curr.get_column() > 0 and not self.maze[curr.get_row()][curr.get_column() - 1] in visited:  # not north edge
+            neighbors.append(self.maze[curr.get_row()][curr.get_column() - 1])
+
+        if curr.get_column() < self.columns - 1 and not self.maze[curr.get_row()][curr.get_column() + 1] in visited:
+            neighbors.append(self.maze[curr.get_row()][curr.get_column() + 1])
+
         return neighbors
+        
+        # neighbors = []
+        #
+        # row = self.maze[row][column].get_row()
+        # column = self.maze[row][column].get_column()
+        #
+        # if row > 0:
+        #     north_neighbor = self.maze[row - 1][column]
+        #     neighbors.append(north_neighbor)
+        # if row < self.rows:
+        #     south_neighbor = self.maze[row + 1][column]
+        #     neighbors.append(south_neighbor)
+        # if column > 0:
+        #     west_neighbor = self.maze[row][column - 1]
+        #     neighbors.append(west_neighbor)
+        # if column < self.columns:
+        #     east_neighbor = self.maze[row][column + 1]
+        #     neighbors.append(east_neighbor)
+        # return neighbors
         
     
     # def close_edges(self, row, column):
@@ -48,7 +69,7 @@ class Maze:
     #     if column == self.columns - 1:
     #         self.eastdoor = False
 
-    def create_doors(self, row, column):
+    def create_doors(self, curr, neighbor):
         """
         1.Ensure that if a room has a northdoor, the northern neighbor has a complementary southdoor, etc.
         2.Open complementary doors to neighboring open doors, then run random number generator to open other doors.
@@ -57,17 +78,31 @@ class Maze:
         :param column:
         :return:
         """
-        if row > 0 and self.maze[row - 1][column].get_southdoor() == True:
-            self.maze[row][column].set_northdoor(True)
-        if column > 0 and self.maze[row][column - 1].get_eastdoor() == True:
-            self.maze[row][column].set_westdoor(True)
+        if neighbor.get_column() - curr.get_column() > 0:
+            curr.set_eastdoor(True)
+            neighbor.set_westdoor(True)
+        if neighbor.get_column() - curr.get_column() < 0:
+            curr.set_westdoor(True)
+            neighbor.set_eastdoor(True)
+        if neighbor.get_row() - curr.get_row() > 0:
+            curr.set_southdoor(True)
+            neighbor.set_northdoor(True)
+        if neighbor.get_row() - curr.get_row() < 0:
+            curr.set_northdoor(True)
+            neighbor.set_southdoor(True)
 
-        if row < self.rows - 1:
-            if random.randint(1, 100) <= 50:
-                self.maze[row][column].set_southdoor(True)
-        if column < self.columns - 1:
-            if random.randint(1, 100) <= 50:
-                self.maze[row][column].set_eastdoor(True)
+
+        # if row > 0 and self.maze[row - 1][column].get_southdoor() == True:
+        #     self.maze[row][column].set_northdoor(True)
+        # if column > 0 and self.maze[row][column - 1].get_eastdoor() == True:
+        #     self.maze[row][column].set_westdoor(True)
+        #
+        # if row < self.rows - 1:
+        #     if random.randint(1, 100) <= 50:
+        #         self.maze[row][column].set_southdoor(True)
+        # if column < self.columns - 1:
+        #     if random.randint(1, 100) <= 50:
+        #         self.maze[row][column].set_eastdoor(True)
 
     def is_valid_room(self, row, column):
         """
@@ -92,6 +127,7 @@ class Maze:
             maze_design += '\n'
             for j in range(self.columns):
                 maze_design += self.maze[i][j].draw_bottom_gui()
+            maze_design += '\n'
         self.dungeon_output_file.write(maze_design)
         return self.dungeon_output_file
 
@@ -120,7 +156,41 @@ class Maze:
             self.maze.append([])
             for j in range(self.columns):
                 self.maze[-1].append(Room(i, j))
-                self.create_doors(i, j)
+        origin = self.maze[0][0]
+        stack = []
+        visited = []
+        stack.append(origin)
+        visited.append(origin)
+        while len(stack) != 0:
+            curr = stack[-1]
+            neighbors = self.get_neighbors(curr, visited)
+            if len(neighbors) != 0:
+                for i in range(len(neighbors) // 2 + 1):
+                    neighbor = random.choice(neighbors)
+                    # while neighbor in visited:
+                    #     if len(neighbors) == 0:
+                    #         stack.pop()
+                    #         continue
+                    #     else:
+                    #         neighbor = random.choice(neighbors)
+                    #         neighbors.remove(neighbor)
+                    stack.append(neighbor)
+                    visited.append(neighbor)
+                    # neighbors.remove(neighbor)
+                    self.create_doors(curr, neighbor)
+                # neighbor = random.choice(neighbors)
+                # # while neighbor in visited:
+                # #     if len(neighbors) == 0:
+                # #         stack.pop()
+                # #         continue
+                # #     else:
+                # #         neighbor = random.choice(neighbors)
+                # #         neighbors.remove(neighbor)
+                # stack.append(neighbor)
+                # visited.append(neighbor)
+                # # neighbors.remove(neighbor)
+                # self.create_doors(curr, neighbor)
+            else: stack.pop()
         return self.maze
 
     def generate_and_traverse(self):
@@ -207,12 +277,15 @@ class Maze:
 
     def main(self):
         self.generate_maze()
-        if self.traverse() == True:
-            self.draw_maze()
-            self.write_dungeon_output()
-            # self.dungeon_output_file.close()
-        else:
-            self.main()
+        self.draw_maze()
+        self.write_dungeon_output()
+        self.dungeon_output_file.close()
+        # if self.traverse() == True:
+        #     self.draw_maze()
+        #     self.write_dungeon_output()
+        #     # self.dungeon_output_file.close()
+        # else:
+        #     self.main()
 
 
 if __name__ == "__main__":

@@ -5,8 +5,8 @@ import random
 class Room:
     """init function includes all features a room could have"""
     def __init__(self, row, column):
-        self.row = row
-        self.column = column
+        self.__row = row
+        self.__column = column
         self.__northdoor = False
         self.__eastdoor = False
         self.__westdoor = False
@@ -66,6 +66,12 @@ class Room:
 
     def __repr__(self):
         return self.str()
+
+    def get_row(self):
+        return self.__row
+
+    def get_column(self):
+        return self.__column
 
     def get_northdoor(self):
         return self.__northdoor
@@ -180,27 +186,27 @@ class Room:
 
     def draw_top_gui(self):
         top_design = ''
-        if self.__northdoor == True:
-            top_design += 'f'
-            print('f', end='')
+        if self.get_northdoor() == True:
+            top_design += 'nfn'
+            print('nfn', end='')
         else:
-            top_design += 'n'
-            print('n', end='')
+            top_design += 'nnn'
+            print('nnn', end='')
         return top_design
 
     def draw_bottom_gui(self):
         bottom_design = ''
-        if self.__southdoor == True:
-            bottom_design += 'f'
-            print('f', end='')
+        if self.get_southdoor() == True:
+            bottom_design += 'wfw'
+            print('wfw', end='')
         else:
-            bottom_design += 'w'
-            print('w', end='')
+            bottom_design += 'www'
+            print('www', end='')
         return bottom_design
 
     def draw_middle_gui(self, is_current=False):
         middle_design = ''
-        if self.__westdoor == True:
+        if self.get_westdoor() == True:
             middle_design += 'f'
             print('f', end='')
         else:
@@ -221,7 +227,7 @@ class Room:
             middle_design += 'M'
             # print("M", end="")
 
-        if self.__eastdoor == True:
+        if self.get_eastdoor() == True:
             middle_design += 'f'
             # print('f', end='')
         else:

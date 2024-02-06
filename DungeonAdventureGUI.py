@@ -38,7 +38,7 @@ At the conclusion of the game, display the entire Dungeon
 class DungeonAdventure(Maze):
 
     def __init__(self):
-        super().__init__(45, 60)
+        super().__init__(15, 20)
 
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
         self.running, self.playing = True, False
@@ -57,7 +57,7 @@ class DungeonAdventure(Maze):
 
         # Player location (need to somehow associate with the Adventurer Class)
 
-        player_image = pg.image.load(a.south_priestess)
+        player_image = pg.image.load(a.north_knight)
 
         player_rect = pg.Rect(25, 25, player_image.get_width(),
                               player_image.get_height())
@@ -162,19 +162,19 @@ class DungeonAdventure(Maze):
             player_movement = [0, 0]
             if self.moving_east:
                 player_movement[0] += 2
-                player_image = pg.image.load(a.east_priestess)
+                player_image = pg.image.load(a.north_knight)
 
             if self.moving_west:
                 player_movement[0] -= 2
-                player_image = pg.image.load(a.west_priestess)
+                player_image = pg.image.load(a.north_knight)
 
             if self.moving_north:
                 player_movement[1] -= 2
-                player_image = pg.image.load(a.north_priestess)
+                player_image = pg.image.load(a.north_knight)
 
             if self.moving_south:
                 player_movement[1] += 2
-                player_image = pg.image.load(a.south_priestess)
+                player_image = pg.image.load(a.north_knight)
 
             player_rect, collisions = move(player_rect, player_movement, tile_rects)
             display.blit(player_image, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
