@@ -17,12 +17,18 @@ class Maze:
     def __str__(self):
         pass
 
-    def create_room(self, row, column):
-        self.create_doors(row, column)
-        self.neighbor_doors(row, column)
-        return Room(row, column)
+    # def create_room(self, row, column):
+    #     self.create_doors(row, column)
+    #     self.neighbor_doors(row, column)
+    #     return Room(row, column)
 
     def get_neighbors(self, curr, visited):
+        '''
+
+        :param curr:
+        :param visited:
+        :return:
+        '''
         neighbors = []
         if curr.get_row() > 0 and not self.maze[curr.get_row() - 1][curr.get_column()] in visited:  # not north edge
             neighbors.append(self.maze[curr.get_row() - 1][curr.get_column()])
@@ -114,7 +120,7 @@ class Maze:
 
     def write_dungeon_output(self):
         '''
-        write dungeon_output file
+
         :return:
         '''
         maze_design = ''
@@ -136,9 +142,10 @@ class Maze:
     #     return self.dungeon_output_file
 
     def draw_maze(self):
-        """
-        Draws a maze map
-        """
+        '''
+
+        :return:
+        '''
         for i in range(self.rows):
             for j in range(self.columns):
                 self.maze[i][j].draw_top_gui()
@@ -151,6 +158,10 @@ class Maze:
             print()
 
     def generate_maze(self):
+        """
+
+        :return:
+        """
         self.maze = []
         for i in range(self.rows):
             self.maze.append([])
@@ -276,6 +287,10 @@ class Maze:
 
 
     def main(self):
+        '''
+
+        :return:
+        '''
         self.generate_maze()
         self.draw_maze()
         self.write_dungeon_output()

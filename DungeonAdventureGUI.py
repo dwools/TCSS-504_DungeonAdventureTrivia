@@ -44,6 +44,10 @@ class DungeonAdventure(Maze):
         self.running, self.playing = True, False
 
     def game_loop(self):
+        '''
+
+        :return:
+        '''
         pg.mixer.pre_init(44100, -16, 2, 512)  # Initializing the audio file to remove its delay
         pg.init()
         clock = pg.time.Clock()
@@ -75,6 +79,10 @@ class DungeonAdventure(Maze):
 
         # Map 20w x 15h
         def load_map():
+            '''
+
+            :return:
+            '''
             file = open('dungeon.txt', 'r')
             data = file.read()
             file.close()
@@ -87,6 +95,12 @@ class DungeonAdventure(Maze):
         dungeon_map = load_map()
 
         def collision_test(rect, tiles):
+            '''
+
+            :param rect:
+            :param tiles:
+            :return:
+            '''
 
             hit_list = []
             for tile in tiles:
@@ -95,6 +109,13 @@ class DungeonAdventure(Maze):
             return hit_list
 
         def move(rect, movement, tiles):
+            '''
+
+            :param rect:
+            :param movement:
+            :param tiles:
+            :return:
+            '''
 
             collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
             rect.x += movement[0]
