@@ -17,12 +17,18 @@ class Maze:
     def __str__(self):
         pass
 
-    def create_room(self, row, column):
-        self.create_doors(row, column)
-        self.neighbor_doors(row, column)
-        return Room(row, column)
+    # def create_room(self, row, column):
+    #     self.create_doors(row, column)
+    #     self.neighbor_doors(row, column)
+    #     return Room(row, column)
 
     def get_neighbors(self, curr, visited):
+        '''
+
+        :param curr:
+        :param visited:
+        :return:
+        '''
         neighbors = []
         if curr.get_row() > 0 and not self.maze[curr.get_row() - 1][curr.get_column()] in visited:  # not north edge
             neighbors.append(self.maze[curr.get_row() - 1][curr.get_column()])
@@ -114,7 +120,7 @@ class Maze:
 
     def write_dungeon_output(self):
         '''
-        write dungeon_output file
+
         :return:
         '''
         maze_design = ''
@@ -136,9 +142,10 @@ class Maze:
     #     return self.dungeon_output_file
 
     def draw_maze(self):
-        """
-        Draws a maze map
-        """
+        '''
+
+        :return:
+        '''
         for i in range(self.rows):
             for j in range(self.columns):
                 self.maze[i][j].draw_top_gui()
@@ -151,12 +158,17 @@ class Maze:
             print()
 
     def generate_maze(self):
+        """
+
+        :return:
+        """
         self.maze = []
         for i in range(self.rows):
             self.maze.append([])
             for j in range(self.columns):
                 self.maze[-1].append(Room(i, j))
         origin = self.maze[0][0]
+        target = self.maze[self.rows - 1][self.columns - 1]
         stack = []
         visited = []
         stack.append(origin)
@@ -165,32 +177,31 @@ class Maze:
             curr = stack[-1]
             neighbors = self.get_neighbors(curr, visited)
             if len(neighbors) != 0:
-                for i in range(len(neighbors) // 2 + 1):
-                    neighbor = random.choice(neighbors)
-                    # while neighbor in visited:
-                    #     if len(neighbors) == 0:
-                    #         stack.pop()
-                    #         continue
-                    #     else:
-                    #         neighbor = random.choice(neighbors)
-                    #         neighbors.remove(neighbor)
-                    stack.append(neighbor)
-                    visited.append(neighbor)
-                    # neighbors.remove(neighbor)
-                    self.create_doors(curr, neighbor)
-                # neighbor = random.choice(neighbors)
-                # # while neighbor in visited:
-                # #     if len(neighbors) == 0:
-                # #         stack.pop()
-                # #         continue
-                # #     else:
-                # #         neighbor = random.choice(neighbors)
-                # #         neighbors.remove(neighbor)
-                # stack.append(neighbor)
-                # visited.append(neighbor)
-                # # neighbors.remove(neighbor)
-                # self.create_doors(curr, neighbor)
+                neighbor = random.choice(neighbors)
+                stack.append(neighbor)
+                visited.append(neighbor)
+                self.create_doors(curr, neighbor)
             else: stack.pop()
+
+
+        origin = self.maze[0][0]
+        target = self.maze[self.rows - 1][self.columns - 1]
+        stack = []
+        visited = []
+        stack.append(origin)
+        visited.append(origin)
+        curr = origin
+        while curr != target:
+            curr = stack[-1]
+            neighbors = self.get_neighbors(curr, visited)
+            if len(neighbors) != 0:
+                neighbor = random.choice(neighbors)
+                stack.append(neighbor)
+                visited.append(neighbor)
+                self.create_doors(curr, neighbor)
+            else:
+                stack.pop()
+
         return self.maze
 
     def generate_and_traverse(self):
@@ -276,6 +287,10 @@ class Maze:
 
 
     def main(self):
+        '''
+
+        :return:
+        '''
         self.generate_maze()
         self.draw_maze()
         self.write_dungeon_output()
@@ -290,4 +305,4 @@ class Maze:
 
 if __name__ == "__main__":
     maze = Maze(45, 60) # (15hx20w) x 3
-    maze.main()
+    # maze.main()

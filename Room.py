@@ -85,17 +85,17 @@ class Room:
     def get_westdoor(self):
         return self.__westdoor
 
-    def set_northdoor(self, param):
-        self.__northdoor = param
+    def set_northdoor(self, bool):
+        self.__northdoor = bool
 
-    def set_southdoor(self, param):
-        self.__southdoor = param
+    def set_southdoor(self, bool):
+        self.__southdoor = bool
 
-    def set_eastdoor(self, param):
-        self.__eastdoor = param
+    def set_eastdoor(self, bool):
+        self.__eastdoor = bool
 
-    def set_westdoor(self, param):
-        self.__westdoor = param
+    def set_westdoor(self, bool):
+        self.__westdoor = bool
 
     def place_item(self, item):
         self.items.append(item)
