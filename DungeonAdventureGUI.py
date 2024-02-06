@@ -38,7 +38,7 @@ At the conclusion of the game, display the entire Dungeon
 class DungeonAdventure(Maze):
 
     def __init__(self):
-        super().__init__(15, 20)
+        super().__init__(9, 12)
 
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
         self.running, self.playing = True, False
