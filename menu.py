@@ -25,6 +25,10 @@ class Menu():
 
 class MainMenu(Menu):
     def __init__(self, game):
+        '''
+
+        :param game:
+        '''
         Menu.__init__(self, game)
         self.state = "Start Game"
         self.start_x, self.start_y = self.middle_width, self.middle_height
