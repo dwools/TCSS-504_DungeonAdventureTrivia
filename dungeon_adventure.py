@@ -1,5 +1,5 @@
 # Import packages
-import pygame as pg
+import pygame as pg  # import pygame
 from pygame.locals import *  # import the pygame modules
 import sys
 
@@ -8,8 +8,9 @@ import sys
 import config as c
 import assets as a
 import Room
+import initialize_databases
 from Dungeon import Maze
-from menu import MainMenu
+from menu import *
 
 """
 Contains the main logic for playing the game
@@ -44,12 +45,18 @@ class DungeonAdventure(Maze):
 
         # Controls
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
-        self.interacting, self.left_clicked = False, False
-        self.mouse_position = pg.event.get(pg.mouse.get_pos())
+        self.interacting, self.left_clicked, self.escaping = False, False, False
 
         # Game Status
         self.running, self.playing, self.paused = True, False, False
-        self.current_menu = MainMenu(self)
+
+        # Menu Status
+        self.main_menu = MainMenu(self)
+        self.options = OptionsMenu(self)
+        self.how_to_play = HowToPlayMenu(self)  # need 2 build
+        self.load_games = LoadSaveGamesMenu(self)  # need 2 build
+        self.credits = CreditsMenu(self)
+        self.current_menu = self.main_menu  # Default menu is the main menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
@@ -75,7 +82,7 @@ class DungeonAdventure(Maze):
 
         player_image = pg.image.load(a.south_knight)
 
-        player_rect = pg.Rect(15, 15, player_image.get_width(),
+        player_rect = pg.Rect(16, 16, player_image.get_width(),
                               player_image.get_height())
 
         # Textures
@@ -136,13 +143,10 @@ class DungeonAdventure(Maze):
                     collision_types['top'] = True
             return rect, collision_types
 
-        while self.running:  # Game Loop
+        while self.playing:  # Game Loop
 
             # Check for player input
             self.check_events()
-
-            # get current Mouse position
-            self.mouse_position = pg.mouse.get_pos()
 
             # Reset the screen Background
             self.display.fill(self.PURPLE)
@@ -241,6 +245,9 @@ class DungeonAdventure(Maze):
                     self.interacting = True
                     print("option selected")
 
+                if event.key == K_ESCAPE or event.key == K_BACKSPACE:
+                    self.escaping = True
+
             if event.type == KEYUP:
 
                 if event.key == K_w or K_UP:
@@ -258,14 +265,18 @@ class DungeonAdventure(Maze):
                 if event.key == K_e or event.key == K_RETURN:
                     self.interacting = False
 
+                if event.key == K_ESCAPE or event.key == K_BACKSPACE:
+                    self.escaping = False
+
     def draw_text(self, text, size, x, y, font_color):
         font = pg.font.Font(self.font, size)
         text_surface = font.render(text, True, font_color)
         text_rect = text_surface.get_rect()
-        text_rect.center = (x/2, y/2)
+        text_rect.center = (x / 2, y / 2)
         self.display.blit(text_surface, text_rect)
 
 
 if __name__ == "__main__":
+    databases = initialize_databases.main()
     main = DungeonAdventure()
     main.game_loop()
