@@ -214,6 +214,9 @@ class DungeonAdventure(Maze):
                 self.running, self.playing = False, False
                 self.current_menu.run_display = False
 
+            if event.type == MOUSEBUTTONDOWN:
+                self.left_clicked = True
+
             if event.type == KEYDOWN:
 
                 if event.key == K_w or event.key == K_UP:

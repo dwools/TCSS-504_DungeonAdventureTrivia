@@ -160,13 +160,13 @@ class LoadSaveGamesMenu(Menu):  # WIP
     def __init__(self, game):
         Menu.__init__(self, game)
 
-        self.saved_games = [1, 2, 3, 4]  # Populate this from somewhere somehow?
-
-        self.save_button_positions = []
+        self.saved_games = [1,2,3,4]  # Populate this from somewhere somehow?
 
         if len(self.saved_games) != 0:  # if there are one or more saves
             self.state = "Save One"
             self.save_x, self.save_y = self.middle_width, self.middle_height
+            self.save_rect = None
+            self.saved_rects = []
 
         else:
             self.state = "No Saved Games"
@@ -187,26 +187,48 @@ class LoadSaveGamesMenu(Menu):  # WIP
 
             self.game.draw_text(f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200, 'forestgreen')
 
-            self.game.draw_text(f'Press enter on a save to start that save', 10, self.middle_width,
+            self.game.draw_text(f'Left Click on a save to start that save', 10, self.middle_width,
                                 self.middle_height - 150, 'yellow')
 
             if len(self.saved_games) != 0:
-                self.save_y = self.middle_height - 60  # adjusting where things are output on the screen
+                self.save_y = self.middle_height - 60
+
+                self.save_rect = None
+                self.saved_rects = []
                 for save in self.saved_games:
+                    self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 25, 200, 50)
+
                     self.game.draw_text(f'Save {self.saved_games[save - 1]}', 20, self.save_x, self.save_y,
                                         self.game.font_color)
-                    # print(f'{self.game.text_rect}')
+
+                    self.saved_rects.append(self.save_rect)
                     self.save_y += 70
+
+                    index = 0
+                    for saved_rect in self.saved_rects:
+
+                        self.game.font_color = c.WHITE
+
+                        if saved_rect.collidepoint(self.mouse_position):
+
+                            self.game.font_color = 'teal'
+
+                            if self.game.left_clicked:
+                                self.game.playing = True # Here is where we enter the saved game
+                                self.run_display = False # end the current menu screen
+
+                            self.game.left_clicked = False
+
+                        else:
+                            self.game.font_color = c.WHITE
+                        index += 1
+
 
             else:
                 self.game.draw_text(f'No Saves Found', 15, self.middle_width, self.middle_height, self.game.font_color)
 
-            # if self.game.text_rect.collidepoint(self.mouse_position):
-            #     self.game.draw_text(f'collision', 10, self.middle_width - 350,
-            #                         self.middle_height - 350, 'yellow')
-
             self.game.draw_text('Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 250,
-                                self.game.font_color)
+                                c.WHITE)
 
             self.blit_screen()
 
