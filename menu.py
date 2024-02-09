@@ -160,7 +160,7 @@ class LoadSaveGamesMenu(Menu):  # WIP
     def __init__(self, game):
         Menu.__init__(self, game)
 
-        self.saved_games = [1,2,3,4]  # Populate this from somewhere somehow?
+        self.saved_games = [1, 2]  # Populate this from somewhere somehow?
 
         if len(self.saved_games) != 0:  # if there are one or more saves
             self.state = "Save One"
@@ -193,8 +193,6 @@ class LoadSaveGamesMenu(Menu):  # WIP
             if len(self.saved_games) != 0:
                 self.save_y = self.middle_height - 60
 
-                self.save_rect = None
-                self.saved_rects = []
                 for save in self.saved_games:
                     self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 25, 200, 50)
 
@@ -204,24 +202,21 @@ class LoadSaveGamesMenu(Menu):  # WIP
                     self.saved_rects.append(self.save_rect)
                     self.save_y += 70
 
-                    index = 0
-                    for saved_rect in self.saved_rects:
+                    self.game.font_color = c.WHITE
 
+                    if self.save_rect.collidepoint(self.mouse_position):
+
+                        self.game.font_color = 'teal'  # changes the color of the text (applying to the next, but we want it to apply to current
+
+                        if self.game.left_clicked:
+                            self.game.playing = True  # Here is where we enter the saved game
+                            self.run_display = False  # end the current menu screen
+
+                        self.game.left_clicked = False
+
+                    else:
                         self.game.font_color = c.WHITE
 
-                        if saved_rect.collidepoint(self.mouse_position):
-
-                            self.game.font_color = 'teal'
-
-                            if self.game.left_clicked:
-                                self.game.playing = True # Here is where we enter the saved game
-                                self.run_display = False # end the current menu screen
-
-                            self.game.left_clicked = False
-
-                        else:
-                            self.game.font_color = c.WHITE
-                        index += 1
 
 
             else:

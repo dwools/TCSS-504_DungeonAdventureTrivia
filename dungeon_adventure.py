@@ -57,6 +57,7 @@ class DungeonAdventure(Maze):
         self.load_games = LoadSaveGamesMenu(self)  # need 2 build
         self.credits = CreditsMenu(self)
         self.current_menu = self.main_menu  # Default menu is the main menu
+        # self.current_menu = self.load_games  # Test the load menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
