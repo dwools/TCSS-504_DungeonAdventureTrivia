@@ -194,15 +194,7 @@ class LoadSaveGamesMenu(Menu):  # WIP
                 self.save_y = self.middle_height - 60
 
                 for save in self.saved_games:
-                    self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 25, 200, 50)
-
-                    self.game.draw_text(f'Save {self.saved_games[save - 1]}', 20, self.save_x, self.save_y,
-                                        self.game.font_color)
-
-                    self.saved_rects.append(self.save_rect)
-                    self.save_y += 70
-
-                    self.game.font_color = c.WHITE
+                    self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 50, 200, 50)
 
                     if self.save_rect.collidepoint(self.mouse_position):
 
@@ -217,7 +209,11 @@ class LoadSaveGamesMenu(Menu):  # WIP
                     else:
                         self.game.font_color = c.WHITE
 
+                    self.game.draw_text(f'Save {self.saved_games[save - 1]}', 20, self.save_x, self.save_y,
+                                        self.game.font_color)
 
+                    self.saved_rects.append(self.save_rect)
+                    self.save_y += 70
 
             else:
                 self.game.draw_text(f'No Saves Found', 15, self.middle_width, self.middle_height, self.game.font_color)
