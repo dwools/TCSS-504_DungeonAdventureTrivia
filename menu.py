@@ -1,5 +1,6 @@
 import pygame as pg
 import config as c
+import sys
 
 
 class Menu():
@@ -45,6 +46,8 @@ class MainMenu(Menu):
             self.check_input()
 
             self.game.display.fill(c.PURPLE)
+            self.game.font_color = c.WHITE
+
             self.game.draw_text('Dungeon Adventure', 20, self.middle_width, self.middle_height - 250, 'forestgreen')
             self.game.draw_text('Start Game', 20, self.start_x, self.start_y, self.game.font_color)
             self.game.draw_text('How To Play', 20, self.how_to_play_x, self.how_to_play_y, self.game.font_color)
@@ -182,9 +185,6 @@ class LoadSaveGamesMenu(Menu):  # WIP
 
             self.game.display.fill(c.PURPLE)
 
-            self.game.draw_text(f'{self.mouse_position}', 15, self.middle_width - 500, self.middle_height - 200,
-                                'yellow')
-
             self.game.draw_text(f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200, 'forestgreen')
 
             self.game.draw_text(f'Left Click on a save to start that save', 10, self.middle_width,
@@ -261,6 +261,11 @@ class OptionsMenu(Menu):
 
     def check_input(self):
 
+        if self.game.paused:
+            if self.game.escaping:
+                self.game.current_menu = self.game.pause_menu
+                self.run_display = False
+
         if self.game.escaping:
             self.game.current_menu = self.game.main_menu
             self.run_display = False
@@ -285,7 +290,7 @@ class CreditsMenu(Menu):
 
             self.game.check_events()
 
-            if self.game.escaping or self.game.interacting:
+            if self.game.escaping:
                 self.game.current_menu = self.game.main_menu
                 self.run_display = False
 
@@ -301,3 +306,115 @@ class CreditsMenu(Menu):
             self.blit_screen()
 
             clock.tick(12)
+
+
+class PauseMenu(Menu):
+    # Needs to be able to resume game time
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.mouse_position = pg.mouse.get_pos()
+
+        self.state = "Save The Game"
+
+        self.save_game_x, self.save_game_y = self.middle_width, self.middle_height - 50
+
+        self.main_x, self.main_y = self.middle_width, self.middle_height + 50
+
+        self.options_x, self.options_y = self.middle_width, self.middle_height + 150
+
+        self.exit_game_x, self.exit_game_y = self.middle_width, self.middle_height + 250
+
+        # create cursor and set position to save_game
+        self.cursor_rect.midtop = (self.save_game_x + self.cursor_offset, self.save_game_y)
+
+    def display_menu(self):
+
+        self.game.paused = True
+        self.run_display = True
+
+        while self.run_display:
+
+            clock = pg.time.Clock()
+
+            self.game.check_events()
+            self.check_input()
+
+            if self.game.escaping:
+                self.game.paused = False
+                self.run_display = False
+            self.game.display.fill(c.PURPLE)  # will fill in background
+
+            self.game.draw_text('Pause Menu', 30, self.middle_width, self.middle_height - 200, 'forestgreen')
+
+            self.game.draw_text('Save The Game', 15, self.save_game_x, self.save_game_y, self.game.font_color)
+            self.game.draw_text('Main Menu', 15, self.main_x, self.main_y, self.game.font_color)
+            self.game.draw_text('Options', 15, self.options_x, self.options_y, self.game.font_color)
+            self.game.draw_text('Exit Game', 20, self.exit_game_x, self.exit_game_y, 'red')
+
+            self.game.draw_text('Press ESCAPE to resume your game', 10, self.middle_width, self.middle_height + 350,
+                                'yellow')
+
+            self.draw_cursor()
+            self.blit_screen()
+
+            clock.tick(12)
+
+    def move_cursor(self):
+
+        if self.game.moving_south or self.game.moving_east:
+            if self.state == 'Save The Game':
+                self.cursor_rect.midtop = (self.main_x + self.cursor_offset, self.main_y)
+                self.state = 'Main Menu'
+
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.options_x + self.cursor_offset, self.options_y)
+                self.state = 'Options'
+
+            elif self.state == 'Options':
+                self.cursor_rect.midtop = (self.exit_game_x + self.cursor_offset, self.exit_game_y)
+                self.state = 'Exit Game'
+
+            elif self.state == 'Exit Game':
+                self.cursor_rect.midtop = (self.save_game_x + self.cursor_offset, self.save_game_y)
+                self.state = 'Save The Game'
+
+        elif self.game.moving_north or self.game.moving_west:
+            if self.state == 'Save The Game':
+                self.cursor_rect.midtop = (self.exit_game_x + self.cursor_offset, self.exit_game_y)
+                self.state = 'Exit Game'
+
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.save_game_x + self.cursor_offset, self.save_game_y)
+                self.state = 'Save The Game'
+
+            elif self.state == 'Options':
+                self.cursor_rect.midtop = (self.main_x + self.cursor_offset, self.main_y)
+                self.state = 'Main Menu'
+
+            elif self.state == 'Exit Game':
+                self.cursor_rect.midtop = (self.options_x + self.cursor_offset, self.options_y)
+                self.state = 'Options'
+
+    def check_input(self):
+
+        self.move_cursor()
+
+        if self.game.interacting:
+
+            if self.state == 'Save The Game':
+                print("SAVING GAME!")
+                self.game.interacting = False
+
+            if self.state == 'Main Menu':
+                self.game.current_menu = MainMenu(self)
+                print("Going to main menu")
+                self.game.interacting = False
+
+            if self.state == 'Options':
+                self.game.current_menu = OptionsMenu(self)
+                print("Going to Options Menu")
+                self.game.interacting = False
+
+            if self.state == 'Exit Game':
+                sys.quit()
+

@@ -15,25 +15,6 @@ from menu import *
 """
 Contains the main logic for playing the game
 
-Introduces the game describing what the game is about and how to play
-
-Creates a Dungeon Object and an Adventurer Object
-
-Obtains the name of the adventurer from the user
-
-
-Does the following repetitively:
-
-Prints the current room (this is based on the Adventurer's current location)
-
-Determines the Adventurer's options (Move, Use a Potion)
-
-Continues this process until the Adventurer wins or dies
-
-NOTE: Include a hidden menu option for testing that prints out the entire Dungeon -- specify what the menu option
-is in your documentation for the DungeonAdventure class
-
-At the conclusion of the game, display the entire Dungeon
 """
 
 
@@ -56,8 +37,8 @@ class DungeonAdventure(Maze):
         self.how_to_play = HowToPlayMenu(self)  # need 2 build
         self.load_games = LoadSaveGamesMenu(self)  # need 2 build
         self.credits = CreditsMenu(self)
+        self.pause_menu = PauseMenu(self)
         self.current_menu = self.main_menu  # Default menu is the main menu
-        # self.current_menu = self.load_games  # Test the load menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
@@ -65,6 +46,12 @@ class DungeonAdventure(Maze):
         self.display = pg.Surface((640, 480))  # (640w, 480h)
         self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
 
+        self.player_movement = [0, 0]
+        self.scroll = [0, 0]
+
+        self.player_image = pg.image.load(a.south_knight)
+        self.player_rect = pg.Rect(16, 16, self.player_image.get_width(),
+                                   self.player_image.get_height())
         self.scroll = [0, 0]
 
         # Config
@@ -81,10 +68,10 @@ class DungeonAdventure(Maze):
 
         # Player location (need to somehow associate with the Adventurer Class)
 
-        player_image = pg.image.load(a.south_knight)
+        # player_image = pg.image.load(a.south_knight)
 
-        player_rect = pg.Rect(16, 16, player_image.get_width(),
-                              player_image.get_height())
+        # self.player_rect = pg.Rect(16, 16, player_image.get_width(),
+        #                       player_image.get_height())
 
         # Textures
         bottom_wall_image = pg.image.load(a.bottom_wall)
@@ -144,7 +131,7 @@ class DungeonAdventure(Maze):
                     collision_types['top'] = True
             return rect, collision_types
 
-        while self.playing:  # Game Loop
+        while self.playing and not self.paused:  # Game Loop
 
             # Check for player input
             self.check_events()
@@ -153,8 +140,8 @@ class DungeonAdventure(Maze):
             self.display.fill(self.PURPLE)
 
             # Basically the camera tracking/ following the player sprite
-            self.scroll[0] += (player_rect.x - self.scroll[0] - 160)
-            self.scroll[1] += (player_rect.y - self.scroll[1] - 120)
+            self.scroll[0] += (self.player_rect.x - self.scroll[0] - 160)
+            self.scroll[1] += (self.player_rect.y - self.scroll[1] - 120)
             self.scroll[0] += 1
             self.scroll[1] += 1
 
@@ -183,25 +170,25 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
-            player_movement = [0, 0]
+            self.player_movement = [0, 0]
             if self.moving_east:
-                player_movement[0] += 2
-                player_image = pg.image.load(a.east_knight)
+                self.player_movement[0] += 2
+                self.player_image = pg.image.load(a.east_knight)
 
             if self.moving_west:
-                player_movement[0] -= 2
-                player_image = pg.image.load(a.west_knight)
+                self.player_movement[0] -= 2
+                self.player_image = pg.image.load(a.west_knight)
 
             if self.moving_north:
-                player_movement[1] -= 2
-                player_image = pg.image.load(a.north_knight)
+                self.player_movement[1] -= 2
+                self.player_image = pg.image.load(a.north_knight)
 
             if self.moving_south:
-                player_movement[1] += 2
-                player_image = pg.image.load(a.south_knight)
+                self.player_movement[1] += 2
+                self.player_image = pg.image.load(a.south_knight)
 
-            player_rect, collisions = move(player_rect, player_movement, tile_rects)
-            self.display.blit(player_image, (player_rect.x - self.scroll[0], player_rect.y - self.scroll[1]))
+            self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
+            self.display.blit(self.player_image, (self.player_rect.x - self.scroll[0], self.player_rect.y - self.scroll[1]))
 
             window_surface = pg.transform.scale(self.display, self.WINDOW_SIZE)
             self.screen.blit(window_surface, (0, 0))
@@ -212,7 +199,7 @@ class DungeonAdventure(Maze):
         for event in pg.event.get():  # Event Loop
 
             if event.type == QUIT:  # Check for window quit
-                self.running, self.playing = False, False
+                self.running, self.playing, self.paused = False, False, False
                 self.current_menu.run_display = False
 
             if event.type == MOUSEBUTTONDOWN:
@@ -243,7 +230,7 @@ class DungeonAdventure(Maze):
                 if event.key == K_p:
                     self.paused = True
                     print("The game is paused")
-                    # call the pause menu UI here
+                    self.current_menu = self.pause_menu
 
                 if event.key == K_RETURN:
                     self.interacting = True
