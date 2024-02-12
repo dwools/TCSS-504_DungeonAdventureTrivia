@@ -1,9 +1,11 @@
 import pygame as pg
+import pygame.display
+
 import config as c
-import sys
+import assets as a
 
 
-class Menu():
+class Menu:
 
     def __init__(self, game):
         self.game = game
@@ -19,15 +21,20 @@ class Menu():
         self.mouse_position = pg.mouse.get_pos()
 
     def draw_cursor(self):
+        # Draw the little star next to the buttons
         self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y, 'red')
 
     def blit_screen(self):
+        # draw to / update the GUI
         window_surface = pg.transform.scale(self.game.display, c.WINDOW_SIZE)
         self.screen.blit(window_surface, (0, 0))
         pg.display.update()  # Update the Display
 
 
 class MainMenu(Menu):
+    """ Main Menu Class.
+        Displays the main menu and leads to the other menus"""
+
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = "Start Game"
@@ -59,6 +66,10 @@ class MainMenu(Menu):
             clock.tick(12)
 
     def move_cursor(self):
+        """ Adjust cursor position to notify user of their current choice / button.
+            Does a full loop through the menu allowing north and south traversal.
+        """
+
         if self.game.moving_south:
             if self.state == 'Start Game':
                 self.cursor_rect.midtop = (self.how_to_play_x + self.cursor_offset, self.how_to_play_y)
@@ -102,13 +113,16 @@ class MainMenu(Menu):
                 self.state = 'Options'
 
     def check_input(self):
+        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
 
-        self.move_cursor()
+        self.move_cursor()  # Read cursor position
 
-        if self.game.interacting:
+        if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
 
             if self.state == 'Start Game':
-                self.game.playing = True
+                self.game.current_menu = self.game.character_select
+                # self.game.playing = True
 
             elif self.state == 'How To Play':
                 self.game.current_menu = self.game.how_to_play
@@ -121,6 +135,143 @@ class MainMenu(Menu):
 
             elif self.state == 'Credits':
                 self.game.current_menu = self.game.credits
+
+            self.run_display = False
+
+
+class CharacterSelectMenu(Menu):
+
+    def __init__(self, game):
+        Menu.__init__(self, game)
+
+        # The Knight
+        self.state = "Knight"  # Base state
+        self.select_knight_x, self.select_knight_y = self.middle_width + 50, self.middle_height + 300
+        self.knight_image = pg.image.load(a.south_knight)
+
+        # The Priestess
+        self.select_priestess_x, self.select_priestess_y = self.middle_width - 350, self.middle_height + 300
+        self.priestess_image = pg.image.load(a.south_priestess)
+
+        # The Rogue
+        self.select_rogue_x, self.select_rogue_y = self.middle_width + 400, self.middle_height + 300
+        self.rogue_image = pg.image.load(a.south_priestess)  # Change to Roque image
+
+        # Placing the cursor at the Base State
+        self.cursor_rect.midtop = (self.select_knight_x - 100, self.select_knight_y)
+
+    def display_menu(self):
+        self.run_display = True
+        clock = pg.time.Clock()
+
+        while self.run_display:
+            self.game.interacting = False
+            self.game.display.fill(c.PURPLE)
+
+            self.game.check_events()
+            self.check_input()
+
+            # Title
+            self.game.draw_text('Character Select', 30, self.middle_width, self.middle_height - 300, 'forestgreen')
+
+            # Line Separators
+            pg.draw.rect(self.screen, 'gray', pg.Rect(self.select_knight_x + 150, self.select_knight_y - 550, 10, 550))
+            pg.draw.rect(self.screen, 'gray', pg.Rect(self.select_knight_x - 225, self.select_knight_y - 550, 10, 550))
+
+            # Knight
+            self.game.draw_text('Knight', 15, self.select_knight_x, self.select_knight_y, self.game.font_color)
+            self.knight_image = pg.transform.scale(self.knight_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
+            self.screen.blit(self.knight_image, (self.select_knight_x - 100, self.select_knight_y - 500))
+
+            # Abilities
+            self.game.draw_text('Crushing Blow', 12, self.select_knight_x - 25, self.select_knight_y - 200,
+                                'forestgreen')
+            self.game.draw_text('40 percent chance', 10, self.select_knight_x - 25, self.select_knight_y - 125,
+                                'yellow')
+            self.game.draw_text('to do', 10, self.select_knight_x - 25, self.select_knight_y - 100, 'yellow')
+            self.game.draw_text('high damage', 10, self.select_knight_x - 25, self.select_knight_y - 75, 'yellow')
+
+            # Priestess
+            self.game.draw_text('Priestess', 15, self.select_priestess_x, self.select_priestess_y, self.game.font_color)
+            self.priestess_image = pg.transform.scale(self.priestess_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
+            self.screen.blit(self.priestess_image, (self.select_priestess_x - 75, self.select_priestess_y - 500))
+
+            # Abilities
+            self.game.draw_text('Divine Blessing', 12, self.select_priestess_x, self.select_priestess_y - 200,
+                                'forestgreen')
+            self.game.draw_text('Heal a', 10, self.select_priestess_x, self.select_priestess_y - 125, 'yellow')
+            self.game.draw_text('random amount', 10, self.select_priestess_x, self.select_priestess_y - 100, 'yellow')
+
+            # Rogue
+            self.game.draw_text('Rogue', 15, self.select_rogue_x, self.select_rogue_y, self.game.font_color)
+            self.rogue_image = pg.transform.scale(self.rogue_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
+            self.screen.blit(self.rogue_image, (self.select_rogue_x - 75, self.select_rogue_y - 500))
+
+            # Abilities
+            self.game.draw_text('Surprise Attack', 12, self.select_rogue_x, self.select_rogue_y - 200, 'forestgreen')
+            self.game.draw_text('40 percent chance', 10, self.select_rogue_x, self.select_rogue_y - 125, 'yellow')
+            self.game.draw_text('to do a', 10, self.select_rogue_x, self.select_rogue_y - 100, 'yellow')
+            self.game.draw_text('second attack', 10, self.select_rogue_x, self.select_rogue_y - 75, 'yellow')
+
+            # Return to Main Menu prompt
+            self.game.draw_text('Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 400,
+                                'yellow')
+
+            self.draw_cursor()
+            pygame.display.update()
+
+            window_surface = pg.transform.scale(self.game.display, c.WINDOW_SIZE)
+            self.screen.blit(window_surface, (0, 0))
+            clock.tick(12)
+
+    def move_cursor(self):
+
+        if self.game.moving_east:
+            if self.state == 'Knight':
+                self.cursor_rect.midtop = (self.select_rogue_x - 100, self.select_rogue_y)
+                self.state = 'Rogue'
+
+            elif self.state == 'Rogue':
+                self.cursor_rect.midtop = (self.select_priestess_x - 150, self.select_priestess_y)
+                self.state = 'Priestess'
+
+            elif self.state == 'Priestess':
+                self.cursor_rect.midtop = (self.select_knight_x - 100, self.select_knight_y)
+                self.state = 'Knight'
+
+        elif self.game.moving_west:
+            if self.state == 'Knight':
+                self.cursor_rect.midtop = (self.select_priestess_x - 150, self.select_priestess_y)
+                self.state = 'Priestess'
+
+            elif self.state == 'Priestess':
+                self.cursor_rect.midtop = (self.select_rogue_x - 100, self.select_rogue_y)
+                self.state = 'Rogue'
+
+            elif self.state == 'Rogue':
+                self.cursor_rect.midtop = (self.select_knight_x - 100, self.select_knight_y)
+                self.state = 'Knight'
+
+    def check_input(self):
+        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
+
+        self.move_cursor()  # Read cursor position
+
+        if self.game.escaping:
+            self.game.current_menu = self.game.main_menu
+            self.run_display = False
+
+        if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
+
+            if self.state == 'Knight':
+                self.game.playing = True
+
+            elif self.state == 'Priestess':
+                self.game.playing = True
+
+            elif self.state == 'Rogue':
+                self.game.playing = True
 
             self.run_display = False
 
@@ -333,15 +484,11 @@ class PauseMenu(Menu):
         self.run_display = True
 
         while self.run_display:
-
             clock = pg.time.Clock()
 
             self.game.check_events()
             self.check_input()
 
-            if self.game.escaping:
-                self.game.paused = False
-                self.run_display = False
             self.game.display.fill(c.PURPLE)  # will fill in background
 
             self.game.draw_text('Pause Menu', 30, self.middle_width, self.middle_height - 200, 'forestgreen')
@@ -407,6 +554,8 @@ class PauseMenu(Menu):
 
             if self.state == 'Main Menu':
                 self.game.current_menu = MainMenu(self)
+                self.run_display = False
+                # self.game.paused = False
                 print("Going to main menu")
                 self.game.interacting = False
 
@@ -416,5 +565,8 @@ class PauseMenu(Menu):
                 self.game.interacting = False
 
             if self.state == 'Exit Game':
-                sys.quit()
+                pg.quit()
 
+        if self.game.escaping:
+            self.game.paused = False
+            self.run_display = False

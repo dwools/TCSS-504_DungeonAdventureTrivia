@@ -19,6 +19,11 @@ Contains the main logic for playing the game
 
 
 class DungeonAdventure(Maze):
+    """
+    Class Dungeon Adventure:
+    Holds main gameplay loop and generates the GUI.
+    Reads and adapts to player input.
+    """
 
     def __init__(self):
         pg.init()
@@ -33,6 +38,7 @@ class DungeonAdventure(Maze):
 
         # Menu Status
         self.main_menu = MainMenu(self)
+        self.character_select = CharacterSelectMenu(self)
         self.options = OptionsMenu(self)
         self.how_to_play = HowToPlayMenu(self)  # need 2 build
         self.load_games = LoadSaveGamesMenu(self)  # need 2 build
@@ -46,6 +52,7 @@ class DungeonAdventure(Maze):
         self.display = pg.Surface((640, 480))  # (640w, 480h)
         self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
 
+        # Player sprite setup, camera scrolling setup
         self.player_movement = [0, 0]
         self.scroll = [0, 0]
 
@@ -62,18 +69,16 @@ class DungeonAdventure(Maze):
         self.WHITE = c.WHITE
 
     def game_loop(self):
+        """
+        Main Gameplay Loop, runs the Main Game GUI and updates screen based on user input.
+        :return:
+        """
+
         pg.mixer.pre_init(44100, -16, 2, 512)  # Initializing the audio file to remove its delay
         clock = pg.time.Clock()
         pg.display.set_caption(f"Dungeon Adventure")
 
-        # Player location (need to somehow associate with the Adventurer Class)
-
-        # player_image = pg.image.load(a.south_knight)
-
-        # self.player_rect = pg.Rect(16, 16, player_image.get_width(),
-        #                       player_image.get_height())
-
-        # Textures
+        # Loading Map/ Tile Textures
         bottom_wall_image = pg.image.load(a.bottom_wall)
         upper_wall_image = pg.image.load(a.upper_wall)
         floor_image = pg.image.load(a.floor)
@@ -86,6 +91,9 @@ class DungeonAdventure(Maze):
 
         # Map 20w x 15h
         def load_map():
+            """ Reading-in the tilemap from the dungeon.txt map file.
+            """
+
             file = open('dungeon.txt', 'r')
             data = file.read()
             file.close()
@@ -98,6 +106,7 @@ class DungeonAdventure(Maze):
         dungeon_map = load_map()
 
         def collision_test(rect, tiles):
+            """ Testing whether the player collides with n tile. """
 
             hit_list = []
             for tile in tiles:
@@ -106,6 +115,7 @@ class DungeonAdventure(Maze):
             return hit_list
 
         def move(rect, movement, tiles):
+            """ Adjusts player position based on collision with n tile. """
 
             collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
             rect.x += movement[0]
@@ -132,6 +142,7 @@ class DungeonAdventure(Maze):
             return rect, collision_types
 
         while self.playing and not self.paused:  # Game Loop
+            """ Dungeon Adventure Gui runs while: game is not paused, game is 'playing'. """
 
             # Check for player input
             self.check_events()
@@ -145,8 +156,12 @@ class DungeonAdventure(Maze):
             self.scroll[0] += 1
             self.scroll[1] += 1
 
+            ###
+
             # List containing tiles where collisions occur
             tile_rects = []
+
+            # Assign image sprites to the dungeon map txt values. Depending on the sprite add it to the collisions list.
 
             y = 0
             for row in dungeon_map:
@@ -170,6 +185,9 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
+            # set players position to 0,0
+            # update player position based on user input
+
             self.player_movement = [0, 0]
             if self.moving_east:
                 self.player_movement[0] += 2
@@ -187,8 +205,12 @@ class DungeonAdventure(Maze):
                 self.player_movement[1] += 2
                 self.player_image = pg.image.load(a.south_knight)
 
+            # adjust player position based on collision with n tiles
+
             self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
             self.display.blit(self.player_image, (self.player_rect.x - self.scroll[0], self.player_rect.y - self.scroll[1]))
+
+            # Draw the Gui to the screen, update it
 
             window_surface = pg.transform.scale(self.display, self.WINDOW_SIZE)
             self.screen.blit(window_surface, (0, 0))
@@ -196,6 +218,8 @@ class DungeonAdventure(Maze):
             clock.tick(60)  # set the FPS
 
     def check_events(self):
+        """ Receive user input from Mouse x Keyboard. """
+
         for event in pg.event.get():  # Event Loop
 
             if event.type == QUIT:  # Check for window quit
@@ -260,6 +284,8 @@ class DungeonAdventure(Maze):
                     self.escaping = False
 
     def draw_text(self, text, size, x, y, font_color):
+        """ Simple helper-function used to write text to the GUI. """
+
         font = pg.font.Font(self.font, size)
         text_surface = font.render(text, True, font_color)
         text_rect = text_surface.get_rect()
