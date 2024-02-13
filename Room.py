@@ -11,14 +11,14 @@ class Room:
         self.__eastdoor = False
         self.__westdoor = False
         self.__southdoor = False
-        # self.entrance = False
+        self.__entrance = False
         # self.exit = False
         # self.blocked = False
-        self.entered = False
+        self.__entered = False
         # self.empty_room = False
-        # self.multiple_items = False
-        # self.pit = False
-        # self.healing = False
+        self.__multiple_items = False
+        self.__pit = False
+        self.__healing = False
         # self.vision = False
         # self.pillars = False
         # self.pillar_type = None
@@ -106,9 +106,11 @@ class Room:
     def get_entered(self):
         return self.__entered
 
-    def set_entered(self):
-        self.entered = True
+    def set_entered(self, bool):
+        self.__entered = bool
 
+    def set_entrance(self, bool):
+        self.__entrance = bool
     # def draw_top(self):
     #     if self.__northdoor == True:
     #         print('* _ *', end='')
