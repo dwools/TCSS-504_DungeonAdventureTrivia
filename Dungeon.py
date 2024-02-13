@@ -285,6 +285,39 @@ class Maze:
     #
     #     return found_exit, room_count
 
+    def place_items(self, pit_prob=10, health_prob=10):
+        """
+        Lays down items in the maze
+        :param pit_prob:
+        :param health_prob:
+        :return:
+        """
+        entrance = (0, 0)
+        singular_items = ["i", "o", "A", "E", "I", "P"]
+        while len(singular_items) != 0:
+            i = random.randint(0, self.rows - 1)
+            j = random.randint(0, self.columns - 1)
+            room = self.maze[i][j]
+            if len(room.items) == 0:
+                item = singular_items.pop(0)
+                room.place_item(item)
+                if item == 'i':
+                    room.set_entrance(True)
+                    entrance = (i, j)
+
+            for i in range(self.rows):
+                for j in range(self.columns):
+                    room = self.maze[i][j]
+                    if len(room.items) == 0 and room.items[0] in singular_items:
+                        pass
+                    else:
+                        if random.randint(0, 100) <= pit_prob:
+                            room.place_item("X")
+                        if random.randint(0, 100) <= health_prob:
+                            room.place_item("H")
+
+        return entrance
+
 
     def main(self):
         '''

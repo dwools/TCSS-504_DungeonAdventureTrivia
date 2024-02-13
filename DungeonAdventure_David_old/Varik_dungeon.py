@@ -190,5 +190,5 @@ class Maze:
 m1 = Maze(15, 20)
 m1.generate()
 # m1.print()
-# m1.place_items()
+m1.place_items()
 m1.draw((0, 0))
