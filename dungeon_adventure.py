@@ -41,11 +41,11 @@ class DungeonAdventure(Maze):
         self.character_select = CharacterSelectMenu(self)
         self.options = OptionsMenu(self)
         self.how_to_play = HowToPlayMenu(self)  # need 2 build
-        self.load_games = LoadSaveGamesMenu(self)  # need 2 build
+        self.load_games = LoadSaveGamesMenu(self)
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
-        # self.current_menu = self.main_menu  # Default menu is the main menu
-        self.current_menu = self.load_games
+        self.current_menu = self.main_menu  # Default menu is the main menu
+
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
         self.WINDOW_SIZE = c.WINDOW_SIZE

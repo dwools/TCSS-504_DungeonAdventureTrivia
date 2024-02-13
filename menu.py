@@ -417,7 +417,7 @@ class OptionsMenu(Menu):
                 self.game.current_menu = self.game.pause_menu
                 self.run_display = False
 
-        if self.game.escaping:
+        if self.game.escaping and not self.game.paused:
             self.game.current_menu = self.game.main_menu
             self.run_display = False
 
