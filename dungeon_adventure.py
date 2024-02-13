@@ -54,12 +54,12 @@ class DungeonAdventure(Maze):
 
         # Player sprite setup, camera scrolling setup
         self.player_movement = [0, 0]
-        self.scroll = [0, 0]
+        self.camera_scroll = [0, 0]
 
         self.player_image = pg.image.load(a.south_knight)
         self.player_rect = pg.Rect(16, 16, self.player_image.get_width(),
                                    self.player_image.get_height())
-        self.scroll = [0, 0]
+        self.camera_scroll = [0, 0]
 
         # Config
         self.font = c.dungeon_font
@@ -151,10 +151,10 @@ class DungeonAdventure(Maze):
             self.display.fill(self.PURPLE)
 
             # Basically the camera tracking/ following the player sprite
-            self.scroll[0] += (self.player_rect.x - self.scroll[0] - 160)
-            self.scroll[1] += (self.player_rect.y - self.scroll[1] - 120)
-            self.scroll[0] += 1
-            self.scroll[1] += 1
+            self.camera_scroll[0] += (self.player_rect.x - self.camera_scroll[0] - 160)
+            self.camera_scroll[1] += (self.player_rect.y - self.camera_scroll[1] - 120)
+            self.camera_scroll[0] += 1
+            self.camera_scroll[1] += 1
 
             ###
 
@@ -170,16 +170,16 @@ class DungeonAdventure(Maze):
                 for tile in row:
 
                     if tile == "f":  # floor
-                        self.display.blit(floor_image, (x * TILE_SIZE - self.scroll[0], y * TILE_SIZE - self.scroll[1]))
+                        self.display.blit(floor_image, (x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
 
                     elif tile == "n":  # North Wall (A separate north wall looks better in the GUI)
                         self.display.blit(upper_wall_image,
-                                          (x * TILE_SIZE - self.scroll[0], y * TILE_SIZE - self.scroll[1]))
+                                          (x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     elif tile == "w":  # Wall (for east, west, south walls)
                         self.display.blit(bottom_wall_image,
-                                          (x * TILE_SIZE - self.scroll[0], y * TILE_SIZE - self.scroll[1]))
+                                          (x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     x += 1
@@ -208,7 +208,7 @@ class DungeonAdventure(Maze):
             # adjust player position based on collision with n tiles
 
             self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
-            self.display.blit(self.player_image, (self.player_rect.x - self.scroll[0], self.player_rect.y - self.scroll[1]))
+            self.display.blit(self.player_image, (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
 
             # Draw the Gui to the screen, update it
 

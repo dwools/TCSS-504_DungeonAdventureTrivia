@@ -158,7 +158,7 @@ class CharacterSelectMenu(Menu):
         self.rogue_image = pg.image.load(a.south_priestess)  # Change to Roque image
 
         # Placing the cursor at the Base State
-        self.cursor_rect.midtop = (self.select_knight_x - 100, self.select_knight_y)
+        self.cursor_rect.midtop = (self.select_knight_x - 125, self.select_knight_y)
 
     def display_menu(self):
         self.run_display = True
@@ -179,7 +179,7 @@ class CharacterSelectMenu(Menu):
             pg.draw.rect(self.screen, 'gray', pg.Rect(self.select_knight_x - 225, self.select_knight_y - 550, 10, 550))
 
             # Knight
-            self.game.draw_text('Knight', 15, self.select_knight_x, self.select_knight_y, self.game.font_color)
+            self.game.draw_text('Knight', 15, self.select_knight_x - 25, self.select_knight_y, self.game.font_color)
             self.knight_image = pg.transform.scale(self.knight_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
             self.screen.blit(self.knight_image, (self.select_knight_x - 100, self.select_knight_y - 500))
 
@@ -236,7 +236,7 @@ class CharacterSelectMenu(Menu):
                 self.state = 'Priestess'
 
             elif self.state == 'Priestess':
-                self.cursor_rect.midtop = (self.select_knight_x - 100, self.select_knight_y)
+                self.cursor_rect.midtop = (self.select_knight_x - 125, self.select_knight_y)
                 self.state = 'Knight'
 
         elif self.game.moving_west:
@@ -249,7 +249,7 @@ class CharacterSelectMenu(Menu):
                 self.state = 'Rogue'
 
             elif self.state == 'Rogue':
-                self.cursor_rect.midtop = (self.select_knight_x - 100, self.select_knight_y)
+                self.cursor_rect.midtop = (self.select_knight_x - 125, self.select_knight_y)
                 self.state = 'Knight'
 
     def check_input(self):
@@ -483,7 +483,7 @@ class PauseMenu(Menu):
         self.game.paused = True
         self.run_display = True
 
-        while self.run_display:
+        while self.game.paused and self.run_display:
             clock = pg.time.Clock()
 
             self.game.check_events()
@@ -553,14 +553,16 @@ class PauseMenu(Menu):
                 self.game.interacting = False
 
             if self.state == 'Main Menu':
-                self.game.current_menu = MainMenu(self)
+                self.game.current_menu = MainMenu(self.game)
+                self.game.paused = False
+                self.game.playing = False
                 self.run_display = False
-                # self.game.paused = False
                 print("Going to main menu")
                 self.game.interacting = False
 
             if self.state == 'Options':
-                self.game.current_menu = OptionsMenu(self)
+                self.game.current_menu = OptionsMenu(self.game)
+                self.run_display = False
                 print("Going to Options Menu")
                 self.game.interacting = False
 
