@@ -1,7 +1,8 @@
 import random
-
 import DungeonCharacter
-
+from Monster import Monster
+import sqlite3
+from sqlite3 import Error
 
 class MonsterFactory(DungeonCharacter):
     def __init__(self):
