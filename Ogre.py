@@ -15,3 +15,7 @@ class Ogre(Monster):
     def set_maximum_heal_points(self, maximum_heal_points):
         self.__maximum_heal_points = maximum_heal_points
 
+
+# Factory can return an object of class Ogre, Gremlin, Skeleton
+
+# Conversely, if Ogre, Gremlin, and Skeleton aren't otherwise unique, then they don't need to exist.

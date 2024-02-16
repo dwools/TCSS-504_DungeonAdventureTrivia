@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class DungeonCharacter(ABC):
-    def __init__(self, character=None, hit_points=None, attack_speed=None, chance_to_hit=None, minimum_damage=None, maximum_damage=None):
-        self.__character = character
+    def __init__(self, name=None, hit_points=None, attack_speed=None, chance_to_hit=None, minimum_damage=None, maximum_damage=None):
+        # Dungeon character needs a name per project specifications
+        self.__character = name
         self.__hit_points = hit_points
         self.__attack_speed = attack_speed
         self.__chance_to_hit = chance_to_hit

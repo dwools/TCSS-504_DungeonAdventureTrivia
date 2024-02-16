@@ -16,17 +16,17 @@ class MonsterFactory():
 
     def create_ogre(self):
         ogre = self.read_monster_database("Ogre")
-        print(ogre)
+        # print(ogre)
         return ogre
 
     def create_gremlin(self):
         gremlin = self.read_monster_database("Gremlin")
-        print(gremlin)
+        # print(gremlin)
         return gremlin
 
     def create_skeleton(self):
         skeleton = self.read_monster_database("Skeleton")
-        print(skeleton)
+        # print(skeleton)
         return skeleton
 
     def choose_monster(self):
@@ -34,16 +34,26 @@ class MonsterFactory():
         if monster_choice == 1:
             choice = self.create_ogre()
             return choice
-        elif monster_choice == 2:
+        if monster_choice == 2:
             choice = self.create_gremlin()
             return choice
-        elif monster_choice == 3:
+        if monster_choice == 3:
             choice = self.create_skeleton()
             return choice
 
     def create_monster(self):
         monster_stats = self.choose_monster()
-        return Monster(*monster_stats)
+        (monster,
+         hit_points,
+         attack_speed,
+         chance_to_hit,
+         minimum_damage,
+         maximum_damage,
+         chance_to_heal,
+         minimum_heal_points,
+         maximum_heal_points) = monster_stats
+
+        return Monster(monster, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal, minimum_heal_points, maximum_heal_points)
 
     def main(self):
         pass
