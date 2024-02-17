@@ -1,7 +1,7 @@
 import random
 import sqlite3
-from Monster import Monster
-from DungeonCharacter import DungeonCharacter
+from monster import Monster
+from dungeon_character import DungeonCharacter
 
 
 class MonsterFactory():
@@ -53,11 +53,11 @@ class MonsterFactory():
          minimum_heal_points,
          maximum_heal_points) = monster_stats
 
-        return Monster(monster, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal, minimum_heal_points, maximum_heal_points)
+        return Monster(monster, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+                       minimum_heal_points, maximum_heal_points)
 
     def main(self):
         pass
-
 
 
 if __name__ == '__main__':

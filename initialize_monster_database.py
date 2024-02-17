@@ -37,7 +37,7 @@ def main():
     database = r"dungeon_monsters.db"
 
     sql_create_monsters_table = """ CREATE TABLE IF NOT EXISTS monsters (
-                                    monster varvhar(255) PRIMARY KEY,
+                                    monster text PRIMARY KEY,
                                     hit_points integer,
                                     attack_speed integer,
                                     chance_to_hit float,

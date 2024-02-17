@@ -2,7 +2,7 @@ import textwrap
 
 import pygame as pg
 import pygame.display
-import trivia_question
+from trivia_question import TriviaQuestion
 
 import sqlite3
 
@@ -582,9 +582,11 @@ class PauseMenu(Menu):
 class TriviaUI(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
-        self.question = "question here"  # Need David's Help here
+        self.question_font = c.question_font
+
+        self.question = TriviaQuestion.get_question  # Need David's Help here
         self.answer = None
-        self.question_x, self.question_y = self.middle_width, self.middle_height
+        self.question_x, self.question_y = self.middle_width, self.middle_height - 150
         self.bool_x, self.bool_y = self.middle_width, self.middle_height
 
     def display_menu(self):
@@ -596,30 +598,89 @@ class TriviaUI(Menu):
             self.game.check_events()
 
             self.game.display.fill(c.PURPLE)
-            self.game.draw_text(self.question, 10, self.question_x, self.question_y, self.game.font_color)
+
+            self.draw_question(self.question, 15, self.question_x, self.question_y, self.game.font_color)
+
+            # for line in given_question:
+            #     self.draw_question(self.question, 15, self.question_x, self.question_y, self.game.font_color)
+            #     self.question_y += 25
 
             self.blit_screen()
 
             clock.tick(12)
 
-# class GameOver(Menu):
-#     def __init__(self, game):
-#         Menu.__init__(self, game)
-#         self.game_over_x, self.game_over_y = self.middle_width, self.middle_height
-#         self.main_menu_x, self.main_menu_y = self.middle_width, self.middle_height
-#         self.exit_game_x, self.exit_game_y = self.middle_width, self.middle_height
+    def draw_question(self, text, size, x, y, font_color):
+        """ Simple helper-function used to write text to the GUI. """
 
-    # def display_menu(self):
-    #     self.run_display = True
-    #
-    #     while self.run_display:
-    #         clock = pg.time.Clock()
-    #
-    #         self.game.check_events()
-    #
-    #         self.game.display.fill(c.PURPLE)
-    #         self.game.draw_wrapped_text(self.question, 10, self.question_x, self.question_y, self.game.font_color)
-    #
-    #         self.blit_screen()
-    #
-    #         clock.tick(12)
+        font = pg.font.Font(self.question_font, size)
+        text_surface = font.render(text, True, font_color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x / 2, y / 2)
+        self.game.display.blit(text_surface, text_rect)
+
+
+class GameOver(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.state = "Main Menu"
+        self.game_over_x, self.game_over_y = self.middle_width, self.middle_height - 200
+        self.main_menu_x, self.main_menu_y = self.middle_width, self.middle_height
+        self.exit_game_x, self.exit_game_y = self.middle_width, self.middle_height + 100
+
+        self.cursor_rect.midtop = (self.main_menu_x + self.cursor_offset, self.main_menu_y)
+
+    def display_menu(self):
+        self.run_display = True
+
+        while self.run_display:
+            clock = pg.time.Clock()
+            self.check_input()
+            self.game.check_events()
+
+            self.game.display.fill(c.PURPLE)
+            self.draw_cursor()
+
+            self.game.draw_text("Game Over", 40, self.game_over_x, self.game_over_y, 'red')
+            self.game.draw_text("Main Menu", 20, self.main_menu_x, self.main_menu_y, self.game.font_color)
+            self.game.draw_text("Exit Game", 20, self.exit_game_x, self.exit_game_y, self.game.font_color)
+
+            self.blit_screen()
+
+            clock.tick(12)
+
+    def move_cursor(self):
+
+        if self.game.moving_south:
+            if self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.exit_game_x + self.cursor_offset, self.exit_game_y)
+                self.state = 'Exit Game'
+
+            elif self.state == 'Exit Game':
+                self.cursor_rect.midtop = (self.main_menu_x + self.cursor_offset, self.main_menu_y)
+                self.state = 'Main Menu'
+
+        elif self.game.moving_north:
+            if self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.exit_game_x + self.cursor_offset, self.exit_game_y)
+                self.state = 'Exit Game'
+
+            elif self.state == 'Exit Game':
+                self.cursor_rect.midtop = (self.main_menu_x + self.cursor_offset, self.main_menu_y)
+                self.state = 'Main Menu'
+
+    def check_input(self):
+
+        self.move_cursor()
+
+        if self.game.interacting:
+
+            if self.state == 'Main Menu':
+                self.game.current_menu = MainMenu(self.game)
+                self.game.paused = False
+                self.game.playing = False
+                self.run_display = False
+                print("Going to main menu")
+                self.game.interacting = False
+
+            if self.state == 'Exit Game':
+                pg.quit()

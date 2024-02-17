@@ -1,4 +1,4 @@
-from Monster import Monster
+from monster import Monster
 
 
 class Ogre(Monster):

@@ -1,4 +1,4 @@
-import Monster
+import monster
 
 
 class Skeleton(Monster):

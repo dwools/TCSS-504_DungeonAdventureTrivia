@@ -1,4 +1,5 @@
 # Constant Variables
+import pygame.font
 
 # Window Dimensions
 WIN_WIDTH = 1280
@@ -12,3 +13,4 @@ PURPLE = (11, 0, 11)
 
 # FONT
 dungeon_font = 'assets/Fonts/8-BIT WONDER.TTF'
+question_font = pygame.font.get_default_font()

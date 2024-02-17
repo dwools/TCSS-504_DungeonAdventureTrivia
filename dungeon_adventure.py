@@ -8,9 +8,9 @@ import textwrap
 
 import config as c
 import assets as a
-import Room
+import room
 import initialize_databases
-from Dungeon import Maze
+from dungeon import Maze
 from menu import *
 
 """
@@ -46,7 +46,8 @@ class DungeonAdventure(Maze):
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
         self.trivia_ui = TriviaUI(self)
-        self.current_menu = self.main_menu  # Default menu is the main menu
+        self.game_over = GameOver(self)
+        self.current_menu = self.trivia_ui  # Default menu is the main menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h

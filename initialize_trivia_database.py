@@ -37,26 +37,26 @@ def main():
     database = r"dungeon_trivia.db"
 
     sql_create_international_trivia_table = """ CREATE TABLE IF NOT EXISTS international_trivia (
-                                    id integer PRIMARY KEY,
-                                    question varchar(255),
+                                    rowid integer PRIMARY KEY,
+                                    question text,
                                     answer boolean
                                     ); """
 
     sql_create_pokemon_trivia_table = """CREATE TABLE IF NOT EXISTS pokemon_trivia (
-                                    id integer PRIMARY KEY,
-                                    question varchar(255),
+                                    rowid integer PRIMARY KEY,
+                                    question text,
                                     answer boolean
                                 );"""
 
     sql_create_astronomy_trivia_table = """CREATE TABLE IF NOT EXISTS astronomy_trivia (
-                                        id integer PRIMARY KEY,
-                                        question varchar(255),
+                                        rowid integer PRIMARY KEY,
+                                        question text,
                                         answer boolean
                                     );"""
 
     sql_create_elapids_trivia_table = """CREATE TABLE IF NOT EXISTS elapids_trivia (
-                                            id integer PRIMARY KEY,
-                                            question varchar(255),
+                                            rowid integer PRIMARY KEY,
+                                            question text,
                                             answer boolean
                                         );"""
 

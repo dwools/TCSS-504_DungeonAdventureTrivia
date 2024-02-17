@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from DungeonCharacter import DungeonCharacter
+from dungeon_character import DungeonCharacter
 
 
 class Monster(DungeonCharacter):

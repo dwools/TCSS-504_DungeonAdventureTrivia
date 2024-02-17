@@ -9,25 +9,25 @@ class TriviaFactory:
 
     def read_elapids_table(self, num):
         cursor = self.__conn.cursor()
-        cursor.execute(f'SELECT * FROM elapids_trivia WHERE id = {num}')
+        cursor.execute(f'SELECT * FROM elapids_trivia WHERE rowid = "{num}"')
         elapids_trivia = cursor.fetchone()
         return elapids_trivia
 
     def read_astronomy_table(self, num):
         cursor = self.__conn.cursor()
-        cursor.execute(f'SELECT * FROM astronomy_trivia WHERE id = {num}')
+        cursor.execute(f'SELECT * FROM astronomy_trivia WHERE rowid = "{num}"')
         astronomy_trivia = cursor.fetchone()
         return astronomy_trivia
 
     def read_pokemon_table(self, num):
         cursor = self.__conn.cursor()
-        cursor.execute(f'SELECT * FROM pokemon_trivia WHERE id = {num}')
+        cursor.execute(f'SELECT * FROM pokemon_trivia WHERE rowid = "{num}"')
         pokemon_trivia = cursor.fetchone()
         return pokemon_trivia
 
     def read_international_table(self, num):
         cursor = self.__conn.cursor()
-        cursor.execute(f'SELECT * FROM international_trivia WHERE id = {num}')
+        cursor.execute(f'SELECT * FROM international_trivia WHERE rowid = "{num}"')
         international_trivia = cursor.fetchone()
         return international_trivia
 

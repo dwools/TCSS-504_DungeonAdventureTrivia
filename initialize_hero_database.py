@@ -38,7 +38,7 @@ def main():
     database = r"dungeon_heroes.db"
 
     sql_create_heroes_table = """ CREATE TABLE IF NOT EXISTS heroes (
-                                    hero varvhar(255) PRIMARY KEY,
+                                    hero text PRIMARY KEY,
                                     hit_points integer,
                                     attack_speed integer,
                                     chance_to_hit float,
