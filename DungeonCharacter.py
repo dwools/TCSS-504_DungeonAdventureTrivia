@@ -38,27 +38,27 @@ class DungeonCharacter(ABC):
     def get_maximum_damage(self):
         return self.__maximum_damage
 
-    @abstractmethod
-    def set_character(self, character):
-        self.__character = character
-
-    @abstractmethod
-    def set_hit_points(self, hit_points):
-        self.__hit_points = hit_points
-
-    @abstractmethod
-    def set_attack_speed(self, attack_speed):
-        self.__attack_speed = attack_speed
-
-    @abstractmethod
-    def set_chance_to_hit(self, chance_to_hit):
-        self.__chance_to_hit = chance_to_hit
-
-    @abstractmethod
-    def set_minimum_damage(self, minimum_damage):
-        self.__minimum_damage = minimum_damage
-
-    @abstractmethod
-    def set_maximum_damage(self, maximum_damage):
-        self.__maximum_damage = maximum_damage
+    # @abstractmethod
+    # def set_character(self, character):
+    #     self.__character = character
+    #
+    # @abstractmethod
+    # def set_hit_points(self, hit_points):
+    #     self.__hit_points = hit_points
+    #
+    # @abstractmethod
+    # def set_attack_speed(self, attack_speed):
+    #     self.__attack_speed = attack_speed
+    #
+    # @abstractmethod
+    # def set_chance_to_hit(self, chance_to_hit):
+    #     self.__chance_to_hit = chance_to_hit
+    #
+    # @abstractmethod
+    # def set_minimum_damage(self, minimum_damage):
+    #     self.__minimum_damage = minimum_damage
+    #
+    # @abstractmethod
+    # def set_maximum_damage(self, maximum_damage):
+    #     self.__maximum_damage = maximum_damage
 
