@@ -1,5 +1,10 @@
+import textwrap
+
 import pygame as pg
 import pygame.display
+import trivia_question
+
+import sqlite3
 
 import config as c
 import assets as a
@@ -572,3 +577,49 @@ class PauseMenu(Menu):
         if self.game.escaping:
             self.game.paused = False
             self.run_display = False
+
+
+class TriviaUI(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.question = "question here"  # Need David's Help here
+        self.answer = None
+        self.question_x, self.question_y = self.middle_width, self.middle_height
+        self.bool_x, self.bool_y = self.middle_width, self.middle_height
+
+    def display_menu(self):
+        self.run_display = True
+
+        while self.run_display:
+            clock = pg.time.Clock()
+
+            self.game.check_events()
+
+            self.game.display.fill(c.PURPLE)
+            self.game.draw_text(self.question, 10, self.question_x, self.question_y, self.game.font_color)
+
+            self.blit_screen()
+
+            clock.tick(12)
+
+# class GameOver(Menu):
+#     def __init__(self, game):
+#         Menu.__init__(self, game)
+#         self.game_over_x, self.game_over_y = self.middle_width, self.middle_height
+#         self.main_menu_x, self.main_menu_y = self.middle_width, self.middle_height
+#         self.exit_game_x, self.exit_game_y = self.middle_width, self.middle_height
+
+    # def display_menu(self):
+    #     self.run_display = True
+    #
+    #     while self.run_display:
+    #         clock = pg.time.Clock()
+    #
+    #         self.game.check_events()
+    #
+    #         self.game.display.fill(c.PURPLE)
+    #         self.game.draw_wrapped_text(self.question, 10, self.question_x, self.question_y, self.game.font_color)
+    #
+    #         self.blit_screen()
+    #
+    #         clock.tick(12)

@@ -2,6 +2,7 @@
 import pygame as pg  # import pygame
 from pygame.locals import *  # import the pygame modules
 import sys
+import textwrap
 
 # Import project files
 
@@ -44,6 +45,7 @@ class DungeonAdventure(Maze):
         self.load_games = LoadSaveGamesMenu(self)
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
+        self.trivia_ui = TriviaUI(self)
         self.current_menu = self.main_menu  # Default menu is the main menu
 
         # Window Setup
@@ -255,6 +257,10 @@ class DungeonAdventure(Maze):
                     self.paused = True
                     print("The game is paused")
                     self.current_menu = self.pause_menu
+
+                if event.key == K_t:
+                    self.paused = True
+                    self.current_menu = self.trivia_ui
 
                 if event.key == K_RETURN:
                     self.interacting = True
