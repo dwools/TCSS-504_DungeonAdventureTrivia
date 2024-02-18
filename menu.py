@@ -2,12 +2,10 @@ import textwrap
 
 import pygame as pg
 import pygame.display
-from trivia_question import TriviaQuestion
-
-import sqlite3
 
 import config as c
 import assets as a
+from trivia_factory import TriviaFactory
 
 
 class Menu:
@@ -582,28 +580,45 @@ class PauseMenu(Menu):
 class TriviaUI(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
+        self.state = 'True'
         self.question_font = c.question_font
 
-        self.question = TriviaQuestion.get_question  # Need David's Help here
-        self.answer = None
+        self.trivia = TriviaFactory().create_question()
+
+        self.given_question = textwrap.wrap(self.trivia.get_question(), 55)
+        self.answer = self.trivia.get_answer()
+        print(self.answer)
+
+        self.title_x, self.title_y = self.middle_width, self.middle_height - 250
         self.question_x, self.question_y = self.middle_width, self.middle_height - 150
-        self.bool_x, self.bool_y = self.middle_width, self.middle_height
+
+        self.true_x, self.true_y = self.middle_width - 150, self.middle_height + 100
+        self.false_x, self.false_y = self.middle_width + 150, self.middle_height + 100
+
+        self.cursor_rect.midtop = (self.true_x - 100, self.true_y)
 
     def display_menu(self):
         self.run_display = True
 
         while self.run_display:
+            self.question_y = self.middle_height - 150
             clock = pg.time.Clock()
 
             self.game.check_events()
+            self.check_input()
 
             self.game.display.fill(c.PURPLE)
 
-            self.draw_question(self.question, 15, self.question_x, self.question_y, self.game.font_color)
+            self.game.draw_text("Trivia Question", 15, self.title_x, self.title_y, 'teal')
 
-            # for line in given_question:
-            #     self.draw_question(self.question, 15, self.question_x, self.question_y, self.game.font_color)
-            #     self.question_y += 25
+            for line in self.given_question:
+                self.draw_question(line, 20, self.question_x, self.question_y, self.game.font_color)
+                self.question_y += 50
+
+            self.game.draw_text("True", 15, self.true_x, self.true_y, 'forestgreen')
+            self.game.draw_text("False", 15, self.false_x, self.false_y, 'darkred')
+
+            self.draw_cursor()
 
             self.blit_screen()
 
@@ -617,6 +632,57 @@ class TriviaUI(Menu):
         text_rect = text_surface.get_rect()
         text_rect.center = (x / 2, y / 2)
         self.game.display.blit(text_surface, text_rect)
+
+    def move_cursor(self):
+
+        if self.game.moving_east:
+            if self.state == 'True':
+                self.cursor_rect.midtop = (self.false_x - 100, self.false_y)
+                self.state = 'False'
+
+            elif self.state == 'False':
+                self.cursor_rect.midtop = (self.true_x - 100, self.true_y)
+                self.state = 'True'
+
+        elif self.game.moving_west:
+            if self.state == 'True':
+                self.cursor_rect.midtop = (self.false_x - 100, self.false_y)
+                self.state = 'False'
+
+            elif self.state == 'False':
+                self.cursor_rect.midtop = (self.true_x - 100, self.true_y)
+                self.state = 'True'
+
+    def check_input(self):
+        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
+
+        self.move_cursor()  # Read cursor position
+
+        if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
+
+            if self.state == 'True':
+                print('you have selected true')
+
+                # if answer == true, add pillar to backpack || else: relocate pillar
+                if self.answer:
+                    print('You have chosen correctly')
+                else:
+                    print('you failed')
+                self.run_display = False
+                self.game.paused = False
+
+            elif self.state == 'False':
+                print('you have selected false')
+
+                # if answer == false, add pillar to backpack || else: relocate pillar
+                if not self.answer:
+                    print('You have chosen correctly')
+                else:
+                    print('you failed')
+
+                self.run_display = False
+                self.game.paused = False
 
 
 class GameOver(Menu):

@@ -4,7 +4,7 @@ from monster import Monster
 from dungeon_character import DungeonCharacter
 
 
-class MonsterFactory():
+class MonsterFactory:
     def __init__(self):
         self.__conn = sqlite3.connect('dungeon_monsters.db')
 

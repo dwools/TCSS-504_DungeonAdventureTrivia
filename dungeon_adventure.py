@@ -47,7 +47,7 @@ class DungeonAdventure(Maze):
         self.pause_menu = PauseMenu(self)
         self.trivia_ui = TriviaUI(self)
         self.game_over = GameOver(self)
-        self.current_menu = self.trivia_ui  # Default menu is the main menu
+        self.current_menu = self.main_menu  # Default menu is the main menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
