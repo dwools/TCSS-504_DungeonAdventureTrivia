@@ -16,7 +16,6 @@ class TriviaFactory:
         cursor = self.__conn.cursor()
         cursor.execute(f'SELECT * FROM elapids_trivia WHERE rowid = "{num}"')
         elapids_trivia = cursor.fetchone()
-        print(elapids_trivia)
         return elapids_trivia
 
     def read_astronomy_table(self, num):
@@ -59,7 +58,6 @@ class TriviaFactory:
 
         if self.pillar == 'Encapsulation':
             choice = self.create_elapid_question(self.elapids_count)
-            print(self.elapids_count)
             return choice
 
         if self.pillar == 'Abstraction':

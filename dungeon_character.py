@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from object_coordinates_generator import ValidCoordsGenerator
 
 
 class DungeonCharacter(ABC):
@@ -10,6 +11,13 @@ class DungeonCharacter(ABC):
         self.__chance_to_hit = chance_to_hit
         self.__minimum_damage = minimum_damage
         self.__maximum_damage = maximum_damage
+
+        #  Generating random valid coords for the position
+        self.coords_generator = ValidCoordsGenerator()
+        self.__char_position = self.coords_generator.get_random_coords()
+        self.__position_x, self.__position_y = self.__char_position
+
+
         # self.__chance_to_block = None
         # self.__chance_to_heal = None
         # self.__minimum_heal_points = None
@@ -38,6 +46,9 @@ class DungeonCharacter(ABC):
     def get_maximum_damage(self):
         return self.__maximum_damage
 
+    def get_position(self):
+        return self.__char_position #  returns random coords in a [x,y] list
+
     # @abstractmethod
     # def set_character(self, character):
     #     self.__character = character
@@ -62,3 +73,4 @@ class DungeonCharacter(ABC):
     # def set_maximum_damage(self, maximum_damage):
     #     self.__maximum_damage = maximum_damage
 
+if __name__ == '__main__':

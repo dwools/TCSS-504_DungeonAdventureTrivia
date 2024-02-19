@@ -10,6 +10,7 @@ import config as c
 import assets as a
 import room
 import initialize_databases
+from object_coordinates_generator import ValidCoordsGenerator
 from dungeon import Maze
 from menu import *
 
@@ -59,13 +60,20 @@ class DungeonAdventure(Maze):
         self.player_movement = [0, 0]
         self.camera_scroll = [0, 0]
 
+        self.coords_generator = ValidCoordsGenerator()
+        self.coords_generator.generate_coords()
+
+        self.player_position = self.coords_generator.get_random_coords()
+        self.player_x, self.player_y = self.player_position
+
         self.player_image = pg.image.load(a.south_knight)
-        self.player_rect = pg.Rect(16, 16, self.player_image.get_width(),
-                                   self.player_image.get_height())
+        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
+                                   self.player_image.get_height())  # start at 16, add 48 x or y for good position
         self.camera_scroll = [0, 0]
 
         # Config
-        self.font = c.dungeon_font
+        self.dungeon_font = c.dungeon_font
+        self.normal_cont = c.system_font
         self.font_color = c.WHITE
         self.PURPLE = c.PURPLE
         self.BLACK = c.BLACK
@@ -159,8 +167,6 @@ class DungeonAdventure(Maze):
             self.camera_scroll[0] += 1
             self.camera_scroll[1] += 1
 
-            ###
-
             # List containing tiles where collisions occur
             tile_rects = []
 
@@ -173,16 +179,21 @@ class DungeonAdventure(Maze):
                 for tile in row:
 
                     if tile == "f":  # floor
-                        self.display.blit(floor_image, (x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
+                        self.display.blit(floor_image, (
+                            x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
 
                     elif tile == "n":  # North Wall (A separate north wall looks better in the GUI)
                         self.display.blit(upper_wall_image,
-                                          (x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
+                                          (
+                                              x * TILE_SIZE - self.camera_scroll[0],
+                                              y * TILE_SIZE - self.camera_scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     elif tile == "w":  # Wall (for east, west, south walls)
                         self.display.blit(bottom_wall_image,
-                                          (x * TILE_SIZE - self.camera_scroll[0], y * TILE_SIZE - self.camera_scroll[1]))
+                                          (
+                                              x * TILE_SIZE - self.camera_scroll[0],
+                                              y * TILE_SIZE - self.camera_scroll[1]))
                         tile_rects.append(pg.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
                     x += 1
@@ -211,7 +222,27 @@ class DungeonAdventure(Maze):
             # adjust player position based on collision with n tiles
 
             self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
-            self.display.blit(self.player_image, (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
+            self.display.blit(self.player_image,
+                              (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
+
+            #test health for hud
+            current_health = 12
+            max_health = 22
+
+            # Drawing the HUDisplay
+            pg.draw.rect(self.display, 'black', pg.Rect(0, 0, 140, 90))  # outside background
+            pg.draw.rect(self.display, 'darkslategray', pg.Rect(5, 5, 130, 80))  # inside background
+
+            # Setup Health
+            self.draw_text(c.system_font, f'Health: ', 10, 55, 30, c.BLACK)
+            self.draw_text(c.system_font, f'{current_health} ', 12, 120, 30, c.BLACK)
+            self.draw_text(c.system_font, f'/{max_health}', 12, 150, 30, c.BLACK)
+
+            # Setup Pillars
+            self.draw_text(c.system_font, f'Pillars: ', 10, 55, 60, c.BLACK)
+
+            # Setup Lives
+            self.draw_text(c.system_font, f'Lives: ', 10, 55, 90, c.BLACK)
 
             # Draw the Gui to the screen, update it
 
@@ -290,10 +321,10 @@ class DungeonAdventure(Maze):
                 if event.key == K_ESCAPE or event.key == K_BACKSPACE:
                     self.escaping = False
 
-    def draw_text(self, text, size, x, y, font_color):
+    def draw_text(self, font, text, size, x, y, font_color):
         """ Simple helper-function used to write text to the GUI. """
 
-        font = pg.font.Font(self.font, size)
+        font = pg.font.Font(font, size)
         text_surface = font.render(text, True, font_color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x / 2, y / 2)
