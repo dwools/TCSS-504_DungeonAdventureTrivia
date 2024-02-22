@@ -73,7 +73,7 @@ class DungeonAdventure(Maze):
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = self.coords_generator.get_random_coords()
+        self.player_position = [16, 16]
         self.player_x, self.player_y = self.player_position
 
         self.player_image = pg.image.load(a.south_priestess)
@@ -87,7 +87,7 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(random.randint(25, 30)):
+        for _ in range(random.randint(35, 40)):
             creature = self.m_factory.choose_monster()
 
             if Gremlin == type(creature):
@@ -311,20 +311,10 @@ class DungeonAdventure(Maze):
                 if isinstance(monster, Ogre):
                     ogre_rect = monster.get_rect()
 
-                    self.display.blit(self.player_image, (
+                    self.display.blit(self.ogre_image, (
                         ogre_rect.x - self.camera_scroll[0], ogre_rect.y - self.camera_scroll[1]))
                     print("i'm an ogre")
 
-            # self.display.blit(self.gremlin_image, (
-            #     self.gremlin_rect.x - self.camera_scroll[0],
-            #     self.gremlin_rect.y - self.camera_scroll[1]))
-            #
-            # self.display.blit(self.skeleton_image, (
-            #     self.skeleton_rect.x - self.camera_scroll[0],
-            #     self.skeleton_rect.y - self.camera_scroll[1]))
-            #
-            # self.display.blit(self.player_image, (
-            #     self.ogre_rect.x - self.camera_scroll[0], self.ogre_rect.y - self.camera_scroll[1]))
 
             # test health for hud
 
