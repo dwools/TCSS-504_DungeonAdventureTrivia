@@ -21,8 +21,10 @@ east_gremlin = 'assets/char_sprites/east_gremlin.png'
 # Ogre
 
 # Skeleton
-
-
+south_skelly = 'assets/char_sprites/south_skelly.png'
+north_skelly = 'assets/char_sprites/north_skelly.png'
+west_skelly = 'assets/char_sprites/west_skelly.png'
+east_skelly = 'assets/char_sprites/east_skelly.png'
 
 # Audio files
 background_music = 'assets/audio/theme_forest.mp3'
