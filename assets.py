@@ -12,6 +12,22 @@ north_priestess = 'assets/char_sprites/north_priestess.png'
 west_priestess = 'assets/char_sprites/west_priestess.png'
 east_priestess = 'assets/char_sprites/east_priestess.png'
 
+# Rogue
+
+# Gremlin
+south_gremlin = 'assets/char_sprites/south_gremlin.png'
+north_gremlin = 'assets/char_sprites/north_gremlin.png'
+west_gremlin = 'assets/char_sprites/west_gremlin.png'
+east_gremlin = 'assets/char_sprites/east_gremlin.png'
+
+# Ogre
+
+# Skeleton
+south_skelly = 'assets/char_sprites/south_skelly.png'
+north_skelly = 'assets/char_sprites/north_skelly.png'
+west_skelly = 'assets/char_sprites/west_skelly.png'
+east_skelly = 'assets/char_sprites/east_skelly.png'
+
 # Audio files
 background_music = 'assets/audio/theme_forest.mp3'
 
