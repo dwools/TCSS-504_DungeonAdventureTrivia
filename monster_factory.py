@@ -29,7 +29,7 @@ class MonsterFactory:
          minimum_heal_points,
          maximum_heal_points) = ogre_stats
         return Ogre(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
-                       minimum_heal_points, maximum_heal_points)
+                    minimum_heal_points, maximum_heal_points)
 
     def create_gremlin(self):
         gremlin_stats = self.read_monster_database("Gremlin")
@@ -43,8 +43,7 @@ class MonsterFactory:
          minimum_heal_points,
          maximum_heal_points) = gremlin_stats
         return Gremlin(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
-                    minimum_heal_points, maximum_heal_points)
-
+                       minimum_heal_points, maximum_heal_points)
 
     def create_skeleton(self):
         skeleton_stats = self.read_monster_database("Skeleton")
@@ -58,10 +57,10 @@ class MonsterFactory:
          minimum_heal_points,
          maximum_heal_points) = skeleton_stats
         return Skeleton(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
-                       minimum_heal_points, maximum_heal_points)
+                        minimum_heal_points, maximum_heal_points)
 
     def choose_monster(self):
-        monster_choice = random.randint(1, 1)
+        monster_choice = random.randint(1, 3)
         if monster_choice == 1:
             choice = self.create_ogre()
             return choice
@@ -83,7 +82,6 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = monster_stats
-
 
         return Monster(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                        minimum_heal_points, maximum_heal_points)

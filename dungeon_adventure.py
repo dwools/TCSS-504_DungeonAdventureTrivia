@@ -1,4 +1,6 @@
 # Import packages
+import random
+
 import pygame as pg  # import pygame
 from pygame.locals import *  # import the pygame modules
 import sys
@@ -8,11 +10,19 @@ import textwrap
 
 import config as c
 import assets as a
+import gremlin
+from monster import Monster
+import monster_factory
+
+from gremlin import Gremlin
+
 import room
 import initialize_databases
 from object_coordinates_generator import ValidCoordsGenerator
 from dungeon import Maze
 from menu import *
+from ogre import Ogre
+from skeleton import Skeleton
 
 """
 Contains the main logic for playing the game
@@ -71,6 +81,62 @@ class DungeonAdventure(Maze):
                                    self.player_image.get_height())  # start at 16, add 48 x or y for good position
         self.camera_scroll = [0, 0]
 
+        # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.m_factory = monster_factory.MonsterFactory()
+
+        self.monsters = []
+        self.monster_rects = []
+
+        for _ in range(random.randint(25, 30)):
+            creature = self.m_factory.choose_monster()
+
+            if Gremlin == type(creature):
+                gremlin = self.m_factory.create_gremlin()
+
+                print(creature)
+
+                gremlin_movement = gremlin.set_monster_movement([0, 0])
+                gremlin_direction = gremlin.set_monster_direction(0)
+                gremlin_position = self.coords_generator.get_random_coords()
+                gremlin.set_position(gremlin_position)
+                gremlin_x, gremlin_y = gremlin.get_position()
+                gremlin_rect = gremlin.set_rect(gremlin_x, gremlin_y)
+                self.monster_rects.append(gremlin_rect)
+                self.monsters.append(gremlin)
+
+            elif Skeleton == type(creature):
+                skeleton = self.m_factory.create_skeleton()
+
+                print(creature)
+
+                skeleton_movement = skeleton.set_monster_movement([0, 0])
+                skeleton_direction = skeleton.set_monster_direction(0)
+                skeleton_position = self.coords_generator.get_random_coords()
+                skeleton.set_position(skeleton_position)
+                skeleton_x, skeleton_y = skeleton.get_position()
+                skeleton_rect = skeleton.set_rect(skeleton_x, skeleton_y)
+                self.monster_rects.append(skeleton_rect)
+
+                self.monsters.append(skeleton)
+
+            elif Ogre == type(creature):
+                ogre = self.m_factory.create_ogre()
+                print(creature)
+                ogre_movement = ogre.set_monster_movement([0, 0])
+                ogre_direction = ogre.set_monster_direction(0)
+                ogre_position = self.coords_generator.get_random_coords()
+                ogre.set_position(ogre_position)
+                ogre_x, ogre_y = ogre.get_position()
+                ogre_rect = ogre.set_rect(ogre_x, ogre_y)
+                self.monster_rects.append(ogre_rect)
+
+                self.monsters.append(ogre)
+
+        self.gremlin_image = pg.image.load(a.south_gremlin)
+        self.skeleton_image = pg.image.load(a.south_skelly)
+        self.ogre_image = pg.image.load(a.south_knight)  # to be replaced with Ogre sprite
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
         self.dungeon_font = c.dungeon_font
         self.normal_cont = c.system_font
@@ -116,7 +182,7 @@ class DungeonAdventure(Maze):
 
         dungeon_map = load_map()
 
-        def collision_test(rect, tiles):
+        def tile_collision_test(rect, tiles):
             """ Testing whether the player collides with n tile. """
 
             hit_list = []
@@ -128,29 +194,29 @@ class DungeonAdventure(Maze):
         def move(rect, movement, tiles):
             """ Adjusts player position based on collision with n tile. """
 
-            collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
+            tile_collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
             rect.x += movement[0]
-            hit_list = collision_test(rect, tiles)
+            hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
 
                 if movement[0] > 0:
                     rect.right = tile.left
-                    collision_types['right'] = True
+                    tile_collision_types['right'] = True
 
                 elif movement[0] < 0:
                     rect.left = tile.right
-                    collision_types['left'] = True
+                    tile_collision_types['left'] = True
 
             rect.y += movement[1]
-            hit_list = collision_test(rect, tiles)
+            hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
                 if movement[1] > 0:
                     rect.bottom = tile.top
-                    collision_types['bottom'] = True
+                    tile_collision_types['bottom'] = True
                 elif movement[1] < 0:
                     rect.top = tile.bottom
-                    collision_types['top'] = True
-            return rect, collision_types
+                    tile_collision_types['top'] = True
+            return rect, tile_collision_types
 
         while self.playing and not self.paused:  # Game Loop
             """ Dungeon Adventure Gui runs while: game is not paused, game is 'playing'. """
@@ -225,9 +291,42 @@ class DungeonAdventure(Maze):
             self.display.blit(self.player_image,
                               (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
 
-            #test health for hud
-            current_health = 12
-            max_health = 22
+            # Monster Nonsense
+            for monster in self.monsters:
+                if isinstance(monster, Gremlin):
+                    gremlin_rect = monster.get_rect()
+                    print(f'{gremlin_rect}')
+
+                    self.display.blit(self.gremlin_image, (
+                        gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
+                    print("i'm a gremlin")
+
+                if isinstance(monster, Skeleton):
+                    skeleton_rect = monster.get_rect()
+
+                    self.display.blit(self.skeleton_image, (
+                        skeleton_rect.x - self.camera_scroll[0], skeleton_rect.y - self.camera_scroll[1]))
+                    print("i'm a skeleton")
+
+                if isinstance(monster, Ogre):
+                    ogre_rect = monster.get_rect()
+
+                    self.display.blit(self.player_image, (
+                        ogre_rect.x - self.camera_scroll[0], ogre_rect.y - self.camera_scroll[1]))
+                    print("i'm an ogre")
+
+            # self.display.blit(self.gremlin_image, (
+            #     self.gremlin_rect.x - self.camera_scroll[0],
+            #     self.gremlin_rect.y - self.camera_scroll[1]))
+            #
+            # self.display.blit(self.skeleton_image, (
+            #     self.skeleton_rect.x - self.camera_scroll[0],
+            #     self.skeleton_rect.y - self.camera_scroll[1]))
+            #
+            # self.display.blit(self.player_image, (
+            #     self.ogre_rect.x - self.camera_scroll[0], self.ogre_rect.y - self.camera_scroll[1]))
+
+            # test health for hud
 
             # Drawing the HUDisplay
             pg.draw.rect(self.display, 'black', pg.Rect(0, 0, 140, 90))  # outside background
@@ -235,14 +334,14 @@ class DungeonAdventure(Maze):
 
             # Setup Health
             self.draw_text(c.system_font, f'Health: ', 10, 55, 30, c.BLACK)
-            self.draw_text(c.system_font, f'{current_health} ', 12, 120, 30, c.BLACK)
-            self.draw_text(c.system_font, f'/{max_health}', 12, 150, 30, c.BLACK)
+            # self.draw_text(c.system_font, f'{current_health} ', 12, 120, 30, c.BLACK)
+            # self.draw_text(c.system_font, f'/{max_health}', 12, 150, 30, c.BLACK)
 
             # Setup Pillars
             self.draw_text(c.system_font, f'Pillars: ', 10, 55, 60, c.BLACK)
 
             # Setup Lives
-            self.draw_text(c.system_font, f'Lives: ', 10, 55, 90, c.BLACK)
+            self.draw_text(c.system_font, f'Lives: ', 10, 50, 90, c.BLACK)
 
             # Draw the Gui to the screen, update it
 

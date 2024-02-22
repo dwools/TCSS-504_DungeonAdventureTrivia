@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import pygame as pg
 from object_coordinates_generator import ValidCoordsGenerator
 
 
@@ -11,12 +12,10 @@ class DungeonCharacter(ABC):
         self.__chance_to_hit = chance_to_hit
         self.__minimum_damage = minimum_damage
         self.__maximum_damage = maximum_damage
+        self.__position = [0, 0]
+        self.__position_x, self.__position_y = self.__position
 
-        #  Generating random valid coords for the position
-        # self.coords_generator = ValidCoordsGenerator()
-        # self.__char_position = self.coords_generator.get_random_coords()
-        # self.__position_x, self.__position_y = self.__char_position
-
+        self.__rect = pg.Rect(self.__position_x, self.__position_y, 16, 16)
 
         # self.__chance_to_block = None
         # self.__chance_to_heal = None
@@ -47,7 +46,16 @@ class DungeonCharacter(ABC):
         return self.__maximum_damage
 
     def get_position(self):
-        return self.__char_position #  returns random coords in a [x,y] list
+        return self.__position
+
+    def set_position(self, position):
+        self.__position = position
+
+    def set_rect(self, x, y):
+        self.__rect = pg.Rect(y, x, 16, 16)
+
+    def get_rect(self):
+        return self.__rect
 
     # @abstractmethod
     # def set_character(self, character):
