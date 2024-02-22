@@ -12,8 +12,8 @@ class ValidCoordsGenerator:
 
         self.start_x, self.start_y = 16, 16
         self.increment = 48
-        self.max_x = 640
-        self.max_y = 880
+        self.max_x = 688
+        self.max_y = 928
 
         self.coords = []
 
@@ -23,10 +23,10 @@ class ValidCoordsGenerator:
         """
 
         x = self.start_x
-        while x <= self.max_x:
+        while x < self.max_x:
             row = []
             y = self.start_y
-            while y <= self.max_y:
+            while y < self.max_y:
                 row.append([x, y])
                 y += self.increment
             self.coords.append(row)
