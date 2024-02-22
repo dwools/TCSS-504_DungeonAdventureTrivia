@@ -3,9 +3,9 @@ from object_coordinates_generator import ValidCoordsGenerator
 
 
 class DungeonCharacter(ABC):
-    def __init__(self, name=None, hit_points=None, attack_speed=None, chance_to_hit=None, minimum_damage=None, maximum_damage=None):
+    def __init__(self, name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
-        self.__character = name
+        self.__name = name
         self.__hit_points = hit_points
         self.__attack_speed = attack_speed
         self.__chance_to_hit = chance_to_hit
@@ -13,9 +13,9 @@ class DungeonCharacter(ABC):
         self.__maximum_damage = maximum_damage
 
         #  Generating random valid coords for the position
-        self.coords_generator = ValidCoordsGenerator()
-        self.__char_position = self.coords_generator.get_random_coords()
-        self.__position_x, self.__position_y = self.__char_position
+        # self.coords_generator = ValidCoordsGenerator()
+        # self.__char_position = self.coords_generator.get_random_coords()
+        # self.__position_x, self.__position_y = self.__char_position
 
 
         # self.__chance_to_block = None
@@ -27,9 +27,9 @@ class DungeonCharacter(ABC):
         # self.__maximum_bonus_damage = None
         # self.__chance_for_second_attack = None
 
-    def get_character(self):
-        print(self.__character)
-        return self.__character
+    def get_name(self):
+        print(self.__name)
+        return self.__name
 
     def get_hit_points(self):
         return self.__hit_points
@@ -73,4 +73,4 @@ class DungeonCharacter(ABC):
     # def set_maximum_damage(self, maximum_damage):
     #     self.__maximum_damage = maximum_damage
 
-if __name__ == '__main__':
+# if __name__ == '__main__':

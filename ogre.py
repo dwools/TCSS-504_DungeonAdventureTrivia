@@ -2,20 +2,23 @@ from monster import Monster
 
 
 class Ogre(Monster):
-    def __init__(self):
-        pass
+    def __init__(self, name,
+                 hit_points,
+                 attack_speed,
+                 chance_to_hit,
+                 minimum_damage,
+                 maximum_damage,
+                 chance_to_heal,
+                 minimum_heal_points,
+                 maximum_heal_points):
+        super().__init__(name,
+                 hit_points,
+                 attack_speed,
+                 chance_to_hit,
+                 minimum_damage,
+                 maximum_damage,
+                 chance_to_heal,
+                 minimum_heal_points,
+                 maximum_heal_points)
 
 
-    def set_chance_to_heal(self, chance_to_heal):
-        self.__chance_to_heal = chance_to_heal
-
-    def set_minimum_heal_points(self, minimum_heal_points):
-        self.__minimum_heal_points = minimum_heal_points
-
-    def set_maximum_heal_points(self, maximum_heal_points):
-        self.__maximum_heal_points = maximum_heal_points
-
-
-# Factory can return an object of class Ogre, Gremlin, Skeleton
-
-# Conversely, if Ogre, Gremlin, and Skeleton aren't otherwise unique, then they don't need to exist.
