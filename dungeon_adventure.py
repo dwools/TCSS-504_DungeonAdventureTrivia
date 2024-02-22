@@ -66,7 +66,7 @@ class DungeonAdventure(Maze):
         self.player_position = self.coords_generator.get_random_coords()
         self.player_x, self.player_y = self.player_position
 
-        self.player_image = pg.image.load(a.south_knight)
+        self.player_image = pg.image.load(a.south_priestess)
         self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
                                    self.player_image.get_height())  # start at 16, add 48 x or y for good position
         self.camera_scroll = [0, 0]
@@ -205,19 +205,19 @@ class DungeonAdventure(Maze):
             self.player_movement = [0, 0]
             if self.moving_east:
                 self.player_movement[0] += 2
-                self.player_image = pg.image.load(a.east_knight)
+                self.player_image = pg.image.load(a.east_priestess)
 
             if self.moving_west:
                 self.player_movement[0] -= 2
-                self.player_image = pg.image.load(a.west_knight)
+                self.player_image = pg.image.load(a.west_priestess)
 
             if self.moving_north:
                 self.player_movement[1] -= 2
-                self.player_image = pg.image.load(a.north_knight)
+                self.player_image = pg.image.load(a.north_priestess)
 
             if self.moving_south:
                 self.player_movement[1] += 2
-                self.player_image = pg.image.load(a.south_knight)
+                self.player_image = pg.image.load(a.south_priestess)
 
             # adjust player position based on collision with n tiles
 
