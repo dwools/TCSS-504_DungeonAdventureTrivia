@@ -76,8 +76,8 @@ class DungeonAdventure(Maze):
 
         self.player_position = [16, 16]
         self.player_x, self.player_y = self.player_position
-        self.player_img_size = (14, 14)
 
+        self.player_img_size = (14, 14)
         self.player_image = pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
         self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
                                    self.player_image.get_height())  # start at 16, add 48 x or y for good position
@@ -187,7 +187,7 @@ class DungeonAdventure(Maze):
         dungeon_map = load_map()
 
         def tile_collision_test(rect, tiles):
-            """ Testing whether the player collides with n tile. """
+            """ Testing whether a character collides with n tile. """
 
             hit_list = []
             for tile in tiles:
@@ -214,14 +214,65 @@ class DungeonAdventure(Maze):
             rect.y += movement[1]
             hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
+
                 if movement[1] > 0:
                     rect.bottom = tile.top
                     tile_collision_types['bottom'] = True
+
                 elif movement[1] < 0:
                     rect.top = tile.bottom
                     tile_collision_types['top'] = True
+
             return rect, tile_collision_types
 
+        def check_monster_wall_collisions(rect, movement, monster, tiles):
+            tile_collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
+            rect.x += movement[0]
+            hit_list = tile_collision_test(rect, tiles)
+            new_direction = random.randint(0, 3)
+            for tile in hit_list:
+
+                if movement[0] > 0:
+                    rect.right = tile.left
+                    tile_collision_types['right'] = True
+                    direction = monster.get_monster_direction()
+
+                    if new_direction == direction:
+                        new_direction = random.choice[0, 1, 2]
+                        monster.set_monster_direction(new_direction)
+                    else:
+                        monster.set_monster_direction(direction)
+
+                elif movement[0] < 0:
+                    rect.left = tile.right
+                    tile_collision_types['left'] = True
+                    direction = monster.get_monster_direction()
+
+                    if new_direction == direction:
+                        new_direction = random.choice[0, 1, 3]
+                        monster.set_monster_direction(new_direction)
+                    else:
+                        monster.set_monster_direction(direction)
+
+            rect.y += movement[1]
+            hit_list = tile_collision_test(rect, tiles)
+            for tile in hit_list:
+
+                if movement[1] > 0:
+                    rect.bottom = tile.top
+                    tile_collision_types['bottom'] = True
+                    direction = monster.get_monster_direction()
+
+                    monster.set_monster_direction(direction)
+
+                elif movement[1] < 0:
+                    rect.top = tile.bottom
+                    tile_collision_types['top'] = True
+                    direction = monster.get_monster_direction()
+
+                    monster.set_monster_direction(direction)
+
+            return rect, tile_collision_types
 
         while self.playing and not self.paused:  # Game Loop
             """ Dungeon Adventure Gui runs while: game is not paused, game is 'playing'. """
@@ -300,61 +351,101 @@ class DungeonAdventure(Maze):
             for monster in self.monsters:
                 if isinstance(monster, Gremlin):
                     gremlin_rect = monster.get_character_rect()
+                    gremlin_movement = monster.get_monster_movement()
+                    gremlin_rect, collisions = move(gremlin_rect, gremlin_movement, tile_rects)
 
                     if monster.get_monster_direction() == 0:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
+
+                        gremlin_movement[1] += 1 / 60
+                        monster.set_monster_movement(gremlin_movement)
+
                         self.gremlin_image = pg.image.load(a.south_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 1:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
+
+                        gremlin_movement[1] -= 1 / 60
+                        monster.set_monster_movement(gremlin_movement)
+
                         self.gremlin_image = pg.image.load(a.north_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 2:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
+
+                        gremlin_movement[0] += 1 / 60
+                        monster.set_monster_movement(gremlin_movement)
+
                         self.gremlin_image = pg.image.load(a.east_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 3:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
+
+                        gremlin_movement[0] -= 1 / 60
+                        monster.set_monster_movement(gremlin_movement)
+
                         self.gremlin_image = pg.image.load(a.west_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                 if isinstance(monster, Skeleton):
                     skelly_rect = monster.get_character_rect()
+                    skelly_movement = monster.get_monster_movement()
+                    skelly_rect, collisions = move(skelly_rect, skelly_movement, tile_rects)
 
                     if monster.get_monster_direction() == 0:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
+
+                        skelly_movement[1] += 1 / 60
+                        monster.set_monster_movement(skelly_movement)
+
                         self.skelly_image = pg.image.load(a.south_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 1:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
+
+                        skelly_movement[1] -= 1 / 60
+                        monster.set_monster_movement(skelly_movement)
+
                         self.skelly_image = pg.image.load(a.north_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 2:  # 0,1,2,3 == S,N,E,W
+                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
+
+                        skelly_movement[0] += 1 / 60
+                        monster.set_monster_movement(skelly_movement)
+
                         self.skelly_image = pg.image.load(a.east_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 3:  # 0,1,2,3 == S,N,E,W
+
+                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
+
+                        skelly_movement[0] -= 1 / 60
+                        monster.set_monster_movement(skelly_movement)
+
                         self.skelly_image = pg.image.load(a.west_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                 if isinstance(monster, Ogre):
                     ogre_rect = monster.get_character_rect()
+                    ogre_rect, collisions = move(ogre_rect, monster.get_monster_movement(), tile_rects)
 
                     self.display.blit(self.ogre_image, (
                         ogre_rect.x - self.camera_scroll[0], ogre_rect.y - self.camera_scroll[1]))
-
-            def combat_collision_test():
-                pass  # Initiate Combat!
-
-            def monster_wall_collision_test():
-                pass
 
             # test health for hud
 
@@ -393,7 +484,7 @@ class DungeonAdventure(Maze):
 
             if event.type == KEYDOWN:
 
-                if event.key == K_w or event.key == K_UP: # 0,1,2,3 == S,N,E,W
+                if event.key == K_w or event.key == K_UP:  # 0,1,2,3 == S,N,E,W
                     self.moving_north = True
                     self.player_direction = 1
                     print("Moving North")
@@ -462,8 +553,6 @@ class DungeonAdventure(Maze):
         text_rect = text_surface.get_rect()
         text_rect.center = (x / 2, y / 2)
         self.display.blit(text_surface, text_rect)
-
-
 
 
 if __name__ == "__main__":

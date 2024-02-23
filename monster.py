@@ -18,12 +18,14 @@ class Monster(DungeonCharacter):
                  ):
         super().__init__(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage)
 
-        self.__movement = (0, 0)
+        self.__movement = [0, 0]
         self.__direction = 0
+
         self.__chance_to_heal = chance_to_heal
         self.__minimum_heal_points = minimum_heal_points
         self.__maximum_heal_points = maximum_heal_points
         self.__monster_goal = None
+
 
     def get_chance_to_heal(self):
         return self.__chance_to_heal
@@ -60,6 +62,10 @@ class Monster(DungeonCharacter):
 
     def get_monster_goal(self):
         return self.__monster_goal
+
+    def set_monster_turns(self, turns):
+        self.__allowed_turns = turns
+
 
 
 
