@@ -1,4 +1,5 @@
 # Sprites
+snake_pointer = 'assets/char_sprites/snake.png'
 
 # Warrior
 south_knight = 'assets/char_sprites/south_knight.png'

@@ -56,10 +56,10 @@ class DungeonCharacter(ABC):
     def set_position(self, position):
         self.__position = position
 
-    def set_rect(self, x, y):
+    def set_character_rect(self, x, y):
         self.__rect = pg.Rect(y, x, 16, 16)
 
-    def get_rect(self):
+    def get_character_rect(self):
         return self.__rect
 
     # @abstractmethod

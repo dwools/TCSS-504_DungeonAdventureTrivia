@@ -24,8 +24,9 @@ class Menu:
         self.mouse_position = pg.mouse.get_pos()
 
     def draw_cursor(self):
-        # Draw the little star next to the buttons
+        # Draw the pointer next to the buttons
         self.game.draw_text(c.dungeon_font, '*', 15, self.cursor_rect.x, self.cursor_rect.y, 'red')
+
 
     def blit_screen(self):
         # draw to / update the GUI

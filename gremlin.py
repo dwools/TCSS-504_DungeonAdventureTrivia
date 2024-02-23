@@ -1,4 +1,5 @@
 from monster import Monster
+import pygame as pg
 import assets as a
 
 
@@ -32,3 +33,5 @@ class Gremlin(Monster):
 
     def get_west_sprite(self):
         return self.__west_sprite
+
+
