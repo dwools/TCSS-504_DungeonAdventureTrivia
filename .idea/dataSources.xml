@@ -25,11 +25,11 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="dungeon_trivia" uuid="4da226a0-53cd-4dcb-bc17-7acae1ba7b7f">
+    <data-source source="LOCAL" name="monster_names" uuid="549df3bb-084a-4d04-aeba-4aba525994e1">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\dungeon_trivia.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\monster_names.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
@@ -37,11 +37,11 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="monster_names" uuid="549df3bb-084a-4d04-aeba-4aba525994e1">
+    <data-source source="LOCAL" name="dungeon_trivia" uuid="390d4612-01a4-4cb2-a04e-e5171d709884">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\monster_names.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\dungeon_trivia.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

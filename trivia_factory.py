@@ -74,6 +74,7 @@ class TriviaFactory:
 
     def create_question(self):
         chosen_question = self.choose_question()
+        print(chosen_question)
         return TriviaQuestion(*chosen_question)
 
     def main(self):
