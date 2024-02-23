@@ -6,6 +6,7 @@ class Monster(DungeonCharacter):
 
     def __init__(self,
                  name,
+                 type,
                  hit_points,
                  attack_speed,
                  chance_to_hit,
@@ -15,7 +16,7 @@ class Monster(DungeonCharacter):
                  minimum_heal_points,
                  maximum_heal_points,
                  ):
-        super().__init__(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage)
+        super().__init__(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage)
 
         self.__movement = (0, 0)
         self.__direction = 0

@@ -9,17 +9,27 @@ from dungeon_character import DungeonCharacter
 
 class MonsterFactory:
     def __init__(self):
-        self.__conn = sqlite3.connect('dungeon_monsters.db')
+        self.__conn1 = sqlite3.connect('dungeon_monsters.db')
+        self.__conn2 = sqlite3.connect('monster_names.db')
 
     def read_monster_database(self, row):
-        cursor = self.__conn.cursor()
+        cursor = self.__conn1.cursor()
         cursor.execute(f'SELECT * FROM monsters WHERE monster = "{row}"')
         monster_data = cursor.fetchone()
         return monster_data
 
+    def read_name_database(self):
+        cursor = self.__conn2.cursor()
+        cursor.execute(f'SELECT latin_name from monster_names WHERE rowid > ABS(random()) % ('
+                       f'SELECT max(rowid) from monster_names) LIMIT 1')
+        monster_name = cursor.fetchone()
+        return monster_name
+
     def create_ogre(self):
+        name = self.read_name_database()
+        (name,) = name
         ogre_stats = self.read_monster_database("Ogre")
-        (name,
+        (type,
          hit_points,
          attack_speed,
          chance_to_hit,
@@ -28,12 +38,14 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = ogre_stats
-        return Ogre(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Ogre(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                     minimum_heal_points, maximum_heal_points)
 
     def create_gremlin(self):
+        name = self.read_name_database()
+        (name,) = name
         gremlin_stats = self.read_monster_database("Gremlin")
-        (name,
+        (type,
          hit_points,
          attack_speed,
          chance_to_hit,
@@ -42,12 +54,14 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = gremlin_stats
-        return Gremlin(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Gremlin(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                        minimum_heal_points, maximum_heal_points)
 
     def create_skeleton(self):
+        name = self.read_name_database()
+        (name,) = name
         skeleton_stats = self.read_monster_database("Skeleton")
-        (name,
+        (type,
          hit_points,
          attack_speed,
          chance_to_hit,
@@ -56,7 +70,7 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = skeleton_stats
-        return Skeleton(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Skeleton(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                         minimum_heal_points, maximum_heal_points)
 
     def choose_monster(self):
@@ -72,8 +86,10 @@ class MonsterFactory:
             return choice
 
     def create_monster(self):
+        name = self.read_name_database()
+        (name,) = name
         monster_stats = self.choose_monster()
-        (name,
+        (type,
          hit_points,
          attack_speed,
          chance_to_hit,
@@ -83,7 +99,7 @@ class MonsterFactory:
          minimum_heal_points,
          maximum_heal_points) = monster_stats
 
-        return Monster(name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                        minimum_heal_points, maximum_heal_points)
 
     def main(self):
@@ -92,5 +108,9 @@ class MonsterFactory:
 
 if __name__ == '__main__':
     u = MonsterFactory()
-    creature = u.choose_monster()
-    creature.get_name()
+    creature1 = u.choose_monster()
+    creature1.get_name()
+    creature1.get_type()
+    creature2 = u.choose_monster()
+    creature2.get_name()
+    creature2.get_type()

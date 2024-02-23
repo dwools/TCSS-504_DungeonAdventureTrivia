@@ -4,9 +4,10 @@ from object_coordinates_generator import ValidCoordsGenerator
 
 
 class DungeonCharacter(ABC):
-    def __init__(self, name, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
+    def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
         self.__name = name
+        self.__type = type
         self.__hit_points = hit_points
         self.__attack_speed = attack_speed
         self.__chance_to_hit = chance_to_hit
@@ -29,6 +30,10 @@ class DungeonCharacter(ABC):
     def get_name(self):
         print(self.__name)
         return self.__name
+
+    def get_type(self):
+        print(self.__type)
+        return self.__type
 
     def get_hit_points(self):
         return self.__hit_points
