@@ -1,20 +1,20 @@
 # Import packages
 import random
 
-import pygame as pg  # import pygame
-from pygame.locals import *  # import the pygame modules
 import sys
 import textwrap
+
+import pygame as pg  # import pygame
+from pygame.locals import *  # import the pygame modules
 
 # Import project files
 
 import config as c
 import assets as a
 import gremlin
-from monster import Monster
-import monster_factory
+from monster import *
 
-from gremlin import Gremlin
+import monster_factory
 
 import room
 import initialize_databases
@@ -23,6 +23,7 @@ from dungeon import Maze
 from menu import *
 from ogre import Ogre
 from skeleton import Skeleton
+from gremlin import Gremlin
 
 """
 Contains the main logic for playing the game
@@ -89,15 +90,12 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(random.randint(65, 70)):
+        for _ in range(random.randint(10, 15)):
             creature = self.m_factory.choose_monster()
 
             if Gremlin == type(creature):
                 gremlin = self.m_factory.create_gremlin()
 
-                print(creature)
-
-                gremlin_movement = gremlin.set_monster_movement([0, 0])
                 gremlin_direction = gremlin.set_monster_direction(0)
                 gremlin_position = self.coords_generator.get_random_coords()
                 gremlin.set_position(gremlin_position)
@@ -109,10 +107,7 @@ class DungeonAdventure(Maze):
             elif Skeleton == type(creature):
                 skelly = self.m_factory.create_skeleton()
 
-                print(creature)
-
-                skelly_movement = skelly.set_monster_movement([0, 0])
-                skelly_direction = skelly.set_monster_direction(0)
+                skelly_direction = skelly.set_monster_direction(1)
                 skelly_position = self.coords_generator.get_random_coords()
                 skelly.set_position(skelly_position)
                 skelly_x, skelly_y = skelly.get_position()
@@ -124,10 +119,7 @@ class DungeonAdventure(Maze):
             elif Ogre == type(creature):
                 ogre = self.m_factory.create_ogre()
 
-                print(creature)
-
-                ogre_movement = ogre.set_monster_movement([0, 0])
-                ogre_direction = ogre.set_monster_direction(0)
+                ogre_direction = ogre.set_monster_direction(2)
                 ogre_position = self.coords_generator.get_random_coords()
                 ogre.set_position(ogre_position)
                 ogre_x, ogre_y = ogre.get_position()
@@ -186,6 +178,28 @@ class DungeonAdventure(Maze):
 
         dungeon_map = load_map()
 
+        def create_matrix(tile_set):
+            # Creating a map underneath the visual map that monsters will use in the pathfinding algorithm
+            # 0 is navigable space, 1 is obstacle / walls
+            tile_map = []
+
+            for row in tile_set:
+                # Check if the row is not empty
+                if row:
+                    row_tiles = []
+                    for tile in row:
+                        if tile == "f":  # floor
+                            row_tiles.append(0)
+                        elif tile == "n":  # North Wall (A separate north wall looks better in the GUI)
+                            row_tiles.append(1)
+                        elif tile == "w":  # Wall (for east, west, south walls)
+                            row_tiles.append(1)
+                    tile_map.append(row_tiles)
+
+            return tile_map
+
+        pathfinder = Pathfinder(create_matrix(dungeon_map))
+
         def tile_collision_test(rect, tiles):
             """ Testing whether a character collides with n tile. """
 
@@ -222,55 +236,6 @@ class DungeonAdventure(Maze):
                 elif movement[1] < 0:
                     rect.top = tile.bottom
                     tile_collision_types['top'] = True
-
-            return rect, tile_collision_types
-
-        def check_monster_wall_collisions(rect, movement, monster, tiles):
-            tile_collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
-            rect.x += movement[0]
-            hit_list = tile_collision_test(rect, tiles)
-            new_direction = random.randint(0, 3)
-            for tile in hit_list:
-
-                if movement[0] > 0:
-                    rect.right = tile.left
-                    tile_collision_types['right'] = True
-                    direction = monster.get_monster_direction()
-
-                    if new_direction == direction:
-                        new_direction = random.choice[0, 1, 2]
-                        monster.set_monster_direction(new_direction)
-                    else:
-                        monster.set_monster_direction(direction)
-
-                elif movement[0] < 0:
-                    rect.left = tile.right
-                    tile_collision_types['left'] = True
-                    direction = monster.get_monster_direction()
-
-                    if new_direction == direction:
-                        new_direction = random.choice[0, 1, 3]
-                        monster.set_monster_direction(new_direction)
-                    else:
-                        monster.set_monster_direction(direction)
-
-            rect.y += movement[1]
-            hit_list = tile_collision_test(rect, tiles)
-            for tile in hit_list:
-
-                if movement[1] > 0:
-                    rect.bottom = tile.top
-                    tile_collision_types['bottom'] = True
-                    direction = monster.get_monster_direction()
-
-                    monster.set_monster_direction(direction)
-
-                elif movement[1] < 0:
-                    rect.top = tile.bottom
-                    tile_collision_types['top'] = True
-                    direction = monster.get_monster_direction()
-
-                    monster.set_monster_direction(direction)
 
             return rect, tile_collision_types
 
@@ -321,8 +286,8 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
-            # set players position to 0,0
-            # update player position based on user input
+            # set players movement to 0,0
+            # update player movement based on user input
 
             self.player_movement = [0, 0]
             if self.moving_east:
@@ -348,47 +313,34 @@ class DungeonAdventure(Maze):
                               (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
 
             # Monster Nonsense
+
             for monster in self.monsters:
+                monster.set_monster_goal(self.player_rect)
+
                 if isinstance(monster, Gremlin):
                     gremlin_rect = monster.get_character_rect()
-                    gremlin_movement = monster.get_monster_movement()
-                    gremlin_rect, collisions = move(gremlin_rect, gremlin_movement, tile_rects)
+                    pathfinder.update(monster)
+                    pathfinder.draw_path(self.display, self.camera_scroll)
 
                     if monster.get_monster_direction() == 0:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
-
-                        gremlin_movement[1] += 1 / 60
-                        monster.set_monster_movement(gremlin_movement)
 
                         self.gremlin_image = pg.image.load(a.south_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 1:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
-
-                        gremlin_movement[1] -= 1 / 60
-                        monster.set_monster_movement(gremlin_movement)
 
                         self.gremlin_image = pg.image.load(a.north_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 2:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
-
-                        gremlin_movement[0] += 1 / 60
-                        monster.set_monster_movement(gremlin_movement)
 
                         self.gremlin_image = pg.image.load(a.east_gremlin)
                         self.display.blit(self.gremlin_image, (
                             gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 3:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(gremlin_rect, gremlin_movement, monster, tile_rects)
-
-                        gremlin_movement[0] -= 1 / 60
-                        monster.set_monster_movement(gremlin_movement)
 
                         self.gremlin_image = pg.image.load(a.west_gremlin)
                         self.display.blit(self.gremlin_image, (
@@ -396,34 +348,22 @@ class DungeonAdventure(Maze):
 
                 if isinstance(monster, Skeleton):
                     skelly_rect = monster.get_character_rect()
-                    skelly_movement = monster.get_monster_movement()
-                    skelly_rect, collisions = move(skelly_rect, skelly_movement, tile_rects)
+                    pathfinder.update(monster)
+                    pathfinder.draw_path(self.display, self.camera_scroll)
 
                     if monster.get_monster_direction() == 0:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
-
-                        skelly_movement[1] += 1 / 60
-                        monster.set_monster_movement(skelly_movement)
 
                         self.skelly_image = pg.image.load(a.south_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 1:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
-
-                        skelly_movement[1] -= 1 / 60
-                        monster.set_monster_movement(skelly_movement)
 
                         self.skelly_image = pg.image.load(a.north_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                     if monster.get_monster_direction() == 2:  # 0,1,2,3 == S,N,E,W
-                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
-
-                        skelly_movement[0] += 1 / 60
-                        monster.set_monster_movement(skelly_movement)
 
                         self.skelly_image = pg.image.load(a.east_skelly)
                         self.display.blit(self.skelly_image, (
@@ -431,18 +371,14 @@ class DungeonAdventure(Maze):
 
                     if monster.get_monster_direction() == 3:  # 0,1,2,3 == S,N,E,W
 
-                        check_monster_wall_collisions(skelly_rect, skelly_movement, monster, tile_rects)
-
-                        skelly_movement[0] -= 1 / 60
-                        monster.set_monster_movement(skelly_movement)
-
                         self.skelly_image = pg.image.load(a.west_skelly)
                         self.display.blit(self.skelly_image, (
                             skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
 
                 if isinstance(monster, Ogre):
                     ogre_rect = monster.get_character_rect()
-                    ogre_rect, collisions = move(ogre_rect, monster.get_monster_movement(), tile_rects)
+                    pathfinder.update(monster)
+                    pathfinder.draw_path(self.display, self.camera_scroll)
 
                     self.display.blit(self.ogre_image, (
                         ogre_rect.x - self.camera_scroll[0], ogre_rect.y - self.camera_scroll[1]))
@@ -467,6 +403,7 @@ class DungeonAdventure(Maze):
             # Draw the Gui to the screen, update it
             window_surface = pg.transform.scale(self.display, self.WINDOW_SIZE)
             self.screen.blit(window_surface, (0, 0))
+
             pg.display.update()  # Update the Display
             clock.tick(60)  # set the FPS
 
