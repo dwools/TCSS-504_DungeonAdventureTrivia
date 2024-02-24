@@ -12,6 +12,7 @@ from pygame.locals import *  # import the pygame modules
 import config as c
 import assets as a
 import gremlin
+import ogre
 from monster import *
 
 import monster_factory
@@ -96,7 +97,6 @@ class DungeonAdventure(Maze):
             if Gremlin == type(creature):
                 gremlin = self.m_factory.create_gremlin()
 
-                gremlin_direction = gremlin.set_monster_direction(0)
                 gremlin_position = self.coords_generator.get_random_coords()
                 gremlin.set_position(gremlin_position)
                 gremlin_x, gremlin_y = gremlin.get_position()
@@ -107,7 +107,6 @@ class DungeonAdventure(Maze):
             elif Skeleton == type(creature):
                 skelly = self.m_factory.create_skeleton()
 
-                skelly_direction = skelly.set_monster_direction(1)
                 skelly_position = self.coords_generator.get_random_coords()
                 skelly.set_position(skelly_position)
                 skelly_x, skelly_y = skelly.get_position()
@@ -119,7 +118,6 @@ class DungeonAdventure(Maze):
             elif Ogre == type(creature):
                 ogre = self.m_factory.create_ogre()
 
-                ogre_direction = ogre.set_monster_direction(2)
                 ogre_position = self.coords_generator.get_random_coords()
                 ogre.set_position(ogre_position)
                 ogre_x, ogre_y = ogre.get_position()
@@ -130,7 +128,7 @@ class DungeonAdventure(Maze):
 
         self.gremlin_image = pg.image.load(a.south_gremlin)
         self.skelly_image = pg.image.load(a.south_skelly)
-        self.ogre_image = pg.image.load(a.south_knight)  # to be replaced with Ogre sprite
+        self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
@@ -253,7 +251,6 @@ class DungeonAdventure(Maze):
             self.camera_scroll[1] += (self.player_rect.y - self.camera_scroll[1] - 120)
             self.camera_scroll[0] += 1
             self.camera_scroll[1] += 1
-
             # List containing tiles where collisions occur
             tile_rects = []
 
@@ -316,72 +313,45 @@ class DungeonAdventure(Maze):
 
             for monster in self.monsters:
                 monster.set_monster_goal(self.player_rect)
+                monster.set_player_scroll(self.camera_scroll)
+                monster.get_direction()
+                pathfinder.draw_path(self.display, self.camera_scroll)
+                pathfinder.update(monster)
+                rect = monster.get_character_rect()
 
                 if isinstance(monster, Gremlin):
-                    gremlin_rect = monster.get_character_rect()
-                    pathfinder.update(monster)
-                    pathfinder.draw_path(self.display, self.camera_scroll)
+                    monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
+                    monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
+                    monster.set_east_monster_sprite(pg.image.load(a.east_gremlin))
+                    monster.set_west_monster_sprite(pg.image.load(a.west_gremlin))
+                    monster.set_monster_sprite(pg.image.load(a.south_gremlin))
 
-                    if monster.get_monster_direction() == 0:  # 0,1,2,3 == S,N,E,W
-
-                        self.gremlin_image = pg.image.load(a.south_gremlin)
-                        self.display.blit(self.gremlin_image, (
-                            gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
-
-                    if monster.get_monster_direction() == 1:  # 0,1,2,3 == S,N,E,W
-
-                        self.gremlin_image = pg.image.load(a.north_gremlin)
-                        self.display.blit(self.gremlin_image, (
-                            gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
-
-                    if monster.get_monster_direction() == 2:  # 0,1,2,3 == S,N,E,W
-
-                        self.gremlin_image = pg.image.load(a.east_gremlin)
-                        self.display.blit(self.gremlin_image, (
-                            gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
-
-                    if monster.get_monster_direction() == 3:  # 0,1,2,3 == S,N,E,W
-
-                        self.gremlin_image = pg.image.load(a.west_gremlin)
-                        self.display.blit(self.gremlin_image, (
-                            gremlin_rect.x - self.camera_scroll[0], gremlin_rect.y - self.camera_scroll[1]))
+                    self.gremlin_image = monster.get_monster_sprite()
+                    self.display.blit(self.gremlin_image, (
+                        rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
 
                 if isinstance(monster, Skeleton):
-                    skelly_rect = monster.get_character_rect()
-                    pathfinder.update(monster)
-                    pathfinder.draw_path(self.display, self.camera_scroll)
+                    monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
+                    monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
+                    monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
+                    monster.set_west_monster_sprite(pg.image.load(a.west_skelly))
+                    monster.set_monster_sprite(pg.image.load(a.south_skelly))
 
-                    if monster.get_monster_direction() == 0:  # 0,1,2,3 == S,N,E,W
-
-                        self.skelly_image = pg.image.load(a.south_skelly)
-                        self.display.blit(self.skelly_image, (
-                            skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
-
-                    if monster.get_monster_direction() == 1:  # 0,1,2,3 == S,N,E,W
-
-                        self.skelly_image = pg.image.load(a.north_skelly)
-                        self.display.blit(self.skelly_image, (
-                            skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
-
-                    if monster.get_monster_direction() == 2:  # 0,1,2,3 == S,N,E,W
-
-                        self.skelly_image = pg.image.load(a.east_skelly)
-                        self.display.blit(self.skelly_image, (
-                            skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
-
-                    if monster.get_monster_direction() == 3:  # 0,1,2,3 == S,N,E,W
-
-                        self.skelly_image = pg.image.load(a.west_skelly)
-                        self.display.blit(self.skelly_image, (
-                            skelly_rect.x - self.camera_scroll[0], skelly_rect.y - self.camera_scroll[1]))
+                    self.skelly_image = monster.get_monster_sprite()
+                    self.display.blit(self.skelly_image, (
+                        rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
 
                 if isinstance(monster, Ogre):
-                    ogre_rect = monster.get_character_rect()
-                    pathfinder.update(monster)
-                    pathfinder.draw_path(self.display, self.camera_scroll)
 
+                    monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
+                    monster.set_north_monster_sprite(pg.image.load(a.north_rogue))
+                    monster.set_east_monster_sprite(pg.image.load(a.east_rogue))
+                    monster.set_west_monster_sprite(pg.image.load(a.west_rogue))
+                    monster.set_monster_sprite(pg.image.load(a.south_rogue))
+
+                    self.ogre_image = monster.get_monster_sprite()
                     self.display.blit(self.ogre_image, (
-                        ogre_rect.x - self.camera_scroll[0], ogre_rect.y - self.camera_scroll[1]))
+                        rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
 
             # test health for hud
 
