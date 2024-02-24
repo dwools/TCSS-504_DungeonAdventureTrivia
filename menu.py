@@ -677,7 +677,7 @@ class TriviaUI(Menu):
                 print('you have selected false')
 
                 # if answer == false, add pillar to backpack || else: relocate pillar
-                if not self.answer:
+                if self.answer:
                     print('You have chosen correctly')  # add pillar to backpack
                 else:
                     print('you failed')  # relocate pillar

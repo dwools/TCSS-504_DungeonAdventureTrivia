@@ -11,3 +11,7 @@ class TriviaQuestion:
 
     def get_answer(self):
         return self.__answer
+
+if __name__ == "__main__":
+    pass
+    # question = get_question()

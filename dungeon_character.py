@@ -1,3 +1,4 @@
+import random
 from abc import ABC, abstractmethod
 import pygame as pg
 from object_coordinates_generator import ValidCoordsGenerator
@@ -62,28 +63,34 @@ class DungeonCharacter(ABC):
     def get_character_rect(self):
         return self.__rect
 
-    # @abstractmethod
-    # def set_character(self, character):
-    #     self.__character = character
-    #
-    # @abstractmethod
-    # def set_hit_points(self, hit_points):
-    #     self.__hit_points = hit_points
-    #
-    # @abstractmethod
-    # def set_attack_speed(self, attack_speed):
-    #     self.__attack_speed = attack_speed
-    #
-    # @abstractmethod
-    # def set_chance_to_hit(self, chance_to_hit):
-    #     self.__chance_to_hit = chance_to_hit
-    #
-    # @abstractmethod
-    # def set_minimum_damage(self, minimum_damage):
-    #     self.__minimum_damage = minimum_damage
-    #
-    # @abstractmethod
-    # def set_maximum_damage(self, maximum_damage):
-    #     self.__maximum_damage = maximum_damage
+    def set_character(self, type):
+        self.__character = type
 
+    def set_hit_points(self, hit_points):
+        self.__hit_points = hit_points
+
+    def set_attack_speed(self, attack_speed):
+        self.__attack_speed = attack_speed
+
+    def set_chance_to_hit(self, chance_to_hit):
+        self.__chance_to_hit = chance_to_hit
+
+    def set_minimum_damage(self, minimum_damage):
+        self.__minimum_damage = minimum_damage
+
+    def set_maximum_damage(self, maximum_damage):
+        self.__maximum_damage = maximum_damage
+
+
+    def attack(self, opponent, chance_to_hit, minimum_damage, maximum_damage):
+        damage = random.randint(minimum_damage, maximum_damage)
+        if random.random() < chance_to_hit:  # random.random() by default generates a random value between 0 and 1
+            opponent.set_hit_points(opponent.get_hit_points() - damage)
+
+    # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
+    # Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.
+
+    @abstractmethod
+    def flee(self):
+        pass
 # if __name__ == '__main__':

@@ -84,3 +84,5 @@ class TriviaFactory:
 if __name__ == '__main__':
     u = TriviaFactory()
     trivia_question = u.create_question()
+    print(trivia_question.get_question())
+    print(trivia_question.get_answer())
