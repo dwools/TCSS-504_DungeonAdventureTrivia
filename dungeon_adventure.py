@@ -90,7 +90,7 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(random.randint(10, 15)):
+        for _ in range(20):
             creature = self.m_factory.choose_monster()
 
             if Gremlin == type(creature):

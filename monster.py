@@ -109,8 +109,8 @@ class Pathfinder:
         if self.path:
             points = []
             for point in self.path:
-                x = point.x * 16 - scroll[0]
-                y = point.y * 16 - scroll[1]
+                x = (point.x * 16 - scroll[0]) + 8
+                y = (point.y * 16 - scroll[1]) + 8
                 points.append((x, y))
             pg.draw.lines(screen, 'red', False, points, 3)
 
