@@ -1,9 +1,9 @@
 import random
 import sqlite3
 from monster import Monster
-from ogre import Ogre
-from gremlin import Gremlin
-from skeleton import Skeleton
+from monster_ogre import Ogre
+from monster_gremlin import Gremlin
+from monster_skeleton import Skeleton
 from dungeon_character import DungeonCharacter
 
 

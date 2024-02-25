@@ -28,8 +28,8 @@ def create_hero(conn, hero):
     :return:
     """
 
-    sql = ''' INSERT OR REPLACE INTO heroes('hero', 'hit_points', 'attack_speed', 'chance_to_hit', 'minimum_damage', 'maximum_damage', 'chance_to_block', 'chance_to_heal', 'minimum_heal_points', 'maximum_heal_points', 'chance_for_bonus_damage', 'minimum_bonus_damage', 'maximum_bonus_damage', 'chance_for_second_attack')
-              VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) '''
+    sql = ''' INSERT OR REPLACE INTO heroes('hero', 'hit_points', 'attack_speed', 'chance_to_hit', 'minimum_damage', 'maximum_damage', 'chance_to_block')
+              VALUES(?,?,?,?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, hero)
     conn.commit()
@@ -43,11 +43,11 @@ def main():
     conn = create_connection(database)
     with conn:
         # create a new project
-        priestess = ('Priestess', '75', '5', '0.7', '25', '45', '0.3', '0.7', '30', '60', '0', '0', '0', '0')
+        priestess = ('Priestess', '75', '5', '0.7', '25', '45', '0.3')
 
-        knight = ('Knight', '125', '4', '0.8', '35', '60', '0.2', '0', '0', '0', '0.4', '40', '115', '0')
+        knight = ('Knight', '125', '4', '0.8', '35', '60', '0.2')
 
-        rogue = ('Rogue', '75', '6', '0.8', '20', '40', '0.4', '0', '0', '0', '0', '0', '0', '0.4')
+        rogue = ('Rogue', '75', '6', '0.8', '20', '40', '0.4')
 
         create_hero(conn, priestess)
         create_hero(conn, knight)

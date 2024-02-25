@@ -13,18 +13,6 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="dungeon_heroes" uuid="dd1512b7-f5ee-4dd8-953a-f5fdacad1afc">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\dungeon_heroes.db</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <libraries>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.43.0/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar</url>
-        </library>
-      </libraries>
-    </data-source>
     <data-source source="LOCAL" name="monster_names" uuid="549df3bb-084a-4d04-aeba-4aba525994e1">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
@@ -37,11 +25,23 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="dungeon_trivia" uuid="390d4612-01a4-4cb2-a04e-e5171d709884">
+    <data-source source="LOCAL" name="dungeon_trivia" uuid="809b4678-67e2-4d17-adbf-48753a80d0ab">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\dungeon_trivia.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.43.0/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="dungeon_heroes" uuid="aa2b37b3-4fa7-4674-8026-780611a75e09">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\dwool\TCSS-504\TCSS-504_DungeonAdventureTrivia\dungeon_heroes.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

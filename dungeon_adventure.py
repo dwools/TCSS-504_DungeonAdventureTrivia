@@ -11,8 +11,8 @@ from pygame.locals import *  # import the pygame modules
 
 import config as c
 import assets as a
-import gremlin
-import ogre
+import monster_gremlin
+import monster_ogre
 from monster import *
 
 import monster_factory
@@ -22,9 +22,9 @@ import initialize_databases
 from object_coordinates_generator import ValidCoordsGenerator
 from dungeon import Maze
 from menu import *
-from ogre import Ogre
-from skeleton import Skeleton
-from gremlin import Gremlin
+from monster_ogre import Ogre
+from monster_skeleton import Skeleton
+from monster_gremlin import Gremlin
 
 """
 Contains the main logic for playing the game

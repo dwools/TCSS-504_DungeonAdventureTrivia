@@ -1,13 +1,17 @@
 import random
 import sqlite3
 from hero import Hero
+from hero_priestess import Priestess
+from hero_knight import Knight
+from hero_rogue import Rogue
+
 
 from dungeon_character import DungeonCharacter
 
 
-class MonsterFactory:
+class HeroFactory:
     def __init__(self):
-        self.__conn1 = sqlite3.connect('dungeon_monsters.db')
+        self.__conn1 = sqlite3.connect('dungeon_heroes.db')
         self.__conn2 = sqlite3.connect('monster_names.db')
 
     def read_hero_database(self, row):
@@ -22,7 +26,7 @@ class MonsterFactory:
         monster_name = cursor.fetchone()
         return monster_name
 
-    def create_priestess(self):
+    def create_priestess(self, chance_to_heal=0.7, minimum_heal_points=30, maximum_heal_points=60):
         name = self.read_name_database()
         (name,) = name
         priestess_stats = self.read_hero_database("Priestess")
@@ -32,17 +36,12 @@ class MonsterFactory:
          chance_to_hit,
          minimum_damage,
          maximum_damage,
-         chance_to_block,
-         chance_to_heal,
-         minimum_heal_points,
-         maximum_heal_points,
-         chance_for_bonus_damage,
-         minimum_bonus_damage,
-         maximum_bonus_damage,
-         chance_for_second_attack) = priestess_stats
-        return Hero(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_to_heal, minimum_heal_points, maximum_heal_points, chance_for_bonus_damage, minimum_bonus_damage, maximum_bonus_damage, chance_for_second_attack)
+         chance_to_block
+         ) = priestess_stats
 
-    def create_knight(self):
+        return Priestess(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_to_heal, minimum_heal_points, maximum_heal_points)
+
+    def create_knight(self, chance_for_crushing_blow=0.4, minimum_crushing_damage=75, maximum_crushing_damage=175):
         name = self.read_name_database()
         (name,) = name
         knight_stats = self.read_hero_database("Knight")
@@ -52,17 +51,12 @@ class MonsterFactory:
          chance_to_hit,
          minimum_damage,
          maximum_damage,
-         chance_to_block,
-         chance_to_heal,
-         minimum_heal_points,
-         maximum_heal_points,
-         chance_for_bonus_damage,
-         minimum_bonus_damage,
-         maximum_bonus_damage,
-         chance_for_second_attack) = knight_stats
-        return Hero(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_to_heal, minimum_heal_points, maximum_heal_points, chance_for_bonus_damage, minimum_bonus_damage, maximum_bonus_damage, chance_for_second_attack)
+         chance_to_block
+         ) = knight_stats
 
-    def create_rogue(self):
+        return Knight(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_for_crushing_blow, minimum_crushing_damage, maximum_crushing_damage)
+
+    def create_rogue(self, chance_for_second_attack=0.4):
         name = self.read_name_database()
         (name,) = name
         rogue_stats = self.read_hero_database("Rogue")
@@ -72,15 +66,8 @@ class MonsterFactory:
          chance_to_hit,
          minimum_damage,
          maximum_damage,
-         chance_to_block,
-         chance_to_heal,
-         minimum_heal_points,
-         maximum_heal_points,
-         chance_for_bonus_damage,
-         minimum_bonus_damage,
-         maximum_bonus_damage,
-         chance_for_second_attack) = rogue_stats
-        return Hero(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_to_heal, minimum_heal_points, maximum_heal_points, chance_for_bonus_damage, minimum_bonus_damage, maximum_bonus_damage, chance_for_second_attack)
+         chance_to_block) = rogue_stats
+        return Rogue(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_for_second_attack)
 
     # def choose_monster(self):
     #     monster_choice = random.randint(1, 3)
@@ -111,7 +98,10 @@ class MonsterFactory:
     #     return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
     #                    minimum_heal_points, maximum_heal_points)
 
-    def main(self):
-        pass
+
+if __name__ == '__main__':
+    h = HeroFactory()
+    k = h.create_knight()
+    k.get_chance_for_crushing_blow()
 
 

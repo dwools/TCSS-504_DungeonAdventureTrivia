@@ -1,0 +1,36 @@
+Turn-based
+
+initiate when player and monster rectangles collide
+
+terminate when player or monster health reaches 0
+
+player controls player actions. monster actions automated.
+
+First attack per turn based on higher attack speed attribute.
+
+Monster actions include:
+	attack
+	heal
+		"smart" example: only heal when HP is low
+
+player actions include:
+	attack
+	heal (priestess)
+	double attack (rogue)
+	flee?
+	take health potion
+	
+
+Things that may happen during combat:
+	Player blocks monster attack (roll)
+	Attack may miss (roll)
+	Knight attack gives extra damage (roll for instance and value)
+
+
+
+
+Visualization?
+	menu for options
+	mid-combat assets?
+
+

@@ -133,9 +133,9 @@ def main():
         create_international_trivia(conn, international_trivia_9)
         create_international_trivia(conn, international_trivia_10)
 
-        astronomy_trivia_1 = ('Pluto is a planet.', 'FALSE')
+        astronomy_trivia_1 = ('Neptune is sideways, with an axial tilt 82.23 degrees.', 'FALSE')
         astronomy_trivia_2 = ('There are more possible moves in a game of chess then there are atoms in the universe.', 'TRUE')
-        astronomy_trivia_3 = ('Mercury is the hottest planet in the solar system.', 'FALSE')
+        astronomy_trivia_3 = ('Jupiter\'s largest moon, Ganymede, is larger than the planet Mercury.', 'TRUE')
         astronomy_trivia_4 = ('At the end of its life, the Sun will collapse into a black hole.', 'FALSE')
         astronomy_trivia_5 = ('There are more trees on earth than there are stars in the Milky Way.', 'TRUE')
         astronomy_trivia_6 = ('Venus is the brightest celestial object in the sky.', 'FALSE')
@@ -154,7 +154,7 @@ def main():
         create_astronomy_trivia(conn, astronomy_trivia_9)
         create_astronomy_trivia(conn, astronomy_trivia_10)
 
-        elapids_trivia_1 = ('The king cobra, the longest and largest venomous snake in the world, in addition to envenomation, will also constrict small prey.', 'FALSE')
+        elapids_trivia_1 = ('The king cobra, the longest venomous snake and largest elapid in the world, in addition to envenomation, will also constrict small prey.', 'FALSE')
         elapids_trivia_2 = ('The black mamba causes the most human fatalities per year out of any snake species.', 'FALSE')
         elapids_trivia_3 = ('The inland taipan, the most venomous snake in the world by venom toxicity, is native to Africa.', 'FALSE')
         elapids_trivia_4 = ('Most elapids predominantly produce a neurotoxic venom, as compared to vipers which produce a predominantly hemotoxic venom.', 'TRUE')

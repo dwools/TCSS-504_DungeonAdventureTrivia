@@ -44,14 +44,7 @@ def main():
                                     chance_to_hit float,
                                     minimum_damage integer,
                                     maximum_damage integer,
-                                    chance_to_block float,
-                                    chance_to_heal float,
-                                    minimum_heal_points integer,
-                                    maximum_heal_points integer,
-                                    chance_for_bonus_damage float,
-                                    minimum_bonus_damage integer,
-                                    maximum_bonus_damage integer,
-                                    chance_for_second_attack float
+                                    chance_to_block float
                                     ); """
 
     # create a database connection
