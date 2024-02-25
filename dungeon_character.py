@@ -60,6 +60,12 @@ class DungeonCharacter(ABC):
     def set_character_rect(self, x, y):
         self.__rect = pg.Rect(y, x, 16, 16)
 
+    def set_monster_rect(self, monster_rect):
+        self.__rect = monster_rect
+
+    def set_monster_position(self, monster_position):
+        self.__position = monster_position
+
     def get_character_rect(self):
         return self.__rect
 

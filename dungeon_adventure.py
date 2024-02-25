@@ -76,7 +76,7 @@ class DungeonAdventure(Maze):
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = [16, 16]
+        self.player_position = [16, 112]
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
@@ -93,18 +93,23 @@ class DungeonAdventure(Maze):
 
         for _ in range(1):
             creature = self.m_factory.choose_monster()
+            # choose monsters
 
             if Gremlin == type(creature):
+                # if monster is a gremlin, create it directly
+
                 gremlin = self.m_factory.create_gremlin()
 
                 gremlin_position = self.coords_generator.get_random_coords()
-                gremlin.set_position(gremlin_position)
+                gremlin.set_position(gremlin_position)  # Set monster initial position to random coords
                 gremlin_x, gremlin_y = gremlin.get_position()
-                gremlin_rect = gremlin.set_character_rect(gremlin_x, gremlin_y)
+                gremlin_rect = gremlin.set_character_rect(gremlin_x,
+                                                          gremlin_y)  # Use random coords to create a rect at coords
                 self.monster_rects.append(gremlin_rect)
                 self.monsters.append(gremlin)
 
             elif Skeleton == type(creature):
+                # if monster is a skeleton, create it directly
                 skelly = self.m_factory.create_skeleton()
 
                 skelly_position = self.coords_generator.get_random_coords()
@@ -116,6 +121,7 @@ class DungeonAdventure(Maze):
                 self.monsters.append(skelly)
 
             elif Ogre == type(creature):
+                # if monster is an ogre, create it directly
                 ogre = self.m_factory.create_ogre()
 
                 ogre_position = self.coords_generator.get_random_coords()
@@ -126,6 +132,7 @@ class DungeonAdventure(Maze):
 
                 self.monsters.append(ogre)
 
+        # Load up base images
         self.gremlin_image = pg.image.load(a.south_gremlin)
         self.skelly_image = pg.image.load(a.south_skelly)
         self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
@@ -160,6 +167,10 @@ class DungeonAdventure(Maze):
         background_audio = pg.mixer.music.play(-1)  # loops indefinitely
         background_audio = pg.mixer.music.set_volume(0.0)  # scale of 0->1
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        # Create the map for visuals, create the matrix for monsters
         # Map 20w x 15h
         def load_map():
             """ Reading-in the tilemap from the dungeon.txt map file.
@@ -251,6 +262,7 @@ class DungeonAdventure(Maze):
             self.camera_scroll[1] += (self.player_rect.y - self.camera_scroll[1] - 120)
             self.camera_scroll[0] += 1
             self.camera_scroll[1] += 1
+
             # List containing tiles where collisions occur
             tile_rects = []
 
@@ -283,6 +295,11 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            # Update Sprites for Player
+
             # set players movement to 0,0
             # update player movement based on user input
 
@@ -309,20 +326,25 @@ class DungeonAdventure(Maze):
             self.display.blit(self.player_image,
                               (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
 
-            # Monster Nonsense
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            # Update the sprites for the monsters
 
             for monster in self.monsters:
+                """ For monster in list of monsters, get monster rect, get monster position, 
+                calculate monster's path to the player, update monster position based on path to the player.
+                """
+
                 monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
                 monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
-                pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
-
-
+                pathfinder.draw_path(self.display,
+                                     self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
+                pathfinder.update(monster)  # Updating the monster's path based on player position
+                rect = monster.get_character_rect()  # Get the monster's rect to move
+                monster.update()  # Update the monsters position based on the above path
 
                 if isinstance(monster, Gremlin):
-                    pathfinder.update(monster)
-                    monster.update()
-                    rect = monster.get_character_rect()
-
                     monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
                     monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
                     monster.set_east_monster_sprite(pg.image.load(a.east_gremlin))
@@ -332,15 +354,11 @@ class DungeonAdventure(Maze):
 
                     self.gremlin_image = monster.get_monster_sprite()
                     self.display.blit(self.gremlin_image, (
-                        rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                    print("Gameloop rect.x: ", rect.x)
-                    print("Gameloop rect.y: ", rect.y)
+                        rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
+                    print("Gameloop rect.x: ", rect.x)  # Rect x is the position where the monster is being drawn
+                    print("Gameloop rect.y: ", rect.y)  # same for y
 
                 if isinstance(monster, Skeleton):
-                    pathfinder.update(monster)
-                    monster.update()
-                    rect = monster.get_character_rect()
-
                     monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
                     monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
                     monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
@@ -356,10 +374,6 @@ class DungeonAdventure(Maze):
                     print("Gameloop rect.y: ", rect.y)
 
                 if isinstance(monster, Ogre):
-                    pathfinder.update(monster)
-                    monster.update()
-                    rect = monster.get_character_rect()
-
                     monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
                     monster.set_north_monster_sprite(pg.image.load(a.north_rogue))
                     monster.set_east_monster_sprite(pg.image.load(a.east_rogue))
@@ -372,6 +386,11 @@ class DungeonAdventure(Maze):
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
                     print("Gameloop rect.x: ", rect.x)
                     print("Gameloop rect.y: ", rect.y)
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            # Create the Heads Up Display, draw it to the screen, update it with player stats dynamically
 
             # test health for hud
 
@@ -389,6 +408,9 @@ class DungeonAdventure(Maze):
 
             # Setup Lives
             self.draw_text(c.system_font, f'Lives: ', 10, 50, 90, c.BLACK)
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             # Draw the Gui to the screen, update it
             window_surface = pg.transform.scale(self.display, self.WINDOW_SIZE)

@@ -91,21 +91,41 @@ class Monster(DungeonCharacter):
         row = self.__rect.centery // 16
         return col, row
 
+    def get_position_from_coordinate(self, coords):
+        print("These are the coords: ", coords)
+        col, row = coords
+        row_movement, col_movement = self.__movement
+        x = (col + row_movement)
+        print(x)
+        y = (row + col_movement)
+        print(y)
+        new_coords = x, y
+        print(new_coords)
+        return new_coords
+
     def set_path(self, path):
         self.__path = path
         self.create_collision_rects()
         self.get_direction()
 
     def create_collision_rects(self):
+        """ Create a rectangle over a tile,
+        if the monster collides with that tile.
+        Append that collision rect to a list that will be used in the check_collisions method.
+        """
+
         if self.__path:
             self.__collision_rects = []
             for point in self.__path:
                 x = (point.x * 16) + 8
                 y = (point.y * 16) + 8
-                rect = pg.Rect((x - 4, y - 4), (8, 8))
+                rect = pg.Rect((x - 2, y - 2), (4, 4))
                 self.__collision_rects.append(rect)
 
     def check_collisions(self):
+        """ Check for collisions, if monster collides, delete that rect and move to the next rect in the path.
+        """
+
         if self.__collision_rects:
             for rect in self.__collision_rects:
                 if rect.collidepoint(self.__position):
@@ -172,19 +192,26 @@ class Monster(DungeonCharacter):
     def set_player_scroll(self, scroll):
         self.__player_scroll = scroll
 
-    def set_monster_rect(self, rect):
-        self.__rect = rect
-
-    def update(self):
-        print("Before Update - Position:", self.__position)
-        print("Before Update - Direction:", self.__direction)
-        print("Before Update - Speed", self.__speed)
+    def update(self):  # Update the monsters position
+        print("Before Update - Position:", self.__position)  # position before movement
+        print("Before Update - Direction:",
+              self.__direction)  # monster's current direction (moving towards player, following the path)
+        print("Before Update - Speed", self.__speed)  # Monster's speed
 
         self.__position += self.__direction * self.__speed
-        self.check_collisions()
-        self.__rect.center = self.__position
+        self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
 
-        print("After Update - Position:", self.__position)
+        self.check_collisions()  # Checks if  monster collides with a wall
+
+        self.__position = self.get_position_from_coordinate(self.__rect.center)
+        print("After Conversion - Position:", self.__position)
+
+        self.set_monster_position(self.__position)
+        print("Monster Position set to: ", self.__position)
+
+        self.set_monster_rect(self.__rect)
+
+        print("After Update - Position:", self.__position)  # position after movement
 
         # Update __movement based on __direction
         if self.__direction.x > 0:
@@ -199,6 +226,7 @@ class Monster(DungeonCharacter):
 
 # Abstract classes are parent classes. We write them to consolidate information for objects that share characteristic
 # We do it when there isn't enough information to warrant an instance of a class.
+
 
 # Any set methods need to ensure the data being passed in looks okay, and if not, raise an exception.
 class Pathfinder:
@@ -228,6 +256,7 @@ class Pathfinder:
     def create_path(self, monster):
         # start cell
         monster_start = monster.get_character_rect()
+        print(f"MONSTER START: {monster_start} \n")
         start_x, start_y = monster_start.x, monster_start.y
         start = self.grid.node(start_x // 16, start_y // 16)
 
@@ -254,4 +283,4 @@ class Pathfinder:
     def update(self, monster):
         self.set_monster(monster)
         self.create_path(monster)
-        self.monster.update()
+        # self.monster.update()
