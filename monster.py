@@ -24,7 +24,7 @@ class Monster(DungeonCharacter):
                  ):
         super().__init__(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage)
 
-        self.__speed = 1.5
+        self.__speed = 2
         self.__movement = [0, 0]
         self.__direction = pg.math.Vector2(0, 0)
         self.__monster_goal = None
@@ -87,9 +87,9 @@ class Monster(DungeonCharacter):
     # Mechanic Methods
 
     def get_coordinate(self):
-        col = self.rect.centerx // 16
-        row = self.rect.centery // 16
-        return (col, row)
+        col = self.__rect.centerx // 16
+        row = self.__rect.centery // 16
+        return col, row
 
     def set_path(self, path):
         self.__path = path
@@ -102,7 +102,7 @@ class Monster(DungeonCharacter):
             for point in self.__path:
                 x = (point.x * 16) + 8
                 y = (point.y * 16) + 8
-                rect = pg.Rect((x - 1, y - 1), (2, 2))
+                rect = pg.Rect((x - 4, y - 4), (8, 8))
                 self.__collision_rects.append(rect)
 
     def check_collisions(self):
@@ -111,6 +111,8 @@ class Monster(DungeonCharacter):
                 if rect.collidepoint(self.__position):
                     del self.__collision_rects[0]
                     self.get_direction()
+        else:
+            self.__path = []
 
     def get_direction(self):
         if self.__collision_rects:
@@ -118,17 +120,17 @@ class Monster(DungeonCharacter):
             end = pg.math.Vector2(self.__collision_rects[0].center)
             self.__direction = (end - start).normalize()
 
-            if self.__direction == pg.math.Vector2(0, 1):
-                self.__current_sprite = self.__south_monster_sprite
-
-            if self.__direction == pg.math.Vector2(1, 1):
-                self.__current_sprite = self.__north_monster_sprite
-
-            if self.__direction == pg.math.Vector2(0, 0):
-                self.__current_sprite = self.__east_monster_sprite
-
-            if self.__direction == pg.math.Vector2(1, 0):
-                self.__current_sprite = self.__west_monster_sprite
+            # if self.__direction == pg.math.Vector2(0, 1):
+            #     self.__current_sprite = self.__south_monster_sprite
+            #
+            # if self.__direction == pg.math.Vector2(1, 1):
+            #     self.__current_sprite = self.__north_monster_sprite
+            #
+            # if self.__direction == pg.math.Vector2(0, 0):
+            #     self.__current_sprite = self.__east_monster_sprite
+            #
+            # if self.__direction == pg.math.Vector2(1, 0):
+            #     self.__current_sprite = self.__west_monster_sprite
 
         else:
             self.__direction = pg.math.Vector2(0, 0)
@@ -170,10 +172,29 @@ class Monster(DungeonCharacter):
     def set_player_scroll(self, scroll):
         self.__player_scroll = scroll
 
+    def set_monster_rect(self, rect):
+        self.__rect = rect
+
     def update(self):
+        print("Before Update - Position:", self.__position)
+        print("Before Update - Direction:", self.__direction)
+        print("Before Update - Speed", self.__speed)
+
         self.__position += self.__direction * self.__speed
         self.check_collisions()
         self.__rect.center = self.__position
+
+        print("After Update - Position:", self.__position)
+
+        # Update __movement based on __direction
+        if self.__direction.x > 0:
+            self.__movement = [self.__speed, 0]
+        elif self.__direction.x < 0:
+            self.__movement = [-self.__speed, 0]
+        elif self.__direction.y > 0:
+            self.__movement = [0, self.__speed]
+        elif self.__direction.y < 0:
+            self.__movement = [0, -self.__speed]
 
 
 # Abstract classes are parent classes. We write them to consolidate information for objects that share characteristic
@@ -199,10 +220,10 @@ class Pathfinder:
     def set_monster(self, monster):
         self.monster, self.path = monster, self.empty_path()
 
-    def draw_active_cell(self, monster):
-        target = monster.get_monster_goal()  # coords of player in the overworld
-        row = target.x // 16
-        col = target.y // 16
+    # def draw_active_cell(self, monster):
+    #     target = monster.get_monster_goal()  # coords of player in the overworld
+    #     row = target.x // 16
+    #     col = target.y // 16
 
     def create_path(self, monster):
         # start cell
@@ -233,5 +254,4 @@ class Pathfinder:
     def update(self, monster):
         self.set_monster(monster)
         self.create_path(monster)
-        self.draw_active_cell(monster)
         self.monster.update()
