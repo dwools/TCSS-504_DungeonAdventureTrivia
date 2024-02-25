@@ -91,7 +91,7 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(20):
+        for _ in range(1):
             creature = self.m_factory.choose_monster()
 
             if Gremlin == type(creature):
@@ -312,46 +312,66 @@ class DungeonAdventure(Maze):
             # Monster Nonsense
 
             for monster in self.monsters:
-                monster.set_monster_goal(self.player_rect)
-                monster.set_player_scroll(self.camera_scroll)
-                monster.get_direction()
-                pathfinder.draw_path(self.display, self.camera_scroll)
-                pathfinder.update(monster)
-                rect = monster.get_character_rect()
+                monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
+                monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
+                pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
+
+
 
                 if isinstance(monster, Gremlin):
+                    pathfinder.update(monster)
+                    monster.update()
+                    rect = monster.get_character_rect()
+
                     monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
                     monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
                     monster.set_east_monster_sprite(pg.image.load(a.east_gremlin))
                     monster.set_west_monster_sprite(pg.image.load(a.west_gremlin))
-                    monster.set_monster_sprite(pg.image.load(a.south_gremlin))
+
+                    monster.set_monster_sprite(monster.get_south_monster_sprite())
 
                     self.gremlin_image = monster.get_monster_sprite()
                     self.display.blit(self.gremlin_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    print("Gameloop rect.x: ", rect.x)
+                    print("Gameloop rect.y: ", rect.y)
 
                 if isinstance(monster, Skeleton):
+                    pathfinder.update(monster)
+                    monster.update()
+                    rect = monster.get_character_rect()
+
                     monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
                     monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
                     monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
                     monster.set_west_monster_sprite(pg.image.load(a.west_skelly))
-                    monster.set_monster_sprite(pg.image.load(a.south_skelly))
+                    # monster.set_monster_sprite(pg.image.load(a.south_skelly))
+
+                    monster.set_monster_sprite(monster.get_south_monster_sprite())
 
                     self.skelly_image = monster.get_monster_sprite()
                     self.display.blit(self.skelly_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    print("Gameloop rect.x: ", rect.x)
+                    print("Gameloop rect.y: ", rect.y)
 
                 if isinstance(monster, Ogre):
+                    pathfinder.update(monster)
+                    monster.update()
+                    rect = monster.get_character_rect()
 
                     monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
                     monster.set_north_monster_sprite(pg.image.load(a.north_rogue))
                     monster.set_east_monster_sprite(pg.image.load(a.east_rogue))
                     monster.set_west_monster_sprite(pg.image.load(a.west_rogue))
-                    monster.set_monster_sprite(pg.image.load(a.south_rogue))
+
+                    monster.set_monster_sprite(monster.get_south_monster_sprite())
 
                     self.ogre_image = monster.get_monster_sprite()
                     self.display.blit(self.ogre_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    print("Gameloop rect.x: ", rect.x)
+                    print("Gameloop rect.y: ", rect.y)
 
             # test health for hud
 
