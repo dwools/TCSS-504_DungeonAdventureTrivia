@@ -58,26 +58,27 @@ class DungeonCharacter(ABC):
 
 
     def set_position(self, position): # ensure that the tile is f before moving it.
-        def load_map():
-            """ Reading-in the tilemap from the dungeon.txt map file.
-            """
-
-            file = open('dungeon.txt', 'r')
-            data = file.read()
-            file.close()
-            data = data.split('\n')
-            dungeon_map = []
-            for row in data:
-                dungeon_map.append((list(row)))
-            return dungeon_map
-
-        dungeon_map = load_map()
-        x = position[0]
-        y = position[1]
-        if dungeon_map[x // 16][y // 16] == 'f':
-            self.__position = position
-        else:
-            pass
+        self.__position = position
+        # def load_map():
+        #     """ Reading-in the tilemap from the dungeon.txt map file.
+        #     """
+        #
+        #     file = open('dungeon.txt', 'r')
+        #     data = file.read()
+        #     file.close()
+        #     data = data.split('\n')
+        #     dungeon_map = []
+        #     for row in data:
+        #         dungeon_map.append((list(row)))
+        #     return dungeon_map
+        #
+        # dungeon_map = load_map()
+        # x = position[0]
+        # y = position[1]
+        # if dungeon_map[x // 16][y // 16] == 'f':
+        #     self.__position = position
+        # else:
+        #     pass
 
     def get_character_rect(self):
         return self.__rect
