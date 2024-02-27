@@ -1,0 +1,13 @@
+Why are monsters getting stuck in the walls?
+
+1. Are they moving along the maze floor? Or are they following the shortest "as the crow flies" route and moving diagonally? 
+	Monsters appear to move over the maze diagonally. 
+
+2. Why are position values being set to non-floor spaces? How can we preclude this? 
+
+	The pathfinder algorithm lays down a red line that doesn't cross through walls. Why 	is the monster not following this? How can we get the monster to follow the red 		line more strictly? 
+
+
+3. Why/how are monsters allowed to occupy walled-off spaces in the first place? What
+	Edit the set_position method to see if the new position is going to be in a wall, and if not, find a new position(?)
+

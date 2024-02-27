@@ -53,8 +53,6 @@ class Monster(DungeonCharacter):
         print("Before Update - Movement: ", self.__movement)
         print("Before Update - Coordinates: ", self.get_coordinate())
         position += self.__direction * self.__speed
-
-
         # if self.__path:  # if self.__path [] is not empty:
         #     position = self.__path[0]
         #     x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
