@@ -48,7 +48,7 @@ class DungeonAdventure(Maze):
         self.interacting, self.left_clicked, self.escaping = False, False, False
 
         # Game Status
-        self.running, self.playing, self.paused = True, False, False
+        self.running, self.playing, self.paused, self.in_menu = True, False, False, True
 
         # Menu Status
         self.main_menu = MainMenu(self)
@@ -93,44 +93,51 @@ class DungeonAdventure(Maze):
 
         for _ in range(1):
             creature = self.m_factory.choose_monster()
+            creature_position = self.coords_generator.get_random_coords()
+            creature.set_position(creature_position)  # Set monster initial position to random coords
+            creature_x, creature_y = creature.get_position()
+            creature_rect = creature.set_character_rect(creature_x,
+                                                      creature_y)  # Use random coords to create a rect at coords
+            self.monster_rects.append(creature_rect)
+            self.monsters.append(creature)
             # choose monsters
 
-            if Gremlin == type(creature):
-                # if monster is a gremlin, create it directly
-
-                gremlin = self.m_factory.create_gremlin()
-
-                gremlin_position = self.coords_generator.get_random_coords()
-                gremlin.set_position(gremlin_position)  # Set monster initial position to random coords
-                gremlin_x, gremlin_y = gremlin.get_position()
-                gremlin_rect = gremlin.set_character_rect(gremlin_x,
-                                                          gremlin_y)  # Use random coords to create a rect at coords
-                self.monster_rects.append(gremlin_rect)
-                self.monsters.append(gremlin)
-
-            elif Skeleton == type(creature):
-                # if monster is a skeleton, create it directly
-                skelly = self.m_factory.create_skeleton()
-
-                skelly_position = self.coords_generator.get_random_coords()
-                skelly.set_position(skelly_position)
-                skelly_x, skelly_y = skelly.get_position()
-                skelly_rect = skelly.set_character_rect(skelly_x, skelly_y)
-                self.monster_rects.append(skelly_rect)
-
-                self.monsters.append(skelly)
-
-            elif Ogre == type(creature):
-                # if monster is an ogre, create it directly
-                ogre = self.m_factory.create_ogre()
-
-                ogre_position = self.coords_generator.get_random_coords()
-                ogre.set_position(ogre_position)
-                ogre_x, ogre_y = ogre.get_position()
-                ogre_rect = ogre.set_character_rect(ogre_x, ogre_y)
-                self.monster_rects.append(ogre_rect)
-
-                self.monsters.append(ogre)
+            # if Gremlin == type(creature):
+            #     # if monster is a gremlin, create it directly
+            #
+            #     gremlin = self.m_factory.create_gremlin()
+            #
+            #     gremlin_position = self.coords_generator.get_random_coords()
+            #     gremlin.set_position(gremlin_position)  # Set monster initial position to random coords
+            #     gremlin_x, gremlin_y = gremlin.get_position()
+            #     gremlin_rect = gremlin.set_character_rect(gremlin_x,
+            #                                               gremlin_y)  # Use random coords to create a rect at coords
+            #     self.monster_rects.append(gremlin_rect)
+            #     self.monsters.append(gremlin)
+            #
+            # elif Skeleton == type(creature):
+            #     # if monster is a skeleton, create it directly
+            #     skelly = self.m_factory.create_skeleton()
+            #
+            #     skelly_position = self.coords_generator.get_random_coords()
+            #     skelly.set_position(skelly_position)
+            #     skelly_x, skelly_y = skelly.get_position()
+            #     skelly_rect = skelly.set_character_rect(skelly_x, skelly_y)
+            #     self.monster_rects.append(skelly_rect)
+            #
+            #     self.monsters.append(skelly)
+            #
+            # elif Ogre == type(creature):
+            #     # if monster is an ogre, create it directly
+            #     ogre = self.m_factory.create_ogre()
+            #
+            #     ogre_position = self.coords_generator.get_random_coords()
+            #     ogre.set_position(ogre_position)
+            #     ogre_x, ogre_y = ogre.get_position()
+            #     ogre_rect = ogre.set_character_rect(ogre_x, ogre_y)
+            #     self.monster_rects.append(ogre_rect)
+            #
+            #     self.monsters.append(ogre)
 
         # Load up base images
         self.gremlin_image = pg.image.load(a.south_gremlin)
@@ -436,23 +443,23 @@ class DungeonAdventure(Maze):
                 if event.key == K_w or event.key == K_UP:  # 0,1,2,3 == S,N,E,W
                     self.moving_north = True
                     self.player_direction = 1
-                    print("Moving North")
+                    # print("Moving North")
 
                 if event.key == K_s or event.key == K_DOWN:
                     self.moving_south = True
                     self.player_direction = 0
-                    print("Moving South")
+                    # print("Moving South")
 
                 if event.key == K_a or event.key == K_LEFT:
                     self.moving_west = True
                     self.player_direction = 3
-                    print("Moving West")
+                    # print("Moving West")
 
                 if event.key == K_d or event.key == K_RIGHT:
                     self.moving_east = True
                     self.player_direction = 2
 
-                    print("Moving East")
+                    # print("Moving East")
 
                 if event.key == K_e:
                     self.interacting = True

@@ -20,7 +20,7 @@ class Monster(DungeonCharacter):
                  maximum_damage,
                  chance_to_heal,
                  minimum_heal_points,
-                 maximum_heal_points,
+                 maximum_heal_points
                  ):
         super().__init__(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage)
 
@@ -34,8 +34,8 @@ class Monster(DungeonCharacter):
         self.__chance_to_heal = chance_to_heal
         self.__minimum_heal_points = minimum_heal_points
         self.__maximum_heal_points = maximum_heal_points
-        self.__rect = self.get_character_rect()
-        self.__position = self.__rect.center
+        # self.__rect = self.get_character_rect()
+        # self.__position = self.__rect.center
         self.__player_scroll = [0, 0]
 
         self.__south_monster_sprite = None
@@ -44,6 +44,69 @@ class Monster(DungeonCharacter):
         self.__west_monster_sprite = None
         self.__current_sprite = self.__south_monster_sprite
 
+    def update(self):  # Update the monsters position
+        position = self.get_position()
+        rectangle = self.get_character_rect()
+        print("Before Update - Position:", self.get_position())  # position before movement
+        print("Before Update - Direction:",
+              self.__direction)  # monster's current direction (moving towards player, following the path)
+        print("Before Update - Speed:", self.__speed)  # Monster's speed
+        print("Before Update - Coordinates: ", self.get_coordinate())
+        # position += self.__direction * self.__speed
+        if self.__path:  # if self.__path [] is not empty:
+            position = self.__path[0]
+            x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
+            y = position.y * 16  # likewise for y.
+            self.set_position([x, y])  # Pop the first "step" toward player and set position to that "step"
+            rectangle.center = [x, y]
+
+        # self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
+
+        self.check_collisions()  # Checks if  monster collides with a wall
+
+        # self.__position = self.get_position_from_coordinate(self.__rect.center)
+        # print("After Conversion - Position:", self.__position)
+        #
+        # self.set_monster_position(self.__position)
+        # print("Monster Position set to: ", self.__position)
+        #
+        # self.set_monster_rect(self.__rect)
+        #
+        print(f"After Update - Position: {self.get_position()}")  # position after movement
+        print(f"After Update - Direction: {self.__direction}")
+        print("After Update - Coordinates: ", self.get_coordinate())
+        # Update __movement based on __direction
+        if self.__direction.x > 0:
+            self.__movement = [self.__speed, 0]
+        elif self.__direction.x < 0:
+            self.__movement = [-self.__speed, 0]
+        elif self.__direction.y > 0:
+            self.__movement = [0, self.__speed]
+        elif self.__direction.y < 0:
+            self.__movement = [0, -self.__speed]
+
+    def get_direction(self):
+        if self.__collision_rects:
+            start = pg.math.Vector2(self.get_position())
+            end = pg.math.Vector2(self.__collision_rects[0].center)
+            self.__direction = (end - start).normalize()
+
+            # if self.__direction == pg.math.Vector2(0, 1):
+            #     self.__current_sprite = self.__south_monster_sprite
+            #
+            # if self.__direction == pg.math.Vector2(1, 1):
+            #     self.__current_sprite = self.__north_monster_sprite
+            #
+            # if self.__direction == pg.math.Vector2(0, 0):
+            #     self.__current_sprite = self.__east_monster_sprite
+            #
+            # if self.__direction == pg.math.Vector2(1, 0):
+            #     self.__current_sprite = self.__west_monster_sprite
+
+        else:
+            self.__direction = pg.math.Vector2(0, 0)
+            self.__current_sprite = self.__south_monster_sprite
+            self.__path = []
     # Statistics
 
     def get_chance_to_heal(self):
@@ -84,24 +147,7 @@ class Monster(DungeonCharacter):
     def get_monster_goal(self):
         return self.__monster_goal
 
-    # Mechanic Methods
 
-    def get_coordinate(self):
-        col = self.__rect.centerx // 16
-        row = self.__rect.centery // 16
-        return col, row
-
-    def get_position_from_coordinate(self, coords):
-        print("These are the coords: ", coords)
-        col, row = coords
-        row_movement, col_movement = self.__movement
-        x = (col + row_movement)
-        print(x)
-        y = (row + col_movement)
-        print(y)
-        new_coords = x, y
-        print(new_coords)
-        return new_coords
 
     def set_path(self, path):
         self.__path = path
@@ -128,34 +174,13 @@ class Monster(DungeonCharacter):
 
         if self.__collision_rects:
             for rect in self.__collision_rects:
-                if rect.collidepoint(self.__position):
+                if rect.collidepoint(self.get_position()):
                     del self.__collision_rects[0]
                     self.get_direction()
         else:
             self.__path = []
 
-    def get_direction(self):
-        if self.__collision_rects:
-            start = pg.math.Vector2(self.__position)
-            end = pg.math.Vector2(self.__collision_rects[0].center)
-            self.__direction = (end - start).normalize()
 
-            # if self.__direction == pg.math.Vector2(0, 1):
-            #     self.__current_sprite = self.__south_monster_sprite
-            #
-            # if self.__direction == pg.math.Vector2(1, 1):
-            #     self.__current_sprite = self.__north_monster_sprite
-            #
-            # if self.__direction == pg.math.Vector2(0, 0):
-            #     self.__current_sprite = self.__east_monster_sprite
-            #
-            # if self.__direction == pg.math.Vector2(1, 0):
-            #     self.__current_sprite = self.__west_monster_sprite
-
-        else:
-            self.__direction = pg.math.Vector2(0, 0)
-            self.__current_sprite = self.__south_monster_sprite
-            self.__path = []
 
     # Sprite Getters / Setters
 
@@ -192,36 +217,7 @@ class Monster(DungeonCharacter):
     def set_player_scroll(self, scroll):
         self.__player_scroll = scroll
 
-    def update(self):  # Update the monsters position
-        print("Before Update - Position:", self.__position)  # position before movement
-        print("Before Update - Direction:",
-              self.__direction)  # monster's current direction (moving towards player, following the path)
-        print("Before Update - Speed", self.__speed)  # Monster's speed
 
-        self.__position += self.__direction * self.__speed
-        self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
-
-        self.check_collisions()  # Checks if  monster collides with a wall
-
-        self.__position = self.get_position_from_coordinate(self.__rect.center)
-        print("After Conversion - Position:", self.__position)
-
-        self.set_monster_position(self.__position)
-        print("Monster Position set to: ", self.__position)
-
-        self.set_monster_rect(self.__rect)
-
-        print("After Update - Position:", self.__position)  # position after movement
-
-        # Update __movement based on __direction
-        if self.__direction.x > 0:
-            self.__movement = [self.__speed, 0]
-        elif self.__direction.x < 0:
-            self.__movement = [-self.__speed, 0]
-        elif self.__direction.y > 0:
-            self.__movement = [0, self.__speed]
-        elif self.__direction.y < 0:
-            self.__movement = [0, -self.__speed]
 
 
 # Abstract classes are parent classes. We write them to consolidate information for objects that share characteristic
@@ -284,3 +280,4 @@ class Pathfinder:
         self.set_monster(monster)
         self.create_path(monster)
         # self.monster.update()
+        # print(self.__position)

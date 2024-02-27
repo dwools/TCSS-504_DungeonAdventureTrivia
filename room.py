@@ -190,30 +190,30 @@ class Room:
         top_design = ''
         if self.get_northdoor() == True:
             top_design += 'nfn'
-            print('nfn', end='')
+            # print('nfn', end='')
         else:
             top_design += 'nnn'
-            print('nnn', end='')
+            # print('nnn', end='')
         return top_design
 
     def draw_bottom_gui(self):
         bottom_design = ''
         if self.get_southdoor() == True:
             bottom_design += 'wfw'
-            print('wfw', end='')
+            # print('wfw', end='')
         else:
             bottom_design += 'www'
-            print('www', end='')
+            # print('www', end='')
         return bottom_design
 
     def draw_middle_gui(self, is_current=False):
         middle_design = ''
         if self.get_westdoor() == True:
             middle_design += 'f'
-            print('f', end='')
+            # print('f', end='')
         else:
             middle_design += 'w'
-            print('w', end='')
+            # print('w', end='')
 
         # if is_current:
         #     print("#", end="")
@@ -221,7 +221,7 @@ class Room:
         item_count = len(self.items)
         if item_count == 0:
             middle_design += 'f'
-            print("f", end="")
+            # print("f", end="")
         elif item_count == 1:
             middle_design += f'{self.items[0]}'
             # print(self.items[0], end="")
@@ -257,9 +257,9 @@ class Room:
 
     def draw(self):
         self.draw_top()
-        print()
+        # print()
         self.draw_middle()
-        print()
+        # print()
         self.draw_bottom()
 
 

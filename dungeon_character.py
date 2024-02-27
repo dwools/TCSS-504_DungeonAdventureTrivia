@@ -4,6 +4,7 @@ import pygame as pg
 from object_coordinates_generator import ValidCoordsGenerator
 
 
+
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
@@ -16,7 +17,7 @@ class DungeonCharacter(ABC):
         self.__maximum_damage = maximum_damage
         self.__position = [0, 0]
         self.__position_x, self.__position_y = self.__position
-
+        # pg.Rect()
         self.__rect = pg.Rect(self.__position_x, self.__position_y, 16, 16)
 
         # self.__chance_to_block = None
@@ -25,8 +26,8 @@ class DungeonCharacter(ABC):
         # self.__maximum_heal_points = None
         # self.__chance_for_bonus_damage = None
         # self.__minimum_bonus_damage = None
-        # self.__maximum_bonus_damage = None
         # self.__chance_for_second_attack = None
+        # self.__maximum_bonus_damage = None
 
     def get_name(self):
         print(self.__name)
@@ -54,8 +55,32 @@ class DungeonCharacter(ABC):
     def get_position(self):
         return self.__position
 
-    def set_position(self, position):
-        self.__position = position
+
+
+    def set_position(self, position): # ensure that the tile is f before moving it.
+        def load_map():
+            """ Reading-in the tilemap from the dungeon.txt map file.
+            """
+
+            file = open('dungeon.txt', 'r')
+            data = file.read()
+            file.close()
+            data = data.split('\n')
+            dungeon_map = []
+            for row in data:
+                dungeon_map.append((list(row)))
+            return dungeon_map
+
+        dungeon_map = load_map()
+        x = position[0]
+        y = position[1]
+        if dungeon_map[x // 16][y // 16] == 'f':
+            self.__position = position
+        else:
+            pass
+
+    def get_character_rect(self):
+        return self.__rect
 
     def set_character_rect(self, x, y):
         self.__rect = pg.Rect(y, x, 16, 16)
@@ -66,8 +91,25 @@ class DungeonCharacter(ABC):
     def set_monster_position(self, monster_position):
         self.__position = monster_position
 
-    def get_character_rect(self):
-        return self.__rect
+        # Mechanic Methods
+
+    def get_coordinate(self):
+        col = self.__rect.centerx // 16
+        row = self.__rect.centery // 16
+        return col, row
+
+    # def get_position_from_coordinate(self, coords):
+    #     print("These are the coords: ", coords)
+    #     col, row = coords
+    #     row_movement, col_movement = self.__movement
+    #     x = (col + row_movement)
+    #     print(x)
+    #     y = (row + col_movement)
+    #     print(y)
+    #     new_coords = x, y
+    #     print(new_coords)
+    #     return new_coords
+
 
     def set_character(self, type):
         self.__character = type
