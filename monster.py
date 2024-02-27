@@ -48,18 +48,22 @@ class Monster(DungeonCharacter):
         position = self.get_position()
         rectangle = self.get_character_rect()
         print("Before Update - Position:", self.get_position())  # position before movement
-        print("Before Update - Direction:",
-              self.__direction)  # monster's current direction (moving towards player, following the path)
+        print("Before Update - Direction:", self.__direction)  # monster's current direction (moving towards player, following the path)
         print("Before Update - Speed:", self.__speed)  # Monster's speed
+        print("Before Update - Movement: ", self.__movement)
         print("Before Update - Coordinates: ", self.get_coordinate())
-        # position += self.__direction * self.__speed
-        if self.__path:  # if self.__path [] is not empty:
-            position = self.__path[0]
-            x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
-            y = position.y * 16  # likewise for y.
-            self.set_position([x, y])  # Pop the first "step" toward player and set position to that "step"
-            rectangle.center = [x, y]
+        position += self.__direction * self.__speed
 
+
+        # if self.__path:  # if self.__path [] is not empty:
+        #     position = self.__path[0]
+        #     x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
+        #     y = position.y * 16  # likewise for y.
+        #     self.set_position([y, x])  # Pop the first "step" toward player and set position to that "step"
+        #     rectangle.center = [x, y]
+        self.set_position(position)
+        x, y = position
+        rectangle.center = y, x
         # self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
 
         self.check_collisions()  # Checks if  monster collides with a wall
@@ -74,7 +78,8 @@ class Monster(DungeonCharacter):
         #
         print(f"After Update - Position: {self.get_position()}")  # position after movement
         print(f"After Update - Direction: {self.__direction}")
-        print("After Update - Coordinates: ", self.get_coordinate())
+        print("After Update - Movement:", self.__movement)
+        print(f"After Update - Coordinates: {self.get_coordinate()}")
         # Update __movement based on __direction
         if self.__direction.x > 0:
             self.__movement = [self.__speed, 0]

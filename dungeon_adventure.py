@@ -48,7 +48,7 @@ class DungeonAdventure(Maze):
         self.interacting, self.left_clicked, self.escaping = False, False, False
 
         # Game Status
-        self.running, self.playing, self.paused, self.in_menu = True, False, False, True
+        self.running, self.playing, self.paused = True, False, False
 
         # Menu Status
         self.main_menu = MainMenu(self)
@@ -81,7 +81,7 @@ class DungeonAdventure(Maze):
 
         self.player_img_size = (14, 14)
         self.player_image = pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
-        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
+        self.player_rect = pg.Rect(self.player_y, self.player_x, self.player_image.get_width(),
                                    self.player_image.get_height())  # start at 16, add 48 x or y for good position
         self.camera_scroll = [0, 0]
 
@@ -96,8 +96,7 @@ class DungeonAdventure(Maze):
             creature_position = self.coords_generator.get_random_coords()
             creature.set_position(creature_position)  # Set monster initial position to random coords
             creature_x, creature_y = creature.get_position()
-            creature_rect = creature.set_character_rect(creature_x,
-                                                      creature_y)  # Use random coords to create a rect at coords
+            creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
             self.monster_rects.append(creature_rect)
             self.monsters.append(creature)
             # choose monsters
@@ -345,8 +344,7 @@ class DungeonAdventure(Maze):
 
                 monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
                 monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
-                pathfinder.draw_path(self.display,
-                                     self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
+                pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
                 pathfinder.update(monster)  # Updating the monster's path based on player position
                 rect = monster.get_character_rect()  # Get the monster's rect to move
                 monster.update()  # Update the monsters position based on the above path
