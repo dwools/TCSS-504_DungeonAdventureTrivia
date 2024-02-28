@@ -25,6 +25,7 @@ from menu import *
 from monster_ogre import Ogre
 from monster_skeleton import Skeleton
 from monster_gremlin import Gremlin
+from pathfinder import Pathfinder
 
 """
 Contains the main logic for playing the game
