@@ -19,14 +19,13 @@ class Menu:
         # Making the little star next to buttons
         self.cursor_rect = pg.Rect(0, 0, 20, 20)
         self.cursor_offset = - 350
-
+        self.bg_image = pg.image.load(a.main_menu_bg)
         # Mouse Configuration
         self.mouse_position = pg.mouse.get_pos()
 
     def draw_cursor(self):
         # Draw the pointer next to the buttons
         self.game.draw_text(c.dungeon_font, '*', 15, self.cursor_rect.x, self.cursor_rect.y, 'red')
-
 
     def blit_screen(self):
         # draw to / update the GUI
@@ -59,10 +58,13 @@ class MainMenu(Menu):
             self.game.display.fill(c.PURPLE)
             self.game.font_color = c.WHITE
 
-            self.game.draw_text(c.dungeon_font, 'Dungeon Adventure', 20, self.middle_width, self.middle_height - 250, 'forestgreen')
+            self.game.draw_text(c.dungeon_font, 'Dungeon Adventure', 20, self.middle_width, self.middle_height - 250,
+                                'forestgreen')
             self.game.draw_text(c.dungeon_font, 'Start Game', 20, self.start_x, self.start_y, self.game.font_color)
-            self.game.draw_text(c.dungeon_font, 'How To Play', 20, self.how_to_play_x, self.how_to_play_y, self.game.font_color)
-            self.game.draw_text(c.dungeon_font, 'Load Save', 20, self.load_game_x, self.load_game_y, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'How To Play', 20, self.how_to_play_x, self.how_to_play_y,
+                                self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'Load Save', 20, self.load_game_x, self.load_game_y,
+                                self.game.font_color)
             self.game.draw_text(c.dungeon_font, 'Options', 20, self.options_x, self.options_y, self.game.font_color)
             self.game.draw_text(c.dungeon_font, 'Credits', 20, self.credits_x, self.credits_y, self.game.font_color)
             self.draw_cursor()
@@ -159,7 +161,7 @@ class CharacterSelectMenu(Menu):
 
         # The Rogue
         self.select_rogue_x, self.select_rogue_y = self.middle_width + 400, self.middle_height + 300
-        self.rogue_image = pg.image.load(a.south_priestess)  # Change to Roque image
+        self.rogue_image = pg.image.load(a.south_rogue)  # Change to Roque image
 
         # Placing the cursor at the Base State
         self.cursor_rect.midtop = (self.select_knight_x - 125, self.select_knight_y)
@@ -176,49 +178,64 @@ class CharacterSelectMenu(Menu):
             self.check_input()
 
             # Title
-            self.game.draw_text(c.dungeon_font, 'Character Select', 30, self.middle_width, self.middle_height - 300, 'forestgreen')
+            self.game.draw_text(c.dungeon_font, 'Character Select', 30, self.middle_width, self.middle_height - 300,
+                                'forestgreen')
 
             # Line Separators
             pg.draw.rect(self.screen, 'gray', pg.Rect(self.select_knight_x + 150, self.select_knight_y - 550, 10, 550))
             pg.draw.rect(self.screen, 'gray', pg.Rect(self.select_knight_x - 225, self.select_knight_y - 550, 10, 550))
 
             # Knight
-            self.game.draw_text(c.dungeon_font, 'Knight', 15, self.select_knight_x - 25, self.select_knight_y, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'Knight', 15, self.select_knight_x - 25, self.select_knight_y,
+                                self.game.font_color)
             self.knight_image = pg.transform.scale(self.knight_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
             self.screen.blit(self.knight_image, (self.select_knight_x - 100, self.select_knight_y - 500))
 
             # Abilities
-            self.game.draw_text(c.dungeon_font, 'Crushing Blow', 12, self.select_knight_x - 25, self.select_knight_y - 200,
+            self.game.draw_text(c.dungeon_font, 'Crushing Blow', 12, self.select_knight_x - 25,
+                                self.select_knight_y - 200,
                                 'forestgreen')
-            self.game.draw_text(c.dungeon_font, '40 percent chance', 10, self.select_knight_x - 25, self.select_knight_y - 125,
+            self.game.draw_text(c.dungeon_font, '40 percent chance', 10, self.select_knight_x - 25,
+                                self.select_knight_y - 125,
                                 'yellow')
-            self.game.draw_text(c.dungeon_font, 'to do', 10, self.select_knight_x - 25, self.select_knight_y - 100, 'yellow')
-            self.game.draw_text(c.dungeon_font, 'high damage', 10, self.select_knight_x - 25, self.select_knight_y - 75, 'yellow')
+            self.game.draw_text(c.dungeon_font, 'to do', 10, self.select_knight_x - 25, self.select_knight_y - 100,
+                                'yellow')
+            self.game.draw_text(c.dungeon_font, 'high damage', 10, self.select_knight_x - 25, self.select_knight_y - 75,
+                                'yellow')
 
             # Priestess
-            self.game.draw_text(c.dungeon_font, 'Priestess', 15, self.select_priestess_x, self.select_priestess_y, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'Priestess', 15, self.select_priestess_x, self.select_priestess_y,
+                                self.game.font_color)
             self.priestess_image = pg.transform.scale(self.priestess_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
             self.screen.blit(self.priestess_image, (self.select_priestess_x - 75, self.select_priestess_y - 500))
 
             # Abilities
-            self.game.draw_text(c.dungeon_font, 'Divine Blessing', 12, self.select_priestess_x, self.select_priestess_y - 200,
+            self.game.draw_text(c.dungeon_font, 'Divine Blessing', 12, self.select_priestess_x,
+                                self.select_priestess_y - 200,
                                 'forestgreen')
-            self.game.draw_text(c.dungeon_font, 'Heal a', 10, self.select_priestess_x, self.select_priestess_y - 125, 'yellow')
-            self.game.draw_text(c.dungeon_font, 'random amount', 10, self.select_priestess_x, self.select_priestess_y - 100, 'yellow')
+            self.game.draw_text(c.dungeon_font, 'Heal a', 10, self.select_priestess_x, self.select_priestess_y - 125,
+                                'yellow')
+            self.game.draw_text(c.dungeon_font, 'random amount', 10, self.select_priestess_x,
+                                self.select_priestess_y - 100, 'yellow')
 
             # Rogue
-            self.game.draw_text(c.dungeon_font, 'Rogue', 15, self.select_rogue_x, self.select_rogue_y, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'Rogue', 15, self.select_rogue_x, self.select_rogue_y,
+                                self.game.font_color)
             self.rogue_image = pg.transform.scale(self.rogue_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4))
             self.screen.blit(self.rogue_image, (self.select_rogue_x - 75, self.select_rogue_y - 500))
 
             # Abilities
-            self.game.draw_text(c.dungeon_font, 'Surprise Attack', 12, self.select_rogue_x, self.select_rogue_y - 200, 'forestgreen')
-            self.game.draw_text(c.dungeon_font, '40 percent chance', 10, self.select_rogue_x, self.select_rogue_y - 125, 'yellow')
+            self.game.draw_text(c.dungeon_font, 'Surprise Attack', 12, self.select_rogue_x, self.select_rogue_y - 200,
+                                'forestgreen')
+            self.game.draw_text(c.dungeon_font, '40 percent chance', 10, self.select_rogue_x, self.select_rogue_y - 125,
+                                'yellow')
             self.game.draw_text(c.dungeon_font, 'to do a', 10, self.select_rogue_x, self.select_rogue_y - 100, 'yellow')
-            self.game.draw_text(c.dungeon_font, 'second attack', 10, self.select_rogue_x, self.select_rogue_y - 75, 'yellow')
+            self.game.draw_text(c.dungeon_font, 'second attack', 10, self.select_rogue_x, self.select_rogue_y - 75,
+                                'yellow')
 
             # Return to Main Menu prompt
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 400,
+            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
+                                self.middle_height + 400,
                                 'yellow')
 
             self.draw_cursor()
@@ -295,8 +312,10 @@ class HowToPlayMenu(Menu):
             self.check_input()
 
             self.game.display.fill(c.PURPLE)
-            self.game.draw_text(c.dungeon_font, 'How To Play', 20, self.middle_width, self.middle_height - 250, 'forestgreen')
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 250,
+            self.game.draw_text(c.dungeon_font, 'How To Play', 20, self.middle_width, self.middle_height - 250,
+                                'forestgreen')
+            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
+                                self.middle_height + 250,
                                 self.game.font_color)
 
             self.draw_cursor()
@@ -340,7 +359,8 @@ class LoadSaveGamesMenu(Menu):  # WIP
 
             self.game.display.fill(c.PURPLE)
 
-            self.game.draw_text(c.dungeon_font, f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200, 'forestgreen')
+            self.game.draw_text(c.dungeon_font, f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200,
+                                'forestgreen')
 
             self.game.draw_text(c.dungeon_font, f'Left Click on a save to start that save', 10, self.middle_width,
                                 self.middle_height - 150, 'yellow')
@@ -364,16 +384,19 @@ class LoadSaveGamesMenu(Menu):  # WIP
                     else:
                         self.game.font_color = c.WHITE
 
-                    self.game.draw_text(c.dungeon_font, f'Save {self.saved_games[save - 1]}', 20, self.save_x, self.save_y,
+                    self.game.draw_text(c.dungeon_font, f'Save {self.saved_games[save - 1]}', 20, self.save_x,
+                                        self.save_y,
                                         self.game.font_color)
 
                     self.saved_rects.append(self.save_rect)
                     self.save_y += 70
 
             else:
-                self.game.draw_text(c.dungeon_font, f'No Saves Found', 15, self.middle_width, self.middle_height, self.game.font_color)
+                self.game.draw_text(c.dungeon_font, f'No Saves Found', 15, self.middle_width, self.middle_height,
+                                    self.game.font_color)
 
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 250,
+            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
+                                self.middle_height + 250,
                                 c.WHITE)
 
             self.blit_screen()
@@ -404,9 +427,11 @@ class OptionsMenu(Menu):
             self.check_input()
 
             self.game.display.fill(c.PURPLE)
-            self.game.draw_text(c.dungeon_font, 'Options', 30, self.middle_width, self.middle_height - 100, 'forestgreen')
+            self.game.draw_text(c.dungeon_font, 'Options', 30, self.middle_width, self.middle_height - 100,
+                                'forestgreen')
             self.game.draw_text(c.dungeon_font, 'Volume', 20, self.volume_x, self.volume_y, self.game.font_color)
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 250,
+            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
+                                self.middle_height + 250,
                                 self.game.font_color)
             self.draw_cursor()
 
@@ -450,12 +475,17 @@ class CreditsMenu(Menu):
                 self.run_display = False
 
             self.game.display.fill(c.PURPLE)
-            self.game.draw_text(c.dungeon_font, 'Credits', 30, self.middle_width, self.middle_height - 200, 'forestgreen')
-            self.game.draw_text(c.dungeon_font, 'Made by', 20, self.middle_width, self.middle_height - 50, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'Credits', 30, self.middle_width, self.middle_height - 200,
+                                'forestgreen')
+            self.game.draw_text(c.dungeon_font, 'Made by', 20, self.middle_width, self.middle_height - 50,
+                                self.game.font_color)
             self.game.draw_text(c.dungeon_font, 'Sanya Sinha', 15, self.middle_width, self.middle_height + 50, 'teal')
-            self.game.draw_text(c.dungeon_font, 'David Woolston', 15, self.middle_width, self.middle_height + 100, 'blue')
-            self.game.draw_text(c.dungeon_font, 'Jackson Davis', 15, self.middle_width, self.middle_height + 150, 'royalblue')
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width, self.middle_height + 300,
+            self.game.draw_text(c.dungeon_font, 'David Woolston', 15, self.middle_width, self.middle_height + 100,
+                                'blue')
+            self.game.draw_text(c.dungeon_font, 'Jackson Davis', 15, self.middle_width, self.middle_height + 150,
+                                'royalblue')
+            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
+                                self.middle_height + 300,
                                 self.game.font_color)
 
             self.blit_screen()
@@ -495,14 +525,17 @@ class PauseMenu(Menu):
 
             self.game.display.fill(c.PURPLE)  # will fill in background
 
-            self.game.draw_text(c.dungeon_font, 'Pause Menu', 30, self.middle_width, self.middle_height - 200, 'forestgreen')
+            self.game.draw_text(c.dungeon_font, 'Pause Menu', 30, self.middle_width, self.middle_height - 200,
+                                'forestgreen')
 
-            self.game.draw_text(c.dungeon_font, 'Save The Game', 15, self.save_game_x, self.save_game_y, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, 'Save The Game', 15, self.save_game_x, self.save_game_y,
+                                self.game.font_color)
             self.game.draw_text(c.dungeon_font, 'Main Menu', 15, self.main_x, self.main_y, self.game.font_color)
             self.game.draw_text(c.dungeon_font, 'Options', 15, self.options_x, self.options_y, self.game.font_color)
             self.game.draw_text(c.dungeon_font, 'Exit Game', 20, self.exit_game_x, self.exit_game_y, 'red')
 
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to resume your game', 10, self.middle_width, self.middle_height + 350,
+            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to resume your game', 10, self.middle_width,
+                                self.middle_height + 350,
                                 'yellow')
 
             self.draw_cursor()
@@ -666,9 +699,9 @@ class TriviaUI(Menu):
 
                 # if answer == true, add pillar to backpack || else: relocate pillar
                 if self.answer:
-                    print('You have chosen correctly') # add pillar to backpack
+                    print('You have chosen correctly')  # add pillar to backpack
                 else:
-                    print('you failed') # relocate pillar
+                    print('you failed')  # relocate pillar
 
                 self.run_display = False
                 self.game.paused = False
@@ -708,8 +741,10 @@ class GameOver(Menu):
             self.draw_cursor()
 
             self.game.draw_text(c.dungeon_font, "Game Over", 40, self.game_over_x, self.game_over_y, 'red')
-            self.game.draw_text(c.dungeon_font, "Main Menu", 20, self.main_menu_x, self.main_menu_y, self.game.font_color)
-            self.game.draw_text(c.dungeon_font, "Exit Game", 20, self.exit_game_x, self.exit_game_y, self.game.font_color)
+            self.game.draw_text(c.dungeon_font, "Main Menu", 20, self.main_menu_x, self.main_menu_y,
+                                self.game.font_color)
+            self.game.draw_text(c.dungeon_font, "Exit Game", 20, self.exit_game_x, self.exit_game_y,
+                                self.game.font_color)
 
             self.blit_screen()
 

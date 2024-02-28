@@ -40,3 +40,6 @@ background_music = 'assets/audio/theme_forest.mp3'
 bottom_wall = 'assets/Environment/Dungeon Prison/Assets/bottom_wall.png'
 upper_wall = 'assets/Environment/Dungeon Prison/Assets/upper_wall.png'
 floor = 'assets/Environment/Dungeon Prison/Assets/floor1.png'
+
+# BG Images
+main_menu_bg = 'assets/backgrounds/mainMenu.JPEG'

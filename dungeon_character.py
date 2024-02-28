@@ -4,7 +4,6 @@ import pygame as pg
 from object_coordinates_generator import ValidCoordsGenerator
 
 
-
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
@@ -55,9 +54,7 @@ class DungeonCharacter(ABC):
     def get_position(self):
         return self.__position
 
-
-
-    def set_position(self, position): # ensure that the tile is f before moving it.
+    def set_position(self, position):  # ensure that the tile is f before moving it.
         def load_map():
             """ Reading-in the tilemap from the dungeon.txt map file.
             """
@@ -109,7 +106,6 @@ class DungeonCharacter(ABC):
     #     new_coords = x, y
     #     print(new_coords)
     #     return new_coords
-
 
     def set_character(self, type):
         self.__character = type

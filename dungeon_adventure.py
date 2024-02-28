@@ -76,7 +76,7 @@ class DungeonAdventure(Maze):
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = [16, 112]
+        self.player_position = [16, 16]
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
@@ -91,13 +91,12 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(1):
+        for _ in range(10):
             creature = self.m_factory.choose_monster()
             creature_position = self.coords_generator.get_random_coords()
             creature.set_position(creature_position)  # Set monster initial position to random coords
             creature_x, creature_y = creature.get_position()
-            creature_rect = creature.set_character_rect(creature_x,
-                                                      creature_y)  # Use random coords to create a rect at coords
+            creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
             self.monster_rects.append(creature_rect)
             self.monsters.append(creature)
             # choose monsters
