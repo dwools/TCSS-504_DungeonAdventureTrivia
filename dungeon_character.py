@@ -4,6 +4,7 @@ import pygame as pg
 from object_coordinates_generator import ValidCoordsGenerator
 
 
+
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
@@ -54,27 +55,30 @@ class DungeonCharacter(ABC):
     def get_position(self):
         return self.__position
 
-    def set_position(self, position):  # ensure that the tile is f before moving it.
-        def load_map():
-            """ Reading-in the tilemap from the dungeon.txt map file.
-            """
 
-            file = open('dungeon.txt', 'r')
-            data = file.read()
-            file.close()
-            data = data.split('\n')
-            dungeon_map = []
-            for row in data:
-                dungeon_map.append((list(row)))
-            return dungeon_map
 
-        dungeon_map = load_map()
-        x = position[0]
-        y = position[1]
-        if dungeon_map[x // 16][y // 16] == 'f':
-            self.__position = position
-        else:
-            pass
+    def set_position(self, position): # ensure that the tile is f before moving it.
+        self.__position = position
+        # def load_map():
+        #     """ Reading-in the tilemap from the dungeon.txt map file.
+        #     """
+        #
+        #     file = open('dungeon.txt', 'r')
+        #     data = file.read()
+        #     file.close()
+        #     data = data.split('\n')
+        #     dungeon_map = []
+        #     for row in data:
+        #         dungeon_map.append((list(row)))
+        #     return dungeon_map
+        #
+        # dungeon_map = load_map()
+        # x = position[0]
+        # y = position[1]
+        # if dungeon_map[x // 16][y // 16] == 'f':
+        #     self.__position = position
+        # else:
+        #     pass
 
     def get_character_rect(self):
         return self.__rect
@@ -106,6 +110,7 @@ class DungeonCharacter(ABC):
     #     new_coords = x, y
     #     print(new_coords)
     #     return new_coords
+
 
     def set_character(self, type):
         self.__character = type

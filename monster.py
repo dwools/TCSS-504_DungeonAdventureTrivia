@@ -48,18 +48,23 @@ class Monster(DungeonCharacter):
         position = self.get_position()
         rectangle = self.get_character_rect()
         print("Before Update - Position:", self.get_position())  # position before movement
-        print("Before Update - Direction:",
-              self.__direction)  # monster's current direction (moving towards player, following the path)
+        print("Before Update - Direction:", self.__direction)  # monster's current direction (moving towards player, following the path)
         print("Before Update - Speed:", self.__speed)  # Monster's speed
+        print("Before Update - Movement: ", self.__movement)
         print("Before Update - Coordinates: ", self.get_coordinate())
-        # position += self.__direction * self.__speed
-        if self.__path:  # if self.__path [] is not empty:
-            position = self.__path[0]
-            x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
-            y = position.y * 16  # likewise for y.
-            self.set_position([x, y])  # Pop the first "step" toward player and set position to that "step"
-            rectangle.center = [x, y]
-
+        position += self.__direction * self.__speed
+        # if self.__path:
+        #     path_x, path_y = self.__path.pop(0)
+        #     position = [path_y * 16, path_x * 16]
+        # if self.__path:  # if self.__path [] is not empty:
+        #     position = self.__path[0]
+        #     x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
+        #     y = position.y * 16  # likewise for y.
+        #     self.set_position([y, x])  # Pop the first "step" toward player and set position to that "step"
+        #     rectangle.center = [x, y]
+        self.set_position(position)
+        rect_x, rect_y = position
+        rectangle.center = rect_y, rect_x
         # self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
 
         self.check_collisions()  # Checks if  monster collides with a wall
@@ -74,16 +79,17 @@ class Monster(DungeonCharacter):
         #
         print(f"After Update - Position: {self.get_position()}")  # position after movement
         print(f"After Update - Direction: {self.__direction}")
-        print("After Update - Coordinates: ", self.get_coordinate())
+        print("After Update - Movement:", self.__movement)
+        print(f"After Update - Coordinates: {self.get_coordinate()}")
         # Update __movement based on __direction
-        if self.__direction.x > 0:
-            self.__movement = [self.__speed, 0]
-        elif self.__direction.x < 0:
-            self.__movement = [-self.__speed, 0]
-        elif self.__direction.y > 0:
-            self.__movement = [0, self.__speed]
-        elif self.__direction.y < 0:
-            self.__movement = [0, -self.__speed]
+        # if self.__direction.x > 0:
+        #     self.__movement = [self.__speed, 0]
+        # elif self.__direction.x < 0:
+        #     self.__movement = [-self.__speed, 0]
+        # elif self.__direction.y > 0:
+        #     self.__movement = [0, self.__speed]
+        # elif self.__direction.y < 0:
+        #     self.__movement = [0, -self.__speed]
 
     def get_direction(self):
         if self.__collision_rects:
@@ -225,59 +231,3 @@ class Monster(DungeonCharacter):
 
 
 # Any set methods need to ensure the data being passed in looks okay, and if not, raise an exception.
-class Pathfinder:
-    def __init__(self, matrix):
-
-        # setup
-        self.matrix = matrix
-        self.grid = Grid(matrix=matrix, inverse=True)
-
-        # pathfinding
-        self.path = []
-
-        # Monster
-        self.monster = None
-
-    def empty_path(self):
-        self.path = []
-
-    def set_monster(self, monster):
-        self.monster, self.path = monster, self.empty_path()
-
-    # def draw_active_cell(self, monster):
-    #     target = monster.get_monster_goal()  # coords of player in the overworld
-    #     row = target.x // 16
-    #     col = target.y // 16
-
-    def create_path(self, monster):
-        # start cell
-        monster_start = monster.get_character_rect()
-        print(f"MONSTER START: {monster_start} \n")
-        start_x, start_y = monster_start.x, monster_start.y
-        start = self.grid.node(start_x // 16, start_y // 16)
-
-        # end cell
-        target = monster.get_monster_goal()  # coords of player in the overworld
-        end_x, end_y = target.x // 16, target.y // 16
-        end = self.grid.node(end_x, end_y)
-
-        # path
-        finder = AStarFinder()
-        self.path, empty = finder.find_path(start, end, self.grid)
-        self.grid.cleanup()
-        self.monster.set_path(self.path)
-
-    def draw_path(self, screen, scroll):
-        if self.path:
-            points = []
-            for point in self.path:
-                x = (point.x * 16 - scroll[0]) + 8
-                y = (point.y * 16 - scroll[1]) + 8
-                points.append((x, y))
-            pg.draw.lines(screen, 'red', False, points, 3)
-
-    def update(self, monster):
-        self.set_monster(monster)
-        self.create_path(monster)
-        # self.monster.update()
-        # print(self.__position)
