@@ -92,7 +92,7 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(10):
+        for _ in range(1):
             creature = self.m_factory.choose_monster()
             creature_position = self.coords_generator.get_random_coords()
             creature.set_position(creature_position)  # Set monster initial position to random coords

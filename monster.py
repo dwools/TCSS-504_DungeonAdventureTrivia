@@ -47,12 +47,16 @@ class Monster(DungeonCharacter):
     def update(self):  # Update the monsters position
         position = self.get_position()
         rectangle = self.get_character_rect()
+        if len(self.__path):
+            # self.__path.pop(0)
+            self.set_direction()
+            position += self.__direction * self.__speed
         print("Before Update - Position:", self.get_position())  # position before movement
         print("Before Update - Direction:", self.__direction)  # monster's current direction (moving towards player, following the path)
         print("Before Update - Speed:", self.__speed)  # Monster's speed
         print("Before Update - Movement: ", self.__movement)
         print("Before Update - Coordinates: ", self.get_coordinate())
-        position += self.__direction * self.__speed
+
         # if self.__path:
         #     path_x, path_y = self.__path.pop(0)
         #     position = [path_y * 16, path_x * 16]
@@ -90,6 +94,15 @@ class Monster(DungeonCharacter):
         #     self.__movement = [0, self.__speed]
         # elif self.__direction.y < 0:
         #     self.__movement = [0, -self.__speed]
+
+    def set_direction(self):
+        # self.__path.pop(0)
+        path_x, path_y = self.__path[1]
+        start = pg.math.Vector2(self.get_position())
+        end = pg.math.Vector2(path_y * 16, path_x * 16)
+        self.__direction = (end - start).normalize()
+        return self.__direction
+
 
     def get_direction(self):
         if self.__collision_rects:
@@ -169,9 +182,9 @@ class Monster(DungeonCharacter):
         if self.__path:
             self.__collision_rects = []
             for point in self.__path:
-                x = (point.x * 16) + 8
-                y = (point.y * 16) + 8
-                rect = pg.Rect((x - 2, y - 2), (4, 4))
+                x = (point.x * 16)
+                y = (point.y * 16)
+                rect = pg.Rect((x, y), (16, 16))
                 self.__collision_rects.append(rect)
 
     def check_collisions(self):

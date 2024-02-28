@@ -19,7 +19,6 @@ class Menu:
         # Making the little star next to buttons
         self.cursor_rect = pg.Rect(0, 0, 20, 20)
         self.cursor_offset = - 350
-        self.bg_image = pg.image.load(a.main_menu_bg)
         # Mouse Configuration
         self.mouse_position = pg.mouse.get_pos()
 
