@@ -26,6 +26,7 @@ from monster_ogre import Ogre
 from monster_skeleton import Skeleton
 from monster_gremlin import Gremlin
 from pathfinder import Pathfinder
+from save_game import SaveGame
 
 """
 Contains the main logic for playing the game
@@ -514,3 +515,4 @@ if __name__ == "__main__":
     databases = initialize_databases.main()
     main = DungeonAdventure()
     main.game_loop()
+    SaveGame.pickle(main)
