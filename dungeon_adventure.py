@@ -6,7 +6,7 @@ import textwrap
 
 import pygame as pg  # import pygame
 from pygame.locals import *  # import the pygame modules
-
+from pygame.font import Font
 # Import project files
 
 import config as c
@@ -26,7 +26,7 @@ from monster_ogre import Ogre
 from monster_skeleton import Skeleton
 from monster_gremlin import Gremlin
 from pathfinder import Pathfinder
-from save_game import SaveGame
+# from save_game import SaveGame
 
 """
 Contains the main logic for playing the game
@@ -42,7 +42,7 @@ class DungeonAdventure(Maze):
     """
 
     def __init__(self):
-        pg.init()
+        # pg.init()
         super().__init__(15, 20)
 
         # Controls
@@ -93,7 +93,7 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
-        for _ in range(1):
+        for _ in range(2):
             creature = self.m_factory.choose_monster()
             creature_position = self.coords_generator.get_random_coords()
             creature.set_position(creature_position)  # Set monster initial position to random coords
@@ -346,7 +346,7 @@ class DungeonAdventure(Maze):
 
                 monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
                 monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
-                pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
+                # pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
                 pathfinder.update(monster)  # Updating the monster's path based on player position
                 rect = monster.get_character_rect()  # Get the monster's rect to move
                 monster.update()  # Update the monsters position based on the above path
@@ -509,6 +509,7 @@ class DungeonAdventure(Maze):
         text_rect = text_surface.get_rect()
         text_rect.center = (x / 2, y / 2)
         self.display.blit(text_surface, text_rect)
+
 
 
 if __name__ == "__main__":

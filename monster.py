@@ -1,4 +1,8 @@
+import time
 from abc import ABC, abstractmethod
+
+import pygame.time
+
 import assets as a
 from dungeon_character import DungeonCharacter
 from pathfinding.core.grid import Grid
@@ -23,6 +27,9 @@ class Monster(DungeonCharacter):
                  maximum_heal_points
                  ):
         super().__init__(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage)
+        self.__chance_to_heal = chance_to_heal
+        self.__minimum_heal_points = minimum_heal_points
+        self.__maximum_heal_points = maximum_heal_points
 
         self.__speed = 2
         self.__movement = [0, 0]
@@ -31,9 +38,6 @@ class Monster(DungeonCharacter):
         self.__path = []
         self.__collision_rects = []
 
-        self.__chance_to_heal = chance_to_heal
-        self.__minimum_heal_points = minimum_heal_points
-        self.__maximum_heal_points = maximum_heal_points
         # self.__rect = self.get_character_rect()
         # self.__position = self.__rect.center
         self.__player_scroll = [0, 0]
@@ -43,14 +47,18 @@ class Monster(DungeonCharacter):
         self.__east_monster_sprite = None
         self.__west_monster_sprite = None
         self.__current_sprite = self.__south_monster_sprite
+        # self.__update_delay = 250
+        # self.__last_update = 0
 
     def update(self):  # Update the monsters position
+        # if pygame.time.get_ticks() - self.__last_update > self.__update_delay:
         position = self.get_position()
         rectangle = self.get_character_rect()
-        if len(self.__path):
-            # self.__path.pop(0)
-            self.set_direction()
-            position += self.__direction * self.__speed
+        # if self.__path:
+        # self.__path.pop(0)
+        self.set_direction()
+        # for _ in range(16):
+        position += (self.__direction)
         print("Before Update - Position:", self.get_position())  # position before movement
         print("Before Update - Direction:", self.__direction)  # monster's current direction (moving towards player, following the path)
         print("Before Update - Speed:", self.__speed)  # Monster's speed
@@ -68,7 +76,7 @@ class Monster(DungeonCharacter):
         #     rectangle.center = [x, y]
         self.set_position(position)
         rect_x, rect_y = position
-        rectangle.center = rect_y, rect_x
+        rectangle.center = rect_y+8, rect_x+8
         # self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
 
         self.check_collisions()  # Checks if  monster collides with a wall
@@ -94,10 +102,13 @@ class Monster(DungeonCharacter):
         #     self.__movement = [0, self.__speed]
         # elif self.__direction.y < 0:
         #     self.__movement = [0, -self.__speed]
+        # time.sleep(1)
+        self.__last_update = pygame.time.get_ticks()
 
     def set_direction(self):
-        # self.__path.pop(0)
-        path_x, path_y = self.__path[1]
+        if len(self.__path) > 1:
+            self.__path.pop(0)
+        path_x, path_y = self.__path[0]
         start = pg.math.Vector2(self.get_position())
         end = pg.math.Vector2(path_y * 16, path_x * 16)
         self.__direction = (end - start).normalize()

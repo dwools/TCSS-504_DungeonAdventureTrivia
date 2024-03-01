@@ -6,7 +6,7 @@ import pygame.display
 import config as c
 import assets as a
 from trivia_factory import TriviaFactory
-
+# from save_game import SaveGame
 
 class Menu:
 
@@ -586,6 +586,7 @@ class PauseMenu(Menu):
 
             if self.state == 'Save The Game':
                 print("SAVING GAME!")
+                # SaveGame.pickle(adventure)
                 self.game.interacting = False
 
             if self.state == 'Main Menu':

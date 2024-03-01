@@ -53,7 +53,9 @@ class Pathfinder:
                 x = (point.x * 16 - scroll[0]) + 8
                 y = (point.y * 16 - scroll[1]) + 8
                 points.append((x, y))
-            pg.draw.lines(screen, 'red', False, points, 3)
+            pg.draw.lines(screen, 'red', False, points, 1)
+        else:
+            pass
 
     def update(self, monster):
         self.set_monster(monster)
