@@ -2,6 +2,36 @@ import os
 import pickle
 from dungeon_adventure import DungeonAdventure
 
+
+class SaveGame:
+
+    @staticmethod
+    def pickle(game_data):
+        attributes = {}
+        attributes['player_position'] = game_data.player_position
+        attributes['monster_health'] = game_data.monster_health
+        attributes['player_health'] = game_data.player_health
+        with open('dungeon_adventure.pickle', 'wb') as saved_file:
+            pickle.dump(attributes, saved_file)
+
+    @staticmethod
+    def load_game():
+        if os.path.exists("dungeon_adventure.pickle"):
+            with open("dungeon_adventure.pickle", "rb") as f:
+                game_data = pickle.load(f)
+                dungeon_adventure = DungeonAdventure()
+                dungeon_adventure.player_position = game_data['player_position']
+                dungeon_adventure.player_health = game_data['player_health']
+                dungeon_adventure.monster_health = game_data['monster_health']
+                return dungeon_adventure  # returning the loaded game data
+
+
+# creating an instance of SaveGame
+game = SaveGame()
+import os
+import pickle
+from dungeon_adventure import DungeonAdventure
+
 class SaveGame:
 
     @staticmethod
