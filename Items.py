@@ -1,17 +1,59 @@
 import random
 import pygame as pg
-class HealingPotion:
+from abc import ABC, abstractmethod
+
+
+
+class Item(ABC):
     """
     Class to hold all items / consumables.
     This includes:
     - Health Potion
-    - Vision Potion
     - Pit Trap
     - the Four Pillars
     """
 
-    def __init__(self, location):
+    def __init__(self, location, health_change):
         self.__location = location
+        self.__health_change = health_change
+
+    def get_location(self):
+        return self.__location
+
+    def set_location(self):
+        pass
+
+    def get_health_change(self):
+        return self.__health_change
+
+    @abstractmethod
+    def set_health_change(self):
+        pass
+
+
+
+    @abstractmethod
+    def change_health(self):
+        pass
+
+
+
+
+
+
+class HealthPotion(Item):
+
+    def change_health(self):
+        dungeon_character.hit_points += "some value here"
+
+# Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
+# Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.
+
+
+class Pillar:
+
+    def __init__(self, location):
+        # self.__location = location
 
     def render(self, surf, scroll):
         """
