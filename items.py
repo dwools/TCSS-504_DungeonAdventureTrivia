@@ -13,24 +13,15 @@ class Item(ABC):
     - the Four Pillars
     """
 
-    def __init__(self, location, health_change):
+    def __init__(self, location, health_change_value):
         self.__location = location
-        self.__health_change = health_change
+        self.__health_change_value = health_change_value
 
     def get_location(self):
         return self.__location
 
-    def set_location(self):
-        pass
-
     def get_health_change(self):
-        return self.__health_change
-
-    @abstractmethod
-    def set_health_change(self):
-        pass
-
-
+        return self.__health_change_value
 
     @abstractmethod
     def change_health(self):
@@ -41,45 +32,45 @@ class Item(ABC):
 
 
 
-class HealthPotion(Item):
-
-    def change_health(self):
-        dungeon_character.hit_points += "some value here"
-
-# Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
-# Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.
-
-
-class Pillar:
-
-    def __init__(self, location):
-        # self.__location = location
-
-    def render(self, surf, scroll):
-        """
-        Render function to visualize the item with its corresponding asset and
-        :param surf:
-        :param scroll:
-        :return:
-        """
-        surf.blit(asset, (self.__location[0] - scroll[0], self.__location[1] - scroll[1]))
-
-
-    def get_rect(self):
-        return pg.Rect(self.__location[0], self.__location[1], 6, 6)
-
-    def collision_test(rect):
-        healing_rect = self.get_rect()
-        return healing_rect.colliderect(rect)
-
-healing_potions = []
-for i in range(5):
-    healing_potions.append(HealingPotion((random.randint(0, 600) - 300, 80)))
-
-for potion in healing_potions:
-    potion.render(surf, scroll)
-    if potion.collision_test(adventurer.obj.rect):
-        hp +=
+# class HealthPotion(Item):
+#
+#     def change_health(self):
+#         dungeon_character.hit_points += "some value here"
+#
+# # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
+# # Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.
+#
+#
+# class Pillar:
+#
+#     def __init__(self, location):
+#         # self.__location = location
+#
+#     def render(self, surf, scroll):
+#         """
+#         Render function to visualize the item with its corresponding asset and
+#         :param surf:
+#         :param scroll:
+#         :return:
+#         """
+#         surf.blit(asset, (self.__location[0] - scroll[0], self.__location[1] - scroll[1]))
+#
+#
+#     def get_rect(self):
+#         return pg.Rect(self.__location[0], self.__location[1], 6, 6)
+#
+#     def collision_test(rect):
+#         healing_rect = self.get_rect()
+#         return healing_rect.colliderect(rect)
+#
+# healing_potions = []
+# for i in range(5):
+#     healing_potions.append(HealingPotion((random.randint(0, 600) - 300, 80)))
+#
+# for potion in healing_potions:
+#     potion.render(surf, scroll)
+#     if potion.collision_test(adventurer.obj.rect):
+#         hp +=
 
 
 # Note: Both ROOM and ADVENTURER are able to hold potions
