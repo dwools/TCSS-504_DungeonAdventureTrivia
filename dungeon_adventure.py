@@ -11,6 +11,7 @@ from pygame.font import Font
 
 import config as c
 import assets as a
+import item_factory
 import monster_gremlin
 import monster_ogre
 from monster import *
@@ -93,6 +94,7 @@ class DungeonAdventure(Maze):
         self.monsters = []
         self.monster_rects = []
 
+        # Place/spawn monsters
         for _ in range(2):
             creature = self.m_factory.choose_monster()
             creature_position = self.coords_generator.get_random_coords()
@@ -101,49 +103,32 @@ class DungeonAdventure(Maze):
             creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
             self.monster_rects.append(creature_rect)
             self.monsters.append(creature)
-            # choose monsters
 
-            # if Gremlin == type(creature):
-            #     # if monster is a gremlin, create it directly
-            #
-            #     gremlin = self.m_factory.create_gremlin()
-            #
-            #     gremlin_position = self.coords_generator.get_random_coords()
-            #     gremlin.set_position(gremlin_position)  # Set monster initial position to random coords
-            #     gremlin_x, gremlin_y = gremlin.get_position()
-            #     gremlin_rect = gremlin.set_character_rect(gremlin_x,
-            #                                               gremlin_y)  # Use random coords to create a rect at coords
-            #     self.monster_rects.append(gremlin_rect)
-            #     self.monsters.append(gremlin)
-            #
-            # elif Skeleton == type(creature):
-            #     # if monster is a skeleton, create it directly
-            #     skelly = self.m_factory.create_skeleton()
-            #
-            #     skelly_position = self.coords_generator.get_random_coords()
-            #     skelly.set_position(skelly_position)
-            #     skelly_x, skelly_y = skelly.get_position()
-            #     skelly_rect = skelly.set_character_rect(skelly_x, skelly_y)
-            #     self.monster_rects.append(skelly_rect)
-            #
-            #     self.monsters.append(skelly)
-            #
-            # elif Ogre == type(creature):
-            #     # if monster is an ogre, create it directly
-            #     ogre = self.m_factory.create_ogre()
-            #
-            #     ogre_position = self.coords_generator.get_random_coords()
-            #     ogre.set_position(ogre_position)
-            #     ogre_x, ogre_y = ogre.get_position()
-            #     ogre_rect = ogre.set_character_rect(ogre_x, ogre_y)
-            #     self.monster_rects.append(ogre_rect)
-            #
-            #     self.monsters.append(ogre)
+
+        # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.i_factory = item_factory.ItemFactory()
+
+        self.items = []
+        self.item_rects = []
+
+        # Place/spawn items
+        for _ in range(1):
+            item = self.i_factory.choose_item()
+            item_position = self.coords_generator.get_random_coords()
+            item.set_item_position(item_position)
+            item_x, item_y = item.get_item_position()
+            item_rect = item.set_item_rect(item_x, item_y)
+            self.item_rects.append(item_rect)
+            self.items.append(item_position)
+
+
 
         # Load up base images
         self.gremlin_image = pg.image.load(a.south_gremlin)
         self.skelly_image = pg.image.load(a.south_skelly)
         self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
+        self.potion_image = pg.image.load(health_potion)
+        self.pittrap_image = pg.image.load(pittrap)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config

@@ -13,15 +13,24 @@ class Item(ABC):
     - the Four Pillars
     """
 
-    def __init__(self, location, health_change_value):
-        self.__location = location
+    def __init__(self, health_change_value):
+        self.__item_position = [0, 0]
+        self.__item_position_x, self.__item_position_y = self.__item_position
+        # pg.Rect()
+        self.__item_rect = pg.Rect(self.__item_position_x, self.__item_position_y, 16, 16)
         self.__health_change_value = health_change_value
 
-    def get_location(self):
-        return self.__location
+    def get_item_position(self):
+        return self.__item_position
+
+    def set_item_position(self, item_position):
+        self.__item_position = item_position
 
     def get_health_change(self):
         return self.__health_change_value
+
+    def set_item_rect(self, x, y):
+        self.__item_rect = pg.Rect(y, x, 16, 16)
 
     @abstractmethod
     def change_health(self):

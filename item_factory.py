@@ -22,6 +22,15 @@ class ItemFactory:
         damage = random.randint(1, 20)
         return PitTrap(location, damage)
 
+    def choose_item(self):
+        choice = random.randint(1,2)
+        if choice == 1:
+            item_choice = self.create_health_potion()
+        else:
+            item_choice = self.create_pit_trap()
+        return item_choice
+
+
     # def pit_trap(self):
     #     """ Pit Trap item to be placed in the Pit Trap room. """
     #
