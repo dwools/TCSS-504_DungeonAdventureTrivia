@@ -1,12 +1,13 @@
 import textwrap
 
 import pygame as pg
+import sys
 import pygame.display
 
 import config as c
 import assets as a
 from trivia_factory import TriviaFactory
-# from save_game import SaveGame
+from save_game import SaveGame
 
 class Menu:
 
@@ -21,6 +22,7 @@ class Menu:
         self.cursor_offset = - 350
         # Mouse Configuration
         self.mouse_position = pg.mouse.get_pos()
+        self.__save_game = False
 
     def draw_cursor(self):
         # Draw the pointer next to the buttons
@@ -31,6 +33,14 @@ class Menu:
         window_surface = pg.transform.scale(self.game.display, c.WINDOW_SIZE)
         self.screen.blit(window_surface, (0, 0))
         pg.display.update()  # Update the Display
+
+    def get_save_game(self):
+        return self.__save_game
+    def set_save_game(self, bool):
+        if bool == True:
+            self.__save_game = True
+        else:
+            pass
 
 
 class MainMenu(Menu):
@@ -586,6 +596,7 @@ class PauseMenu(Menu):
 
             if self.state == 'Save The Game':
                 print("SAVING GAME!")
+                self.set_save_game(True)
                 # SaveGame.pickle(adventure)
                 self.game.interacting = False
 
@@ -605,6 +616,7 @@ class PauseMenu(Menu):
 
             if self.state == 'Exit Game':
                 pg.quit()
+                sys.exit()
 
         if self.game.escaping:
             self.game.paused = False
@@ -786,3 +798,4 @@ class GameOver(Menu):
 
             if self.state == 'Exit Game':
                 pg.quit()
+                sys.exit()
