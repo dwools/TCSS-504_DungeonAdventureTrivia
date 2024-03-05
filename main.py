@@ -3,7 +3,7 @@ from save_game import SaveGame
 import pygame as pg
 
 pg.init()
-pg.font.init()
+# pg.font.init()
 
 
 

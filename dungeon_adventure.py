@@ -106,29 +106,29 @@ class DungeonAdventure(Maze):
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        self.i_factory = item_factory.ItemFactory()
-
-        self.items = []
-        self.item_rects = []
-
-        # Place/spawn items
-        for _ in range(1):
-            item = self.i_factory.choose_item()
-            item_position = self.coords_generator.get_random_coords()
-            item.set_item_position(item_position)
-            item_x, item_y = item.get_item_position()
-            item_rect = item.set_item_rect(item_x, item_y)
-            self.item_rects.append(item_rect)
-            self.items.append(item_position)
-
+        # self.i_factory = item_factory.ItemFactory()
+        #
+        # self.items = []
+        # self.item_rects = []
+        #
+        # # Place/spawn items
+        # for _ in range(1):
+        #     item = self.i_factory.choose_item()
+        #     item_position = self.coords_generator.get_random_coords()
+        #     item.set_item_position(item_position)
+        #     item_x, item_y = item.get_item_position()
+        #     item_rect = item.set_item_rect(item_x, item_y)
+        #     self.item_rects.append(item_rect)
+        #     self.items.append(item_position)
+        #
 
 
         # Load up base images
         self.gremlin_image = pg.image.load(a.south_gremlin)
         self.skelly_image = pg.image.load(a.south_skelly)
         self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
-        self.potion_image = pg.image.load(health_potion)
-        self.pittrap_image = pg.image.load(pittrap)
+        # self.potion_image = pg.image.load(health_potion)
+        # self.pittrap_image = pg.image.load(pittrap)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
@@ -488,7 +488,7 @@ class DungeonAdventure(Maze):
 
     def draw_text(self, font, text, size, x, y, font_color):
         """ Simple helper-function used to write text to the GUI. """
-
+        pg.font.init()
         font = pg.font.Font(font, size)
         text_surface = font.render(text, True, font_color)
         text_rect = text_surface.get_rect()

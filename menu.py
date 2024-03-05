@@ -659,7 +659,7 @@ class TriviaUI(Menu):
 
     def draw_question(self, text, size, x, y, font_color):
         """ Simple helper-function used to write text to the GUI. """
-
+        # pg.font.init()
         font = pg.font.Font(self.question_font, size)
         text_surface = font.render(text, True, font_color)
         text_rect = text_surface.get_rect()
