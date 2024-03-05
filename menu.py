@@ -6,7 +6,7 @@ import pygame.display
 import config as c
 import assets as a
 from trivia_factory import TriviaFactory
-# from save_game import SaveGame
+
 
 class Menu:
 
@@ -160,7 +160,7 @@ class CharacterSelectMenu(Menu):
 
         # The Rogue
         self.select_rogue_x, self.select_rogue_y = self.middle_width + 400, self.middle_height + 300
-        self.rogue_image = pg.image.load(a.south_rogue)  # Change to Roque image
+        self.rogue_image = pg.image.load(a.north_rogue)  # Change to Roque image
 
         # Placing the cursor at the Base State
         self.cursor_rect.midtop = (self.select_knight_x - 125, self.select_knight_y)

@@ -15,9 +15,9 @@ Monster actions include:
 
 player actions include:
 	attack
-	heal (priestess)
+	heal (priestess) (special ability)
 	double attack (rogue)
-	flee?
+	x --flee?-- x
 	take health potion
 	
 
@@ -27,10 +27,11 @@ Things that may happen during combat:
 	Knight attack gives extra damage (roll for instance and value)
 
 
-
-
 Visualization?
 	menu for options
 	mid-combat assets?
+	-> monster facing south
+	-> hero facing north
+	-> everything else is hud rects
 
 

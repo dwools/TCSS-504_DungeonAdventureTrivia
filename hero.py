@@ -19,13 +19,14 @@ class Hero(DungeonCharacter):
                          chance_to_hit,
                          minimum_damage,
                          maximum_damage)
-        self.chance_to_block = chance_to_block
+        self.__chance_to_block = chance_to_block
 
         self.__pillars = []
         self.__health_potions = [["Health Potions", 0]]
 
     def get_chance_to_block(self):
-        return self.chance_to_block
+        return self.__chance_to_block
+
     #
     # def roll_for_special_attack(self, chance_for_bonus_damage):
     #     if random.random() < chance_for_bonus_damage:
