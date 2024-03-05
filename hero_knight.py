@@ -1,4 +1,6 @@
 from hero import Hero
+
+
 class Knight(Hero):
     # to give a crushing blow is a CHOICE that the knight has.
     def __init__(self,
@@ -13,7 +15,6 @@ class Knight(Hero):
                  chance_for_crushing_blow,
                  minimum_crushing_damage,
                  maximum_crushing_damage):
-
         super().__init__(name,
                          type,
                          hit_points,
@@ -30,3 +31,9 @@ class Knight(Hero):
     def get_chance_for_crushing_blow(self):
         print(self.__chance_for_crushing_blow)
         return self.__chance_for_crushing_blow
+
+    def get_min_crushing_damage(self):
+        return self.__minimum_crushing_damage
+
+    def get_maximum_crushing_damage(self):
+        return self.__maximum_crushing_damage

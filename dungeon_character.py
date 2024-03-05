@@ -4,7 +4,6 @@ import pygame as pg
 from object_coordinates_generator import ValidCoordsGenerator
 
 
-
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
@@ -16,11 +15,12 @@ class DungeonCharacter(ABC):
         self.__minimum_damage = minimum_damage
         self.__maximum_damage = maximum_damage
         self.__position = [0, 0]
+        self.__minimum_heal_points = 0
+        self.__maximum_heal_points = 0
         self.__position_x, self.__position_y = self.__position
-        # pg.Rect()
         self.__rect = pg.Rect(self.__position_x, self.__position_y, 16, 16)
 
-        # self.__chance_to_block = None
+        # self.__chance_to_block = Noned
         # self.__chance_to_heal = None
         # self.__minimum_heal_points = None
         # self.__maximum_heal_points = None
@@ -55,30 +55,8 @@ class DungeonCharacter(ABC):
     def get_position(self):
         return self.__position
 
-
-
-    def set_position(self, position): # ensure that the tile is f before moving it.
+    def set_position(self, position):  # ensure that the tile is f before moving it.
         self.__position = position
-        # def load_map():
-        #     """ Reading-in the tilemap from the dungeon.txt map file.
-        #     """
-        #
-        #     file = open('dungeon.txt', 'r')
-        #     data = file.read()
-        #     file.close()
-        #     data = data.split('\n')
-        #     dungeon_map = []
-        #     for row in data:
-        #         dungeon_map.append((list(row)))
-        #     return dungeon_map
-        #
-        # dungeon_map = load_map()
-        # x = position[0]
-        # y = position[1]
-        # if dungeon_map[x // 16][y // 16] == 'f':
-        #     self.__position = position
-        # else:
-        #     pass
 
     def get_character_rect(self):
         return self.__rect
@@ -99,24 +77,17 @@ class DungeonCharacter(ABC):
         row = self.__rect.centery // 16
         return col, row
 
-    # def get_position_from_coordinate(self, coords):
-    #     print("These are the coords: ", coords)
-    #     col, row = coords
-    #     row_movement, col_movement = self.__movement
-    #     x = (col + row_movement)
-    #     print(x)
-    #     y = (row + col_movement)
-    #     print(y)
-    #     new_coords = x, y
-    #     print(new_coords)
-    #     return new_coords
-
-
     def set_character(self, type):
         self.__character = type
 
     def set_hit_points(self, hit_points):
         self.__hit_points = hit_points
+
+    def get_minimum_heal_points(self):
+        return self.__minimum_heal_points
+
+    def get_maximum_heal_points(self):
+        return self.__maximum_heal_points
 
     def set_attack_speed(self, attack_speed):
         self.__attack_speed = attack_speed

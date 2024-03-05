@@ -1,8 +1,9 @@
 import sqlite3
 from sqlite3 import Error
 
-#run me first
-#from https://www.sqlitetutorial.net/sqlite-python/
+
+# run me first
+# from https://www.sqlitetutorial.net/sqlite-python/
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -36,6 +37,11 @@ def create_table(conn, create_table_sql):
 def main():
     database = r"dungeon_trivia.db"
 
+    sql_create_elapids_trivia_table = """CREATE TABLE IF NOT EXISTS elapids_trivia (
+                                            question text,
+                                            answer boolean
+                                        );"""
+
     sql_create_international_trivia_table = """ CREATE TABLE IF NOT EXISTS international_trivia (
                                     question text,
                                     answer boolean
@@ -51,10 +57,7 @@ def main():
                                         answer boolean
                                     );"""
 
-    sql_create_elapids_trivia_table = """CREATE TABLE IF NOT EXISTS elapids_trivia (
-                                            question text,
-                                            answer boolean
-                                        );"""
+
 
     # create a database connection
     conn = create_connection(database)
