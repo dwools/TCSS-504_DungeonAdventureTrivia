@@ -3,24 +3,20 @@ David Woolston
 Jackson Davis
 
 
-TCSS-504 Iteration 3 ReadMe
+TCSS-504 Iteration 4 ReadMe
 
 So Far:
-* No issues encountered. 
 
+* Having issues trying to save. 
 
-* Things are going smoothly, we’ve got a running GUI with intuitive menus and a randomized maze / dungeon. 
-
+* We are on a time crunch regarding the issue with saving. Items are relatively okay, we just need to finalize. 
+  Once we resolve the issue with saving, we're going to have to do the same thing regarding loading. 
 
 
 Our next steps are:
-* Inserting monsters and items into the map (99% there!)
 
+* Saving / Loading games (Still In Progress)
 
-* Saving / Loading games (In Progress)
+* Combat System (Still in progress)
 
-
-* Reading parameters in from the Database (Success!)
-
-
-* Combat System -> Iteration 3 project
+* Items (Still in progress)
