@@ -18,6 +18,6 @@ class LoadGame:
             dungeon_adventure.items = game_data['items']
             dungeon_adventure.item_rects = game_data['item_rects']
             dungeon_adventure.player_rect = game_data['player_rect']
-            dungeon_adventure.dungeon_map = game_data['dungeon_map']  # if anything breaks it's this line
+            dungeon_adventure.dungeon_map = game_data['dungeon_map']  # if anything breaks it's this
 
             return dungeon_adventure  # returning the loaded game data
