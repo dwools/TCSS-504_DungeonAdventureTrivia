@@ -74,6 +74,7 @@ class DungeonAdventure(Maze):
         self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
 
         # Player sprite setup, camera scrolling setup
+        self.__player_character = None
         self.player_movement = [0, 0]
         self.camera_scroll = [0, 0]
         self.player_direction = 0
@@ -140,6 +141,18 @@ class DungeonAdventure(Maze):
         self.PURPLE = c.PURPLE
         self.BLACK = c.BLACK
         self.WHITE = c.WHITE
+
+    # How can we set our character player while avoiding circular imports?
+    # def get_save_status(self):
+    #     if self.pause_menu.get_save_game() == True:
+    #         SaveGame.pickle(DungeonAdventure)
+    #         self.pause_menu.set_save_game(False)
+
+    def get_player_character(self):
+        return self.__player_character
+
+    def set_player_character(self, player_character):
+        self.__player_character = player_character
 
     def game_loop(self):
         """
@@ -290,6 +303,8 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
+            # if self.player_rect.colliderect():
+            #     self.
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
