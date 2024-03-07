@@ -16,13 +16,14 @@ class SaveGame:
             monster.set_west_monster_sprite(None)
             monster.set_north_monster_sprite(None)
             monster.set_south_monster_sprite(None)
-        attributes['self.monsters'] = game_data.monsters
-        attributes['self.monster_rects'] = game_data.monster_rects
-        attributes['self.items'] = game_data.items
+        attributes['monsters'] = game_data.monsters
+        attributes['monster_rects'] = game_data.monster_rects
+        attributes['items'] = game_data.items
         # for item in game_data.items:
         #     item.set_item_sprite(None)
-        attributes['self.item_rects'] = game_data.item_rects
-        attributes['self.player_rect'] = game_data.player_rect
+        attributes['item_rects'] = game_data.item_rects
+        attributes['player_rect'] = game_data.player_rect
+        attributes['dungeon_map'] = game_data.__dungeon_map
         with open('dungeon_adventure.pickle', 'wb') as saved_file:
             pickle.dump(attributes, saved_file)
 

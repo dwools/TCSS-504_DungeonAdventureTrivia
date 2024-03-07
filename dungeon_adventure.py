@@ -195,7 +195,7 @@ class DungeonAdventure(Maze):
                 dungeon_map.append((list(row)))
             return dungeon_map
 
-        dungeon_map = load_map()
+        self.__dungeon_map = load_map()
 
         def create_matrix(tile_set):
             # Creating a map underneath the visual map that monsters will use in the pathfinding algorithm
@@ -217,7 +217,7 @@ class DungeonAdventure(Maze):
 
             return tile_map
 
-        pathfinder = Pathfinder(create_matrix(dungeon_map))
+        pathfinder = Pathfinder(create_matrix(self.__dungeon_map))
 
         def tile_collision_test(rect, tiles):
             """ Testing whether a character collides with n tile. """
@@ -279,7 +279,7 @@ class DungeonAdventure(Maze):
             # Assign image sprites to the dungeon map txt values. Depending on the sprite add it to the collisions list.
 
             y = 0
-            for row in dungeon_map:
+            for row in self.__dungeon_map:
 
                 x = 0
                 for tile in row:
@@ -524,11 +524,12 @@ class DungeonAdventure(Maze):
             with open("dungeon_adventure.pickle", "rb") as f:
                 game_data = pickle.load(f)
             self.player_position = game_data['player_position']
-            self.monsters = game_data['self.monsters']
-            self.monster_rects = game_data['self.monster_rects']
-            self.items = game_data['self.items']
-            self.item_rects = game_data['self.item_rects']
-            self.player_rect = game_data['self.player_rect']
+            self.monsters = game_data['monsters']
+            self.monster_rects = game_data['monster_rects']
+            self.items = game_data['items']
+            self.item_rects = game_data['item_rects']
+            self.player_rect = game_data['player_rect']
+            self.__dungeon_map = game_data['dungeon_map']
 
 
 
