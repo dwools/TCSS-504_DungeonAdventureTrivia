@@ -30,6 +30,7 @@ from monster_ogre import Ogre
 from monster_skeleton import Skeleton
 from monster_gremlin import Gremlin
 from pathfinder import Pathfinder
+
 # from save_game import SaveGame
 
 """
@@ -69,7 +70,7 @@ class DungeonAdventure(Maze):
         self.attack_menu = AttackMenu(self)
         self.inventory_menu = InventoryMenu(self)
         self.game_over = GameOver(self)
-        self.current_menu = self.main_menu  # Default menu is the main menu
+        self.current_menu = self.combat_ui  # Default menu is the main menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
@@ -86,7 +87,7 @@ class DungeonAdventure(Maze):
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = [16, 16]
+        self.player_position = self.coords_generator.get_random_coords()
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
@@ -107,10 +108,10 @@ class DungeonAdventure(Maze):
             creature_position = self.coords_generator.get_random_coords()
             creature.set_position(creature_position)  # Set monster initial position to random coords
             creature_x, creature_y = creature.get_position()
-            creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
+            creature_rect = creature.set_character_rect(creature_x,
+                                                        creature_y)  # Use random coords to create a rect at coords
             self.monster_rects.append(creature_rect)
             self.monsters.append(creature)
-
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.i_factory = item_factory.ItemFactory()
@@ -127,8 +128,6 @@ class DungeonAdventure(Maze):
             item_rect = item.set_item_rect(item_x, item_y)
             self.item_rects.append(item_rect)
             self.items.append(item_position)
-
-
 
         # Load up base images
         self.gremlin_image = pg.image.load(a.south_gremlin)
@@ -535,9 +534,7 @@ class DungeonAdventure(Maze):
             self.maze = game_data['maze']
 
 
-
 if __name__ == "__main__":
-    databases = initialize_databases.main()
     main = DungeonAdventure()
     main.game_loop()
     SaveGame.pickle(main)
