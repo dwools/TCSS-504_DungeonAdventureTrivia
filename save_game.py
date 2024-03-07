@@ -1,6 +1,7 @@
 import os
 import pickle
-from dungeon_adventure import DungeonAdventure
+
+
 # from combat import Combat
 
 
@@ -23,7 +24,8 @@ class SaveGame:
         #     item.set_item_sprite(None)
         attributes['item_rects'] = game_data.item_rects
         attributes['player_rect'] = game_data.player_rect
-        attributes['dungeon_map'] = game_data.__dungeon_map
+        attributes['dungeon_map'] = game_data.dungeon_map
+        attributes['maze'] = game_data.maze
         with open('dungeon_adventure.pickle', 'wb') as saved_file:
             pickle.dump(attributes, saved_file)
 

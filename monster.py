@@ -60,10 +60,13 @@ class Monster(DungeonCharacter):
     def set_direction(self):
         if len(self.__path) > 1:
             self.__path.pop(0)
-        path_x, path_y = self.__path[0]
-        start = pg.math.Vector2(self.get_position())
-        end = pg.math.Vector2(path_y * 16, path_x * 16)
-        self.__direction = (end - start).normalize()
+        if len(self.__path) > 1:        # If monster and player rectangles don't collide, delete this line and un-indent the lines below
+            path_x, path_y = self.__path[0]
+            start = pg.math.Vector2(self.get_position())
+            end = pg.math.Vector2(path_y * 16, path_x * 16)
+            self.__direction = (end - start).normalize()
+        else:
+            self.__direction = pg.math.Vector2(0, 0)
         return self.__direction
 
 
