@@ -109,21 +109,21 @@ class DungeonAdventure(Maze):
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # self.i_factory = item_factory.ItemFactory()
-        #
-        # self.items = []
-        # self.item_rects = []
-        #
-        # # Place/spawn items
-        # for _ in range(1):
-        #     item = self.i_factory.choose_item()
-        #     item_position = self.coords_generator.get_random_coords()
-        #     item.set_item_position(item_position)
-        #     item_x, item_y = item.get_item_position()
-        #     item_rect = item.set_item_rect(item_x, item_y)
-        #     self.item_rects.append(item_rect)
-        #     self.items.append(item_position)
-        #
+        self.i_factory = item_factory.ItemFactory()
+
+        self.items = []
+        self.item_rects = []
+
+        # Place/spawn items
+        for _ in range(1):
+            item = self.i_factory.choose_item()
+            item_position = self.coords_generator.get_random_coords()
+            item.set_item_position(item_position)
+            item_x, item_y = item.get_item_position()
+            item_rect = item.set_item_rect(item_x, item_y)
+            self.item_rects.append(item_rect)
+            self.items.append(item_position)
+
 
 
         # Load up base images

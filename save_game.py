@@ -10,9 +10,17 @@ class SaveGame:
     def pickle(game_data):
         attributes = {}
         attributes['player_position'] = game_data.player_position
+        for monster in game_data.monsters:
+            monster.set_monster_sprite(None)
+            monster.set_east_monster_sprite(None)
+            monster.set_west_monster_sprite(None)
+            monster.set_north_monster_sprite(None)
+            monster.set_south_monster_sprite(None)
         attributes['self.monsters'] = game_data.monsters
         attributes['self.monster_rects'] = game_data.monster_rects
         attributes['self.items'] = game_data.items
+        # for item in game_data.items:
+        #     item.set_item_sprite(None)
         attributes['self.item_rects'] = game_data.item_rects
         attributes['self.player_rect'] = game_data.player_rect
         with open('dungeon_adventure.pickle', 'wb') as saved_file:
