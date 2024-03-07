@@ -8,6 +8,12 @@ import config as c
 import assets as a
 from trivia_factory import TriviaFactory
 from save_game import SaveGame
+from hero import Hero
+from hero_priestess import Priestess
+from hero_knight import Knight
+from hero_rogue import Rogue
+from hero_factory import HeroFactory
+
 
 class Menu:
 
@@ -158,11 +164,12 @@ class CharacterSelectMenu(Menu):
 
     def __init__(self, game):
         Menu.__init__(self, game)
-
+        self.__player_character = None
         # The Knight
         self.state = "Knight"  # Base state
         self.select_knight_x, self.select_knight_y = self.middle_width + 50, self.middle_height + 300
         self.knight_image = pg.image.load(a.south_knight)
+
 
         # The Priestess
         self.select_priestess_x, self.select_priestess_y = self.middle_width - 350, self.middle_height + 300
@@ -292,9 +299,13 @@ class CharacterSelectMenu(Menu):
             self.game.current_menu = self.game.main_menu
             self.run_display = False
 
+# This is where we select our character. How can we set our player character here while avoiding circular imports?
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
-
+            pre_character = HeroFactory()
             if self.state == 'Knight':
+                self.__player_character = pre_character.create_knight()
+
+
                 self.game.playing = True
 
             elif self.state == 'Priestess':
@@ -304,6 +315,9 @@ class CharacterSelectMenu(Menu):
                 self.game.playing = True
 
             self.run_display = False
+
+    def get_player_character(self):
+        return self.__player_character
 
 
 class HowToPlayMenu(Menu):
@@ -596,8 +610,8 @@ class PauseMenu(Menu):
 
             if self.state == 'Save The Game':
                 print("SAVING GAME!")
-                self.set_save_game(True)
-                # SaveGame.pickle(adventure)
+                # self.set_save_game(True)
+                SaveGame.pickle(self.game)
                 self.game.interacting = False
 
             if self.state == 'Main Menu':

@@ -37,9 +37,6 @@ class Monster(DungeonCharacter):
         self.__monster_goal = None
         self.__path = []
         self.__collision_rects = []
-
-        # self.__rect = self.get_character_rect()
-        # self.__position = self.__rect.center
         self.__player_scroll = [0, 0]
 
         self.__south_monster_sprite = None
@@ -47,63 +44,18 @@ class Monster(DungeonCharacter):
         self.__east_monster_sprite = None
         self.__west_monster_sprite = None
         self.__current_sprite = self.__south_monster_sprite
-        # self.__update_delay = 250
-        # self.__last_update = 0
 
-    def update(self):  # Update the monsters position
-        # if pygame.time.get_ticks() - self.__last_update > self.__update_delay:
+
+    def update(self):
         position = self.get_position()
         rectangle = self.get_character_rect()
-        # if self.__path:
-        # self.__path.pop(0)
         self.set_direction()
-        # for _ in range(16):
         position += (self.__direction)
-        print("Before Update - Position:", self.get_position())  # position before movement
-        print("Before Update - Direction:", self.__direction)  # monster's current direction (moving towards player, following the path)
-        print("Before Update - Speed:", self.__speed)  # Monster's speed
-        print("Before Update - Movement: ", self.__movement)
-        print("Before Update - Coordinates: ", self.get_coordinate())
-
-        # if self.__path:
-        #     path_x, path_y = self.__path.pop(0)
-        #     position = [path_y * 16, path_x * 16]
-        # if self.__path:  # if self.__path [] is not empty:
-        #     position = self.__path[0]
-        #     x = position.x * 16  #  x attribute of the GridNode object in the Path. Path is a list of GridNode objects, each with their own x and y coordinate. We set our position to these coordinates specifically, here.
-        #     y = position.y * 16  # likewise for y.
-        #     self.set_position([y, x])  # Pop the first "step" toward player and set position to that "step"
-        #     rectangle.center = [x, y]
         self.set_position(position)
         rect_x, rect_y = position
         rectangle.center = rect_y+8, rect_x+8
-        # self.__rect.center = self.__position  # assign the position of the monster to the monster's rect center
 
-        self.check_collisions()  # Checks if  monster collides with a wall
-
-        # self.__position = self.get_position_from_coordinate(self.__rect.center)
-        # print("After Conversion - Position:", self.__position)
-        #
-        # self.set_monster_position(self.__position)
-        # print("Monster Position set to: ", self.__position)
-        #
-        # self.set_monster_rect(self.__rect)
-        #
-        print(f"After Update - Position: {self.get_position()}")  # position after movement
-        print(f"After Update - Direction: {self.__direction}")
-        print("After Update - Movement:", self.__movement)
-        print(f"After Update - Coordinates: {self.get_coordinate()}")
-        # Update __movement based on __direction
-        # if self.__direction.x > 0:
-        #     self.__movement = [self.__speed, 0]
-        # elif self.__direction.x < 0:
-        #     self.__movement = [-self.__speed, 0]
-        # elif self.__direction.y > 0:
-        #     self.__movement = [0, self.__speed]
-        # elif self.__direction.y < 0:
-        #     self.__movement = [0, -self.__speed]
-        # time.sleep(1)
-        self.__last_update = pygame.time.get_ticks()
+        self.check_collisions()
 
     def set_direction(self):
         if len(self.__path) > 1:
@@ -120,18 +72,6 @@ class Monster(DungeonCharacter):
             start = pg.math.Vector2(self.get_position())
             end = pg.math.Vector2(self.__collision_rects[0].center)
             self.__direction = (end - start).normalize()
-
-            # if self.__direction == pg.math.Vector2(0, 1):
-            #     self.__current_sprite = self.__south_monster_sprite
-            #
-            # if self.__direction == pg.math.Vector2(1, 1):
-            #     self.__current_sprite = self.__north_monster_sprite
-            #
-            # if self.__direction == pg.math.Vector2(0, 0):
-            #     self.__current_sprite = self.__east_monster_sprite
-            #
-            # if self.__direction == pg.math.Vector2(1, 0):
-            #     self.__current_sprite = self.__west_monster_sprite
 
         else:
             self.__direction = pg.math.Vector2(0, 0)

@@ -10,8 +10,8 @@ class SaveGame:
     def pickle(game_data):
         attributes = {}
         attributes['player_position'] = game_data.player_position
-        attributes['self.monster'] = game_data.monster
-        attributes['self.monster_rect'] = game_data.monster_rect
+        attributes['self.monsters'] = game_data.monsters
+        attributes['self.monster_rects'] = game_data.monster_rects
         attributes['self.items'] = game_data.items
         attributes['self.item_rects'] = game_data.item_rects
         attributes['self.player_rect'] = game_data.player_rect
