@@ -1,4 +1,6 @@
 # Import packages
+import os
+import pickle
 import random
 
 import sys
@@ -515,6 +517,18 @@ class DungeonAdventure(Maze):
         text_rect = text_surface.get_rect()
         text_rect.center = (x / 2, y / 2)
         self.display.blit(text_surface, text_rect)
+
+
+    def load_game(self):
+        if os.path.exists("dungeon_adventure.pickle"):
+            with open("dungeon_adventure.pickle", "rb") as f:
+                game_data = pickle.load(f)
+            self.player_position = game_data['player_position']
+            self.monsters = game_data['self.monsters']
+            self.monster_rects = game_data['self.monster_rects']
+            self.items = game_data['self.items']
+            self.item_rects = game_data['self.item_rects']
+            self.player_rect = game_data['self.player_rect']
 
 
 

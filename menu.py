@@ -8,11 +8,13 @@ import config as c
 import assets as a
 from trivia_factory import TriviaFactory
 from save_game import SaveGame
+from load_game import LoadGame
 from hero import Hero
 from hero_priestess import Priestess
 from hero_knight import Knight
 from hero_rogue import Rogue
 from hero_factory import HeroFactory
+
 
 
 class Menu:
@@ -360,10 +362,11 @@ class LoadSaveGamesMenu(Menu):  # WIP
     def __init__(self, game):
         Menu.__init__(self, game)
 
-        self.saved_games = [1, 2]  # Populate this from somewhere somehow?
+        self.saved_games = ['dungeon_adventure.pickle']  # Populate this from somewhere somehow?
 
         if len(self.saved_games) != 0:  # if there are one or more saves
             self.state = "Save One"
+            game.load_game()
             self.save_x, self.save_y = self.middle_width, self.middle_height
             self.save_rect = None
             self.saved_rects = []
