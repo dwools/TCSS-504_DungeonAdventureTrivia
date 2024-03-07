@@ -4,7 +4,8 @@ from dungeon_character import DungeonCharacter
 
 class PitTrap(Item):
     def __init__(self, location, health_change_value):
-        super().__init__(location, health_change_value)
+        self.__location = location
+        super().__init__(health_change_value)
 
     def change_health(self):
         hit_points = DungeonCharacter.get_hit_points()

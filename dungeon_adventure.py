@@ -1,4 +1,6 @@
 # Import packages
+import os
+import pickle
 import random
 
 import sys
@@ -76,6 +78,7 @@ class DungeonAdventure(Maze):
         self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
 
         # Player sprite setup, camera scrolling setup
+        self.__player_character = None
         self.player_movement = [0, 0]
         self.camera_scroll = [0, 0]
         self.player_direction = 0
@@ -110,21 +113,21 @@ class DungeonAdventure(Maze):
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # self.i_factory = item_factory.ItemFactory()
-        #
-        # self.items = []
-        # self.item_rects = []
-        #
-        # # Place/spawn items
-        # for _ in range(1):
-        #     item = self.i_factory.choose_item()
-        #     item_position = self.coords_generator.get_random_coords()
-        #     item.set_item_position(item_position)
-        #     item_x, item_y = item.get_item_position()
-        #     item_rect = item.set_item_rect(item_x, item_y)
-        #     self.item_rects.append(item_rect)
-        #     self.items.append(item_position)
-        #
+        self.i_factory = item_factory.ItemFactory()
+
+        self.items = []
+        self.item_rects = []
+
+        # Place/spawn items
+        for _ in range(1):
+            item = self.i_factory.choose_item()
+            item_position = self.coords_generator.get_random_coords()
+            item.set_item_position(item_position)
+            item_x, item_y = item.get_item_position()
+            item_rect = item.set_item_rect(item_x, item_y)
+            self.item_rects.append(item_rect)
+            self.items.append(item_position)
+
 
 
         # Load up base images
@@ -142,6 +145,18 @@ class DungeonAdventure(Maze):
         self.PURPLE = c.PURPLE
         self.BLACK = c.BLACK
         self.WHITE = c.WHITE
+
+    # How can we set our character player while avoiding circular imports?
+    # def get_save_status(self):
+    #     if self.pause_menu.get_save_game() == True:
+    #         SaveGame.pickle(DungeonAdventure)
+    #         self.pause_menu.set_save_game(False)
+
+    def get_player_character(self):
+        return self.__player_character
+
+    def set_player_character(self, player_character):
+        self.__player_character = player_character
 
     def game_loop(self):
         """
@@ -182,7 +197,7 @@ class DungeonAdventure(Maze):
                 dungeon_map.append((list(row)))
             return dungeon_map
 
-        dungeon_map = load_map()
+        self.__dungeon_map = load_map()
 
         def create_matrix(tile_set):
             # Creating a map underneath the visual map that monsters will use in the pathfinding algorithm
@@ -204,7 +219,7 @@ class DungeonAdventure(Maze):
 
             return tile_map
 
-        pathfinder = Pathfinder(create_matrix(dungeon_map))
+        pathfinder = Pathfinder(create_matrix(self.__dungeon_map))
 
         def tile_collision_test(rect, tiles):
             """ Testing whether a character collides with n tile. """
@@ -266,7 +281,7 @@ class DungeonAdventure(Maze):
             # Assign image sprites to the dungeon map txt values. Depending on the sprite add it to the collisions list.
 
             y = 0
-            for row in dungeon_map:
+            for row in self.__dungeon_map:
 
                 x = 0
                 for tile in row:
@@ -292,6 +307,8 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
+            # if self.player_rect.colliderect():
+            #     self.
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -502,6 +519,19 @@ class DungeonAdventure(Maze):
         text_rect = text_surface.get_rect()
         text_rect.center = (x / 2, y / 2)
         self.display.blit(text_surface, text_rect)
+
+
+    def load_game(self):
+        if os.path.exists("dungeon_adventure.pickle"):
+            with open("dungeon_adventure.pickle", "rb") as f:
+                game_data = pickle.load(f)
+            self.player_position = game_data['player_position']
+            self.monsters = game_data['monsters']
+            self.monster_rects = game_data['monster_rects']
+            self.items = game_data['items']
+            self.item_rects = game_data['item_rects']
+            self.player_rect = game_data['player_rect']
+            self.__dungeon_map = game_data['dungeon_map']
 
 
 
