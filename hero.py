@@ -3,6 +3,7 @@ from dungeon_character import DungeonCharacter
 from abc import ABC, abstractmethod
 from item import Item
 
+
 class Hero(DungeonCharacter):
     def __init__(self, name,
                  type,

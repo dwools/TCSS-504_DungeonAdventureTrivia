@@ -23,7 +23,7 @@ import initialize_databases
 from object_coordinates_generator import ValidCoordsGenerator
 from dungeon import Maze
 from menu import *
-from combat import Combat
+from combat import *
 from monster_ogre import Ogre
 from monster_skeleton import Skeleton
 from monster_gremlin import Gremlin
@@ -64,6 +64,8 @@ class DungeonAdventure(Maze):
         self.pause_menu = PauseMenu(self)
         self.trivia_ui = TriviaUI(self)
         self.combat_ui = Combat(self)
+        self.attack_menu = AttackMenu(self)
+        self.inventory_menu = InventoryMenu(self)
         self.game_over = GameOver(self)
         self.current_menu = self.main_menu  # Default menu is the main menu
 
