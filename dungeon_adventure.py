@@ -14,6 +14,9 @@ from pygame.font import Font
 import config as c
 import assets as a
 import item_factory
+import item
+from item_health_potion import *
+from item_pit_trap import *
 import monster_gremlin
 import monster_ogre
 from monster import *
@@ -30,7 +33,6 @@ from monster_ogre import Ogre
 from monster_skeleton import Skeleton
 from monster_gremlin import Gremlin
 from pathfinder import Pathfinder
-
 # from save_game import SaveGame
 
 """
@@ -48,7 +50,12 @@ class DungeonAdventure(Maze):
 
     def __init__(self):
         # pg.init()
-        super().__init__(15, 20)
+        self.__loaded_game = False
+        if self.__loaded_game == True:
+            self.set_maze("dungeon_adventure.pickle")
+            # We want to
+        else:
+            super().__init__(15, 20)
 
         # Controls
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
@@ -70,7 +77,7 @@ class DungeonAdventure(Maze):
         self.attack_menu = AttackMenu(self)
         self.inventory_menu = InventoryMenu(self)
         self.game_over = GameOver(self)
-        self.current_menu = self.combat_ui  # Default menu is the main menu
+        self.current_menu = self.main_menu  # Default menu is the main menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
@@ -87,7 +94,7 @@ class DungeonAdventure(Maze):
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = self.coords_generator.get_random_coords()
+        self.player_position = [16, 16]# self.coords_generator.get_random_coords()
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
@@ -100,24 +107,24 @@ class DungeonAdventure(Maze):
         self.m_factory = monster_factory.MonsterFactory()
 
         self.monsters = []
-        self.monster_rects = []
+        # self.monster_rects = []
 
         # Place/spawn monsters
         for _ in range(2):
             creature = self.m_factory.choose_monster()
             creature_position = self.coords_generator.get_random_coords()
             creature.set_position(creature_position)  # Set monster initial position to random coords
-            creature_x, creature_y = creature.get_position()
-            creature_rect = creature.set_character_rect(creature_x,
-                                                        creature_y)  # Use random coords to create a rect at coords
-            self.monster_rects.append(creature_rect)
+            # creature_x, creature_y = creature.get_position()
+            # creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
+            # self.monster_rects.append(creature_rect)
             self.monsters.append(creature)
+
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.i_factory = item_factory.ItemFactory()
 
         self.items = []
-        self.item_rects = []
+        # self.item_rects = []
 
         # Place/spawn items
         for _ in range(1):
@@ -125,15 +132,18 @@ class DungeonAdventure(Maze):
             item_position = self.coords_generator.get_random_coords()
             item.set_item_position(item_position)
             item_x, item_y = item.get_item_position()
-            item_rect = item.set_item_rect(item_x, item_y)
-            self.item_rects.append(item_rect)
-            self.items.append(item_position)
+            item.set_item_rect(item_x, item_y)
+            # item_rect = item.set_item_rect(item_x, item_y)
+            # self.item_rects.append(item_rect)
+            self.items.append(item)
+
+
 
         # Load up base images
         self.gremlin_image = pg.image.load(a.south_gremlin)
         self.skelly_image = pg.image.load(a.south_skelly)
         self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
-        # self.potion_image = pg.image.load(health_potion)
+        self.__healthpotion_image = pg.image.load(a.health_potion)
         # self.pittrap_image = pg.image.load(pittrap)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -150,6 +160,12 @@ class DungeonAdventure(Maze):
     #     if self.pause_menu.get_save_game() == True:
     #         SaveGame.pickle(DungeonAdventure)
     #         self.pause_menu.set_save_game(False)
+
+    def get_loaded_game(self):
+        return self.__loaded_game
+
+    def set_loaded_game(self, bool):
+        self.__loaded_game = bool
 
     def get_player_character(self):
         return self.__player_character
@@ -234,6 +250,8 @@ class DungeonAdventure(Maze):
 
             tile_collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
             rect.x += movement[0]
+            self.player_x += movement[0]
+            self.player_position[0] += movement[0]
             hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
 
@@ -246,6 +264,8 @@ class DungeonAdventure(Maze):
                     tile_collision_types['left'] = True
 
             rect.y += movement[1]
+            self.player_y += movement[1]
+            self.player_position[1] += movement[1]
             hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
 
@@ -399,6 +419,9 @@ class DungeonAdventure(Maze):
                     print("Gameloop rect.x: ", rect.x)
                     print("Gameloop rect.y: ", rect.y)
 
+            for item in self.items:
+                if isinstance(item, HealthPotion):
+                    item.set_healthpotion_sprite(pg.image.load(a.health_potion))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -521,6 +544,7 @@ class DungeonAdventure(Maze):
 
 
     def load_game(self):
+        self.set_loaded_game(True)
         if os.path.exists("dungeon_adventure.pickle"):
             with open("dungeon_adventure.pickle", "rb") as f:
                 game_data = pickle.load(f)
@@ -534,7 +558,9 @@ class DungeonAdventure(Maze):
             self.maze = game_data['maze']
 
 
+
 if __name__ == "__main__":
+    databases = initialize_databases.main()
     main = DungeonAdventure()
     main.game_loop()
     SaveGame.pickle(main)

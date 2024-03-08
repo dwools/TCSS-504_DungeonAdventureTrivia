@@ -17,7 +17,7 @@ class Item(ABC):
         self.__item_position = [0, 0]
         self.__item_position_x, self.__item_position_y = self.__item_position
         # pg.Rect()
-        self.__item_rect = pg.Rect(self.__item_position_x, self.__item_position_y, 16, 16)
+        self.__rect = pg.Rect(self.__item_position_x, self.__item_position_y, 16, 16)
         self.__health_change_value = health_change_value
 
     def get_item_position(self):
@@ -25,12 +25,16 @@ class Item(ABC):
 
     def set_item_position(self, item_position):
         self.__item_position = item_position
+        self.__item_position_x, self.__item_position_y = item_position
 
     def get_health_change(self):
         return self.__health_change_value
 
+    def get_item_rect(self):
+        return self.__rect
+
     def set_item_rect(self, x, y):
-        self.__item_rect = pg.Rect(y, x, 16, 16)
+        self.__rect = pg.Rect(y, x, 16, 16)
 
     @abstractmethod
     def change_health(self):
