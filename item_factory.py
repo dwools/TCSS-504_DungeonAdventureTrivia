@@ -13,14 +13,14 @@ class ItemFactory:
         return location
 
     def create_health_potion(self):
-        location = self.get_location()
+        # location = self.get_location()
         add_health = random.randint(5, 15)
-        return HealthPotion(location, add_health)
+        return HealthPotion(add_health)
 
     def create_pit_trap(self):
-        location = self.get_location()
+        # location = self.get_location()
         damage = random.randint(1, 20)
-        return PitTrap(location, damage)
+        return PitTrap(damage)
 
     def choose_item(self):
         choice = random.randint(1,2)

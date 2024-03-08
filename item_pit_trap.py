@@ -3,8 +3,8 @@ from dungeon_character import DungeonCharacter
 
 
 class PitTrap(Item):
-    def __init__(self, location, health_change_value):
-        self.__location = location
+    def __init__(self, health_change_value):
+        # self.__location = location
         super().__init__(health_change_value)
 
     def change_health(self):

@@ -30,7 +30,6 @@ class Menu:
         self.cursor_offset = - 350
         # Mouse Configuration
         self.mouse_position = pg.mouse.get_pos()
-        self.__save_game = False
 
     def draw_cursor(self):
         # Draw the pointer next to the buttons
@@ -42,13 +41,7 @@ class Menu:
         self.screen.blit(window_surface, (0, 0))
         pg.display.update()  # Update the Display
 
-    def get_save_game(self):
-        return self.__save_game
-    def set_save_game(self, bool):
-        if bool == True:
-            self.__save_game = True
-        else:
-            pass
+
 
 
 class MainMenu(Menu):
@@ -166,12 +159,10 @@ class CharacterSelectMenu(Menu):
 
     def __init__(self, game):
         Menu.__init__(self, game)
-        self.__player_character = None
         # The Knight
         self.state = "Knight"  # Base state
         self.select_knight_x, self.select_knight_y = self.middle_width + 50, self.middle_height + 300
         self.knight_image = pg.image.load(a.south_knight)
-
 
         # The Priestess
         self.select_priestess_x, self.select_priestess_y = self.middle_width - 350, self.middle_height + 300
@@ -301,25 +292,21 @@ class CharacterSelectMenu(Menu):
             self.game.current_menu = self.game.main_menu
             self.run_display = False
 
-# This is where we select our character. How can we set our player character here while avoiding circular imports?
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
             pre_character = HeroFactory()
             if self.state == 'Knight':
-                self.__player_character = pre_character.create_knight()
-
-
+                self.game.set_player_character(pre_character.create_knight())
                 self.game.playing = True
 
             elif self.state == 'Priestess':
+                self.game.set_player_character(pre_character.create_priestess())
                 self.game.playing = True
 
             elif self.state == 'Rogue':
+                self.game.set_player_character(pre_character.create_rogue())
                 self.game.playing = True
 
             self.run_display = False
-
-    def get_player_character(self):
-        return self.__player_character
 
 
 class HowToPlayMenu(Menu):

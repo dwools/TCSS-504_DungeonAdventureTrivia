@@ -5,11 +5,24 @@ from collections import deque
 
 class Maze:
     def __init__(self, rows, columns):
-        self.rows = rows
-        self.columns = columns
-        self.dungeon_output_file = open("dungeon.txt", 'w')
-        self.maze = []
-        self.main()
+        self.__rows = rows
+        self.__columns = columns
+        self.__dungeon_output_file = open("dungeon.txt", 'w')
+        self.__maze = []
+        self.__loaded_maze = False
+        if self.__loaded_maze == True:
+            self.set_maze("dungeon_adventure.pickle")
+        # Here: See if pickling saves a maze list or a dungeon.txt file. If it does, pass it into the above setter method. If not, figure out how to preserve the maze or text file.
+        else:
+            self.generate_maze()
+        self.write_dungeon_output()
+        self.__dungeon_output_file.close()
+
+    def get_maze(self):
+        return self.__maze
+
+    def set_maze(self, maze):
+        self.__maze = maze
 
     def get_neighbors(self, curr, visited):
         """
@@ -19,17 +32,17 @@ class Maze:
         :return: neighbors: list
         """
         neighbors = []
-        if curr.get_row() > 0 and not self.maze[curr.get_row() - 1][curr.get_column()] in visited:  # not north edge
-            neighbors.append(self.maze[curr.get_row() - 1][curr.get_column()])
+        if curr.get_row() > 0 and not self.__maze[curr.get_row() - 1][curr.get_column()] in visited:  # not north edge
+            neighbors.append(self.__maze[curr.get_row() - 1][curr.get_column()])
 
-        if curr.get_row() < self.rows - 1 and not self.maze[curr.get_row() + 1][curr.get_column()] in visited: # not south edge
-            neighbors.append(self.maze[curr.get_row() + 1][curr.get_column()])
+        if curr.get_row() < self.__rows - 1 and not self.__maze[curr.get_row() + 1][curr.get_column()] in visited: # not south edge
+            neighbors.append(self.__maze[curr.get_row() + 1][curr.get_column()])
 
-        if curr.get_column() > 0 and not self.maze[curr.get_row()][curr.get_column() - 1] in visited:  # not west edge
-            neighbors.append(self.maze[curr.get_row()][curr.get_column() - 1])
+        if curr.get_column() > 0 and not self.__maze[curr.get_row()][curr.get_column() - 1] in visited:  # not west edge
+            neighbors.append(self.__maze[curr.get_row()][curr.get_column() - 1])
 
-        if curr.get_column() < self.columns - 1 and not self.maze[curr.get_row()][curr.get_column() + 1] in visited: # not east edge
-            neighbors.append(self.maze[curr.get_row()][curr.get_column() + 1])
+        if curr.get_column() < self.__columns - 1 and not self.__maze[curr.get_row()][curr.get_column() + 1] in visited: # not east edge
+            neighbors.append(self.__maze[curr.get_row()][curr.get_column() + 1])
 
         return neighbors
 
@@ -61,12 +74,12 @@ class Maze:
         Assemble maze
         :return: list
         """
-        for i in range(self.rows):
-            self.maze.append([])
-            for j in range(self.columns):
-                self.maze[-1].append(Room(i, j))
-        origin = self.maze[0][0]
-        target = self.maze[self.rows - 1][self.columns - 1]
+        for i in range(self.__rows):
+            self.__maze.append([])
+            for j in range(self.__columns):
+                self.__maze[-1].append(Room(i, j))
+        origin = self.__maze[0][0]
+        target = self.__maze[self.__rows - 1][self.__columns - 1]
         stack = []
         visited = []
         stack.append(origin)
@@ -82,8 +95,8 @@ class Maze:
             else: stack.pop()
 
 
-        origin = self.maze[0][0]
-        target = self.maze[self.rows - 1][self.columns - 1]
+        origin = self.__maze[0][0]
+        target = self.__maze[self.__rows - 1][self.__columns - 1]
         stack = []
         visited = []
         stack.append(origin)
@@ -100,7 +113,7 @@ class Maze:
             else:
                 stack.pop()
 
-        return self.maze
+        return self.__maze
 
     def write_dungeon_output(self):
         """
@@ -108,33 +121,33 @@ class Maze:
         :return: TextIO
         """
         maze_design = ''
-        for i in range(self.rows):
-            for j in range(self.columns):
-                maze_design += self.maze[i][j].draw_top_gui()
+        for i in range(self.__rows):
+            for j in range(self.__columns):
+                maze_design += self.__maze[i][j].draw_top_gui()
             maze_design += '\n'
-            for j in range(self.columns):
-                maze_design += self.maze[i][j].draw_middle_gui()
+            for j in range(self.__columns):
+                maze_design += self.__maze[i][j].draw_middle_gui()
             maze_design += '\n'
-            for j in range(self.columns):
-                maze_design += self.maze[i][j].draw_bottom_gui()
+            for j in range(self.__columns):
+                maze_design += self.__maze[i][j].draw_bottom_gui()
             maze_design += '\n'
-        self.dungeon_output_file.write(maze_design)
-        return self.dungeon_output_file
+        self.__dungeon_output_file.write(maze_design)
+        return self.__dungeon_output_file
 
     def draw_maze(self):
         """
         Print
         :return:
         """
-        for i in range(self.rows):
-            for j in range(self.columns):
-                self.maze[i][j].draw_top_gui()
+        for i in range(self.__rows):
+            for j in range(self.__columns):
+                self.__maze[i][j].draw_top_gui()
             print()
-            for j in range(self.columns):
-                self.maze[i][j].draw_middle_gui()
+            for j in range(self.__columns):
+                self.__maze[i][j].draw_middle_gui()
             print()
-            for j in range(self.columns):
-                self.maze[i][j].draw_bottom_gui()
+            for j in range(self.__columns):
+                self.__maze[i][j].draw_bottom_gui()
             print()
 
 
@@ -145,14 +158,14 @@ class Maze:
         """
         row = 0
         column = 0
-        curr = self.maze[0][0]
+        curr = self.__maze[0][0]
         not_yet_visited = deque()
         not_yet_visited.append((curr, row, column))     # This is a tuple by definition with the ()
 
 
         while len(not_yet_visited) > 0:
             curr, row, column = not_yet_visited.popleft()
-            if row == self.rows - 1 and column == self.columns - 1:
+            if row == self.__rows - 1 and column == self.__columns - 1:
                 return True
 
             if curr.entered == True:
@@ -163,19 +176,19 @@ class Maze:
 
                 # Try moving south
                 if curr.get_southdoor() == True:
-                    not_yet_visited.append((self.maze[row + 1][column], row + 1, column))
+                    not_yet_visited.append((self.__maze[row + 1][column], row + 1, column))
 
                 # Try moving east
                 if curr.get_eastdoor() == True:
-                    not_yet_visited.append((self.maze[row][column + 1], row, column + 1))
+                    not_yet_visited.append((self.__maze[row][column + 1], row, column + 1))
 
                 # Try moving north
                 if curr.get_northdoor() == True:
-                    not_yet_visited.append((self.maze[row - 1][column], row - 1, column))
+                    not_yet_visited.append((self.__maze[row - 1][column], row - 1, column))
 
                 # Try moving west
                 if curr.get_westdoor() == True:
-                    not_yet_visited.append((self.maze[row][column - 1], row, column - 1))
+                    not_yet_visited.append((self.__maze[row][column - 1], row, column - 1))
         return False
 
 
@@ -189,9 +202,9 @@ class Maze:
         entrance = (0, 0)
         singular_items = ["i", "o", "A", "E", "I", "P"]
         while len(singular_items) != 0:
-            i = random.randint(0, self.rows - 1)
-            j = random.randint(0, self.columns - 1)
-            room = self.maze[i][j]
+            i = random.randint(0, self.__rows - 1)
+            j = random.randint(0, self.__columns - 1)
+            room = self.__maze[i][j]
             if len(room.items) == 0:
                 item = singular_items.pop(0)
                 room.place_item(item)
@@ -199,9 +212,9 @@ class Maze:
                     room.set_entrance(True)
                     entrance = (i, j)
 
-            for i in range(self.rows):
-                for j in range(self.columns):
-                    room = self.maze[i][j]
+            for i in range(self.__rows):
+                for j in range(self.__columns):
+                    room = self.__maze[i][j]
                     if len(room.items) == 0 and room.items[0] in singular_items:
                         pass
                     else:
@@ -213,20 +226,7 @@ class Maze:
         return entrance
 
 
-    def main(self):
-        '''
 
-        :return:
-        '''
-        self.generate_maze()
-        self.write_dungeon_output()
-        self.dungeon_output_file.close()
-        # if self.traverse() == True:
-        #     self.draw_maze()
-        #     self.write_dungeon_output()
-        #     # self.dungeon_output_file.close()
-        # else:
-        #     self.main()
 
 
 if __name__ == "__main__":
