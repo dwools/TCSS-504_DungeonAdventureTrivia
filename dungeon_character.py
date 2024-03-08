@@ -101,10 +101,6 @@ class DungeonCharacter(ABC):
     def set_maximum_damage(self, maximum_damage):
         self.__maximum_damage = maximum_damage
 
-    def attack(self, opponent, chance_to_hit, minimum_damage, maximum_damage):
-        damage = random.randint(minimum_damage, maximum_damage)
-        if random.random() < chance_to_hit:  # random.random() by default generates a random value between 0 and 1
-            opponent.set_hit_points(opponent.get_hit_points() - damage)
 
     # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
     # Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.

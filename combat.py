@@ -37,13 +37,15 @@ class Combat:
         # Monster init
         self.__m_factory = MonsterFactory()
         self.__monster = self.__m_factory.create_skeleton()
-        self.__monster_health = self.__monster.get_hit_points()
+        self.__monster_health_curr = self.__monster.get_hit_points()
+        self.__monster_health_max = self.__monster.get_hit_points()
         self.__monster_attack_speed = self.__monster.get_attack_speed()
         self.__monster_name = self.__monster.get_name()
         self.__monster_damage_range = [self.__monster.get_minimum_damage(), self.__monster.get_maximum_damage()]
         self.__monster_chance_to_hit = self.__monster.get_chance_to_hit()
         self.__monster_chance_to_heal = self.__monster.get_chance_to_heal()
-        self.__monster_heal_range = [self.__monster.get_minimum_heal_points(), self.__monster.get_maximum_heal_points()]
+        self.__monster_heal_min = self.__monster.get_minimum_heal_points()
+        self.__monster_heal_max = self.__monster.get_maximum_heal_points()
 
         # Hero init
         self.__h_factory = HeroFactory()
@@ -57,11 +59,17 @@ class Combat:
         self.__hero_heal_range = [self.__hero.get_minimum_heal_points(), self.__hero.get_maximum_heal_points()]
 
     def get_monster_health(self):
-        return self.__monster_health
+        return self.__monster_health_curr
 
     def set_monster_health(self, value):
-        self.__monster_health = value
-        return self.__monster_health
+        self.__monster_health_curr = value
+        return self.__monster_health_curr
+
+    def get_monster_heal_min(self):
+        return self.__monster_heal_min
+
+    def get_monster_heal_max(self):
+        return self.__monster_heal_max
 
     def get_hero_heal_range(self):
         return self.__hero_heal_range
@@ -142,19 +150,22 @@ class Combat:
     def get_main_text_box_x(self, value):
         self.__main_text_box_x = value
 
-    def get_hero_health(self):
+    def get_hero_health_curr(self):
         return self.__hero_health
 
-    def set_hero_health(self, value):
+    def set_hero_health_curr(self, value):
         self.__hero_health = value
         return self.__hero_health
 
-    def get_monster_health(self):
-        return self.__monster_health
+    def get_monster_health_curr(self):
+        return self.__monster_health_curr
 
-    def set_monster_health(self, value):
-        self.__monster_health = value
-        return self.__monster_health
+    def set_monster_health_curr(self, value):
+        self.__monster_health_curr = value
+        return self.__monster_health_curr
+
+    def get_monster_health_max(self):
+        return self.__monster_health_max
 
     def draw_cursor(self):
         # Draw the pointer next to the buttons
@@ -194,7 +205,7 @@ class Combat:
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
                                   self.__monster_name_y,
                                   'darkred')
-            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster_health}', 15, self.__monster_name_x,
+            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster_health_curr}', 15, self.__monster_name_x,
                                   self.__monster_name_y + 50,
                                   'white')
             pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(375, 90, 210, 50))
@@ -278,7 +289,8 @@ class AttackMenu(Combat):
 
         # Monster init
         self.__monster_name = self.get_monster_name()
-        self.__monster_health = self.get_monster_health()
+        self.__monster_health_curr = self.get_monster_health_curr()
+        self.__monster_health_max = self.get_monster_health_max()
         self.__monster_name_x, self.__monster_name_y = self.get_monster_name_x(), self.get_monster_name_y()
 
         # Hero init
@@ -312,7 +324,7 @@ class AttackMenu(Combat):
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
                                   self.__monster_name_y,
                                   'darkred')
-            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster_health}', 15, self.__monster_name_x,
+            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster_health_curr}', 15, self.__monster_name_x,
                                   self.__monster_name_y + 50,
                                   'white')
             pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(375, 90, 210, 50))
@@ -418,3 +430,39 @@ class AttackMenu(Combat):
 class InventoryMenu(Combat):
     def __init__(self, game):
         Combat.__init__(self, game)
+
+
+class CombatMechanics(Combat):
+    def __init__(self, game):
+        Combat.__init__(self, game)
+        self.__game = game
+        self.__attack_order = []
+
+    def attack_order(self):
+        if self.get_monster_health_curr() != 0:
+            if self.__hero_attack_speed > self.__monster_attack_speed:
+                self.__attack_order.extend(["Hero's Turn", "Hero's Turn", "Monster's Turn"])
+            elif self.__hero_attack_speed < self.__monster_attack_speed:
+                self.__attack_order.extend(["Monster's Turn", "Monster's Turn", "Hero's Turn"])
+            else:
+                random.choice((self.__attack_order.extend(["Hero's Turn"]), self.__attack_order.extend(["Monster's Turn"])))
+        elif self.get_hero_health_curr() <= 0:
+            self.__game.current_menu = self.__game.game_over
+
+    def simple_attack(self):  # Hero's attack
+
+        pass
+
+    def monsters_attack(self):  # Monster's attack
+
+        pass
+
+    def monster_heal(self):  # Heal Monster
+        if self.get_monster_health_curr() >= (self.get_monster_health_max() // 3): # change this to chance to heal
+            new_monster_health = (self.get_monster_health_curr() + (random.randint(self.get_monster_heal_min(), self.get_monster_heal_max())))
+            if new_monster_health >= self.get_monster_health_max():
+                self.set_monster_health_curr(self.get_monster_health_max())
+            else:
+                self.set_monster_health_curr(new_monster_health)
+
+

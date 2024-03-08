@@ -1,12 +1,16 @@
 Turn-based
 
-initiate when player and monster rectangles collide
+initiate when player and monster rectangles collide -> dungeon_adventure.py
 
 terminate when player or monster health reaches 0
+if self.player_health = 0:
+    self.game.current_menu = self.game.game_over
 
 player controls player actions. monster actions automated.
+-> combat.py
 
 First attack per turn based on higher attack speed attribute.
+-> combat.py
 
 Monster actions include:
 	attack
