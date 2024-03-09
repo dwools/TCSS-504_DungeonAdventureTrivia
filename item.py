@@ -27,6 +27,9 @@ class Item(ABC):
         self.__item_position = item_position
         self.__item_position_x, self.__item_position_y = item_position
 
+    def set_player_scroll(self, scroll):
+        self.__player_scroll = scroll
+
     def get_health_change(self):
         return self.__health_change_value
 
@@ -34,7 +37,7 @@ class Item(ABC):
         return self.__rect
 
     def set_item_rect(self, x, y):
-        self.__rect = pg.Rect(y, x, 16, 16)
+        self.__rect = pg.Rect(x+4, y+4, 16, 16)
 
     @abstractmethod
     def change_health(self):

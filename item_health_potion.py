@@ -4,7 +4,6 @@ from dungeon_character import DungeonCharacter
 
 class HealthPotion(Item):
     def __init__(self, health_change_value):
-        # self.__location = location
         super().__init__(health_change_value)
 
         self.__healthpotion_sprite = None
@@ -23,10 +22,11 @@ class HealthPotion(Item):
         """We need to be able to pick up potions and put them in our backpack/inventory
         """
 
-    def get_healpotion_sprite(self):
-        return self.__healthpotion_sprite
-    def set_healthpotion_sprite(self, sprite_path):
-        self.__healthpotion_sprite = sprite_path
+    def get_health_potion_sprite(self):
+        return self.__health_potion_sprite
+
+    def set_health_potion_sprite(self, sprite_path):
+        self.__health_potion_sprite = sprite_path
 
     # def create_collision_rects(self):
     #     """ Create a rectangle over a tile,

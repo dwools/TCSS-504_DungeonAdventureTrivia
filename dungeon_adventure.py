@@ -99,7 +99,7 @@ class DungeonAdventure(Maze):
 
         self.player_img_size = (14, 14)
         self.player_image = pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
-        self.player_rect = pg.Rect(self.player_y, self.player_x, self.player_image.get_width(),
+        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
                                    self.player_image.get_height())  # start at 16, add 48 x or y for good position
         self.camera_scroll = [0, 0]
 
@@ -129,7 +129,7 @@ class DungeonAdventure(Maze):
         # Place/spawn items
         for _ in range(1):
             item = self.i_factory.choose_item()
-            item_position = self.coords_generator.get_random_coords()
+            item_position = self.player_position#self.coords_generator.get_random_coords()
             item.set_item_position(item_position)
             item_x, item_y = item.get_item_position()
             item.set_item_rect(item_x, item_y)
@@ -143,7 +143,7 @@ class DungeonAdventure(Maze):
         self.gremlin_image = pg.image.load(a.south_gremlin)
         self.skelly_image = pg.image.load(a.south_skelly)
         self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
-        self.__healthpotion_image = pg.image.load(a.health_potion)
+        self.__health_potion_image = pg.image.load(a.health_potion)
         # self.pittrap_image = pg.image.load(pittrap)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -250,8 +250,8 @@ class DungeonAdventure(Maze):
 
             tile_collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
             rect.x += movement[0]
-            self.player_x += movement[0]
-            self.player_position[0] += movement[0]
+            self.player_x = rect.x
+            self.player_position[0] = rect.x
             hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
 
@@ -264,8 +264,8 @@ class DungeonAdventure(Maze):
                     tile_collision_types['left'] = True
 
             rect.y += movement[1]
-            self.player_y += movement[1]
-            self.player_position[1] += movement[1]
+            self.player_y = rect.y
+            self.player_position[1] = rect.y
             hit_list = tile_collision_test(rect, tiles)
             for tile in hit_list:
 
@@ -416,12 +416,20 @@ class DungeonAdventure(Maze):
                     self.ogre_image = monster.get_monster_sprite()
                     self.display.blit(self.ogre_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                    print("Gameloop rect.x: ", rect.x)
-                    print("Gameloop rect.y: ", rect.y)
+                    # print("Gameloop rect.x: ", rect.x)
+                    # print("Gameloop rect.y: ", rect.y)
 
             for item in self.items:
+                item.set_player_scroll(self.camera_scroll)
+                rect = item.get_item_rect()
                 if isinstance(item, HealthPotion):
-                    item.set_healthpotion_sprite(pg.image.load(a.health_potion))
+                    item.set_health_potion_sprite(pg.image.load(a.health_potion))
+                    self.__health_potion_image = item.get_health_potion_sprite()
+                    self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                if isinstance(item, PitTrap):
+                    item.set_pit_trap_sprite(pg.image.load(a.health_potion))
+                    self.__health_potion_image = item.get_pit_trap_sprite()
+                    self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
