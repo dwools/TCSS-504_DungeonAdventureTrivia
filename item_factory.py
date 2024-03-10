@@ -1,26 +1,26 @@
 # from items import Item
 import random
-from item_pit_trap import PitTrap
+from item_pit_trap import FireTrap
 from item_health_potion import HealthPotion
 from object_coordinates_generator import ValidCoordsGenerator
 
 class ItemFactory:
 
-    def get_location(self):
-        coords = ValidCoordsGenerator()
-        coords.generate_coords()
-        location = coords.get_random_coords()
-        return location
+    # def get_location(self):
+    #     coords = ValidCoordsGenerator()
+    #     coords.generate_coords()
+    #     location = coords.get_random_coords()
+    #     return location
 
     def create_health_potion(self):
         # location = self.get_location()
-        add_health = random.randint(5, 15)
-        return HealthPotion(add_health)
+        # add_health = random.randint(5, 15)
+        return HealthPotion()
 
     def create_pit_trap(self):
         # location = self.get_location()
-        damage = random.randint(1, 20)
-        return PitTrap(damage)
+        # damage = random.randint(1, 20)
+        return FireTrap()
 
     def choose_item(self):
         choice = random.randint(1,2)

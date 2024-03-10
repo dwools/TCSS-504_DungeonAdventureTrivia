@@ -5,7 +5,7 @@ import pygame as pg
 
 from hero_factory import *
 from monster_factory import *
-import dungeon_character
+from dungeon_character import DungeonCharacter
 
 
 class Combat:
@@ -37,8 +37,8 @@ class Combat:
         # Monster init
         self.__m_factory = MonsterFactory()
         self.__monster = self.__m_factory.create_skeleton()
-        self.__monster_health_curr = self.__monster.get_hit_points()
-        self.__monster_health_max = self.__monster.get_hit_points()
+        self.__monster_health_curr = self.__monster.get_current_hit_points()
+        self.__monster_health_max = self.__monster.get_max_hit_points()
         self.__monster_attack_speed = self.__monster.get_attack_speed()
         self.__monster_name = self.__monster.get_name()
         self.__monster_damage_range = [self.__monster.get_minimum_damage(), self.__monster.get_maximum_damage()]
@@ -50,7 +50,7 @@ class Combat:
         # Hero init
         self.__h_factory = HeroFactory()
         self.__hero = self.__h_factory.create_rogue()
-        self.__hero_health = self.__hero.get_hit_points()
+        self.__hero_health = self.__hero.get_current_hit_points()
         self.__hero_attack_speed = self.__hero.get_attack_speed()
         self.__hero_name = self.__hero.get_name()
         self.__hero_damage_range = [self.__hero.get_minimum_damage(), self.__hero.get_maximum_damage()]

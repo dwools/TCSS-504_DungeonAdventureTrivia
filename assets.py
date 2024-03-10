@@ -46,3 +46,4 @@ main_menu_bg = 'assets/backgrounds/mainMenu.JPEG'
 
 # Items
 health_potion = 'assets/ItemsAssets/HealthPotion.png'
+fire_trap = 'assets/ItemsAssets/FireTrap.png'

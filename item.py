@@ -13,12 +13,10 @@ class Item(ABC):
     - the Four Pillars
     """
 
-    def __init__(self, health_change_value):
+    def __init__(self):
         self.__item_position = [0, 0]
         self.__item_position_x, self.__item_position_y = self.__item_position
-        # pg.Rect()
         self.__rect = pg.Rect(self.__item_position_x, self.__item_position_y, 16, 16)
-        self.__health_change_value = health_change_value
 
     def get_item_position(self):
         return self.__item_position
@@ -30,18 +28,15 @@ class Item(ABC):
     def set_player_scroll(self, scroll):
         self.__player_scroll = scroll
 
-    def get_health_change(self):
-        return self.__health_change_value
-
     def get_item_rect(self):
         return self.__rect
 
     def set_item_rect(self, x, y):
-        self.__rect = pg.Rect(x+4, y+4, 16, 16)
+        self.__rect = pg.Rect(x, y, 16, 16)
 
-    @abstractmethod
-    def change_health(self):
-        pass
+    # @abstractmethod
+    # def change_health(self):
+    #     pass
 
 
 

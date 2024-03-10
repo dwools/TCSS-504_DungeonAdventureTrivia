@@ -1,32 +1,41 @@
+import random
+
 from item import Item
-from dungeon_character import DungeonCharacter
+# from dungeon_character import DungeonCharacter
 
 
 class HealthPotion(Item):
-    def __init__(self, health_change_value):
-        super().__init__(health_change_value)
+    def __init__(self):
+        super().__init__()
 
-        self.__healthpotion_sprite = None
+        self.__health_potion_sprite = None
         # self.__collision_rects = []
         self.__player_scroll = [0, 0]
+        self.__health_change_value = random.randint(20, 40)
 
 
-    def change_health(self):
-        hit_points = DungeonCharacter.get_hit_points()
-        hit_points += self.__health_change_value
-        DungeonCharacter.set_hit_points(hit_points)
+    # def change_health(self):
+    #     hit_points = DungeonCharacter.get_hit_points()
+    #     hit_points += self.__health_change_value
+    #     DungeonCharacter.set_hit_points(hit_points)
 
 
 
-    def add_to_backpack(self):
-        """We need to be able to pick up potions and put them in our backpack/inventory
-        """
+    # def add_to_backpack(self):
+    #     """We need to be able to pick up potions and put them in our backpack/inventory
+    #     """
 
     def get_health_potion_sprite(self):
         return self.__health_potion_sprite
 
     def set_health_potion_sprite(self, sprite_path):
         self.__health_potion_sprite = sprite_path
+
+    def get_health_change_value(self):
+        return self.__health_change_value
+
+    def set_health_change_value(self, value):
+        self.__health_change_value = value
 
     # def create_collision_rects(self):
     #     """ Create a rectangle over a tile,

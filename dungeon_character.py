@@ -9,7 +9,8 @@ class DungeonCharacter(ABC):
         # Dungeon character needs a name per project specifications
         self.__name = name
         self.__type = type
-        self.__hit_points = hit_points
+        self.__max_hit_points = hit_points
+        self.__current_hit_points = hit_points
         self.__attack_speed = attack_speed
         self.__chance_to_hit = chance_to_hit
         self.__minimum_damage = minimum_damage
@@ -37,8 +38,17 @@ class DungeonCharacter(ABC):
         print(self.__type)
         return self.__type
 
-    def get_hit_points(self):
-        return self.__hit_points
+    def get_current_hit_points(self):
+        return self.__current_hit_points
+    
+    def set_current_hit_points(self, value):
+        self.__current_hit_points = value
+
+    def get_max_hit_points(self):
+        return self.__max_hit_points
+
+    def set_max_hit_points(self, value):
+        self.__max_hit_points = value
 
     def get_attack_speed(self):
         return self.__attack_speed
@@ -81,7 +91,7 @@ class DungeonCharacter(ABC):
         self.__character = type
 
     def set_hit_points(self, hit_points):
-        self.__hit_points = hit_points
+        self.__current_hit_points = hit_points
 
     def get_minimum_heal_points(self):
         return self.__minimum_heal_points

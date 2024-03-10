@@ -5,6 +5,7 @@ import random
 
 import sys
 import textwrap
+import time
 
 import pygame as pg  # import pygame
 from pygame.locals import *  # import the pygame modules
@@ -107,35 +108,39 @@ class DungeonAdventure(Maze):
         self.m_factory = monster_factory.MonsterFactory()
 
         self.monsters = []
-        # self.monster_rects = []
+        self.monster_rects = []
 
         # Place/spawn monsters
-        for _ in range(2):
-            creature = self.m_factory.choose_monster()
-            creature_position = self.coords_generator.get_random_coords()
-            creature.set_position(creature_position)  # Set monster initial position to random coords
-            # creature_x, creature_y = creature.get_position()
-            # creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
-            # self.monster_rects.append(creature_rect)
-            self.monsters.append(creature)
+        # for _ in range(2):
+        #     creature = self.m_factory.choose_monster()
+        #     creature_position = self.coords_generator.get_random_coords()
+        #     creature.set_position(creature_position)  # Set monster initial position to random coords
+        #     creature_x, creature_y = creature.get_position()
+        #     creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
+        #     self.monster_rects.append(creature_rect)
+        #     self.monsters.append(creature)
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.i_factory = item_factory.ItemFactory()
 
-        self.items = []
-        # self.item_rects = []
+        self.__items = []
+        self.__asleep = False
+        # self.__item_rects = []
 
         # Place/spawn items
-        for _ in range(1):
+        for _ in range(10):
             item = self.i_factory.choose_item()
-            item_position = self.player_position#self.coords_generator.get_random_coords()
+            item_position = self.coords_generator.get_random_coords()
             item.set_item_position(item_position)
             item_x, item_y = item.get_item_position()
-            item.set_item_rect(item_x, item_y)
+            if isinstance(item, HealthPotion):
+                item.set_item_rect(item_x+4, item_y+4)
+            else:
+                item.set_item_rect(item_x, item_y)
             # item_rect = item.set_item_rect(item_x, item_y)
-            # self.item_rects.append(item_rect)
-            self.items.append(item)
+            # self.__item_rects.append(item_rect)
+            self.__items.append(item)
 
 
 
@@ -144,7 +149,7 @@ class DungeonAdventure(Maze):
         self.skelly_image = pg.image.load(a.south_skelly)
         self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
         self.__health_potion_image = pg.image.load(a.health_potion)
-        # self.pittrap_image = pg.image.load(pittrap)
+        self.__fire_trap_image = pg.image.load(a.fire_trap)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
@@ -326,7 +331,17 @@ class DungeonAdventure(Maze):
                     x += 1
                 y += 1
 
-            # if self.player_rect.colliderect():
+            # I think item collisions should go right here
+            for item in self.__items:
+                    item_rect = item.get_item_rect()
+                    if self.player_rect.colliderect(item_rect):
+                        if isinstance(item, FireTrap):
+                            self.__player_character.damage(1)
+                        else:
+                            self.__player_character.add_to_backpack(item)
+                            self.__items.remove(item)
+
+
             #     self.
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -419,16 +434,16 @@ class DungeonAdventure(Maze):
                     # print("Gameloop rect.x: ", rect.x)
                     # print("Gameloop rect.y: ", rect.y)
 
-            for item in self.items:
+            for item in self.__items:
                 item.set_player_scroll(self.camera_scroll)
                 rect = item.get_item_rect()
                 if isinstance(item, HealthPotion):
                     item.set_health_potion_sprite(pg.image.load(a.health_potion))
                     self.__health_potion_image = item.get_health_potion_sprite()
                     self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                if isinstance(item, PitTrap):
-                    item.set_pit_trap_sprite(pg.image.load(a.health_potion))
-                    self.__health_potion_image = item.get_pit_trap_sprite()
+                if isinstance(item, FireTrap):
+                    item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
+                    self.__health_potion_image = item.get_fire_trap_sprite()
                     self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -560,7 +575,7 @@ class DungeonAdventure(Maze):
             self.monsters = game_data['monsters']
             self.monster_rects = game_data['monster_rects']
             self.items = game_data['items']
-            self.item_rects = game_data['item_rects']
+            # self.item_rects = game_data['item_rects']
             self.player_rect = game_data['player_rect']
             self.dungeon_map = game_data['dungeon_map']
             self.maze = game_data['maze']
