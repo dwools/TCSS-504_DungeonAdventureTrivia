@@ -19,7 +19,7 @@ class DungeonCharacter(ABC):
         self.__minimum_heal_points = 0
         self.__maximum_heal_points = 0
         self.__position_x, self.__position_y = self.__position
-        self.__rect = pg.Rect(self.__position_x, self.__position_y, 16, 16)
+        self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
 
         # self.__chance_to_block = Noned
         # self.__chance_to_heal = None

@@ -32,7 +32,7 @@ class Item(ABC):
         return self.__rect
 
     def set_item_rect(self, x, y):
-        self.__rect = pg.Rect(x, y, 16, 16)
+        self.__rect = pg.Rect(y, x, 16, 16)
 
     # @abstractmethod
     # def change_health(self):

@@ -111,14 +111,14 @@ class DungeonAdventure(Maze):
         self.monster_rects = []
 
         # Place/spawn monsters
-        # for _ in range(2):
-        #     creature = self.m_factory.choose_monster()
-        #     creature_position = self.coords_generator.get_random_coords()
-        #     creature.set_position(creature_position)  # Set monster initial position to random coords
-        #     creature_x, creature_y = creature.get_position()
-        #     creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
-        #     self.monster_rects.append(creature_rect)
-        #     self.monsters.append(creature)
+        for _ in range(2):
+            creature = self.m_factory.choose_monster()
+            creature_position = self.coords_generator.get_random_coords()
+            creature.set_position(creature_position)  # Set monster initial position to random coords
+            creature_x, creature_y = creature.get_position()
+            creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
+            self.monster_rects.append(creature_rect)
+            self.monsters.append(creature)
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
