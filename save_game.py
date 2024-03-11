@@ -17,17 +17,29 @@ class SaveGame:
             monster.set_west_monster_sprite(None)
             monster.set_north_monster_sprite(None)
             monster.set_south_monster_sprite(None)
+        # for item in game_data.items:
+        #     item.set_health_potion_sprite(None)
+        #     item.set_fire_trap_sprite(None)
+        # for items in game_data.items:
+        # game_data.set_health_potion_sprite(None)
+        # game_data.set_fire_trap_sprite(None)
         attributes['monsters'] = game_data.monsters
-        attributes['monster_rects'] = game_data.monster_rects
-        attributes['items'] = game_data.items
+        # attributes['monster_rects'] = game_data.monster_rects
+        # attributes['items'] = game_data.items
         # for item in game_data.items:
         #     item.set_item_sprite(None)
-        attributes['item_rects'] = game_data.item_rects
+        # attributes['item_rects'] = game_data.item_rects
         attributes['player_rect'] = game_data.player_rect
         attributes['dungeon_map'] = game_data.dungeon_map
-        attributes['maze'] = game_data.maze
+        # attributes['maze'] = game_data.maze
         with open('dungeon_adventure.pickle', 'wb') as saved_file:
             pickle.dump(attributes, saved_file)
+
+        with open('dungeon.txt', 'r') as file:
+            text_content = file.read()
+
+        with open('dungeon.txt.pickle', 'wb') as saved_file:
+            pickle.dump(text_content, saved_file)
 
     # @staticmethod
     # def load_game():
@@ -46,6 +58,7 @@ class SaveGame:
     #
 
 # creating an instance of SaveGame
-game = SaveGame()
+if __name__ == '__main__':
+    game = SaveGame()
 
 

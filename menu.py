@@ -6,6 +6,8 @@ import pygame.display
 
 import config as c
 import assets as a
+from pillar import Pillar
+# from pillar import Pillar
 from trivia_factory import TriviaFactory
 from save_game import SaveGame
 # from load_game import LoadGame
@@ -14,6 +16,7 @@ from hero_priestess import Priestess
 from hero_knight import Knight
 from hero_rogue import Rogue
 from hero_factory import HeroFactory
+from dungeon import Maze
 
 
 
@@ -137,6 +140,7 @@ class MainMenu(Menu):
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
 
             if self.state == 'Start Game':
+                self.game.set_maze(Maze(15, 20).new_maze())
                 self.game.current_menu = self.game.character_select
                 # self.game.playing = True
 
@@ -293,17 +297,16 @@ class CharacterSelectMenu(Menu):
             self.run_display = False
 
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
-            pre_character = HeroFactory()
             if self.state == 'Knight':
-                self.game.set_player_character(pre_character.create_knight())
+                self.game.set_player_character(HeroFactory().create_knight())
                 self.game.playing = True
 
             elif self.state == 'Priestess':
-                self.game.set_player_character(pre_character.create_priestess())
+                self.game.set_player_character(HeroFactory().create_priestess())
                 self.game.playing = True
 
             elif self.state == 'Rogue':
-                self.game.set_player_character(pre_character.create_rogue())
+                self.game.set_player_character(HeroFactory().create_rogue())
                 self.game.playing = True
 
             self.run_display = False
@@ -389,6 +392,8 @@ class LoadSaveGamesMenu(Menu):  # WIP
 
                         if self.game.left_clicked:
                             self.game.load_game()
+
+                            self.game.set_maze(Maze(15, 20))
                             self.game.playing = True  # Here is where we enter the saved game
                             self.run_display = False  # end the current menu screen
 
@@ -628,12 +633,13 @@ class PauseMenu(Menu):
 
 
 class TriviaUI(Menu):
-    def __init__(self, game):
+    def __init__(self, game, pillar):
         Menu.__init__(self, game)
-        self.state = 'True'
+        self.__pillar = self.game.get_pillar(pillar)
+        self.state = 'TRUE'
         self.question_font = c.system_font
 
-        self.trivia = TriviaFactory().create_question()
+        self.trivia = TriviaFactory(self.__pillar).create_question()
 
         self.given_question = textwrap.wrap(self.trivia.get_question(), 55)
         self.answer = self.trivia.get_answer()
@@ -685,22 +691,22 @@ class TriviaUI(Menu):
     def move_cursor(self):
 
         if self.game.moving_east:
-            if self.state == 'True':
+            if self.state == 'TRUE':
                 self.cursor_rect.midtop = (self.false_x - 100, self.false_y)
-                self.state = 'False'
+                self.state = 'FALSE'
 
-            elif self.state == 'False':
+            elif self.state == 'TRUE':
                 self.cursor_rect.midtop = (self.true_x - 100, self.true_y)
-                self.state = 'True'
+                self.state = 'FALSE'
 
         elif self.game.moving_west:
-            if self.state == 'True':
+            if self.state == 'TRUE':
                 self.cursor_rect.midtop = (self.false_x - 100, self.false_y)
-                self.state = 'False'
+                self.state = 'FALSE'
 
-            elif self.state == 'False':
+            elif self.state == 'FALSE':
                 self.cursor_rect.midtop = (self.true_x - 100, self.true_y)
-                self.state = 'True'
+                self.state = 'TRUE'
 
     def check_input(self):
         """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
@@ -710,29 +716,34 @@ class TriviaUI(Menu):
 
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
 
-            if self.state == 'True':
+            if self.state == 'TRUE':
                 print('you have selected true')
 
-                # if answer == true, add pillar to backpack || else: relocate pillar
-                if self.answer:
-                    print('You have chosen correctly')  # add pillar to backpack
-                else:
-                    print('you failed')  # relocate pillar
-
-                self.run_display = False
-                self.game.paused = False
-
-            elif self.state == 'False':
+            elif self.state == 'FALSE':
                 print('you have selected false')
 
-                # if answer == false, add pillar to backpack || else: relocate pillar
-                if self.answer:
-                    print('You have chosen correctly')  # add pillar to backpack
-                else:
-                    print('you failed')  # relocate pillar
+            # if answer == true, add pillar to backpack || else: relocate pillar
+            if self.answer == self.state:
+                print('You have chosen correctly')  # add pillar to backpack
+                self.game.add_to_backpack(Pillar(self.__pillar))
+                self.game.remove_pillar(self.__pillar)
+            else:
+                print('you failed')  # relocate pillar
+                self.game.place_pillar(self.__pillar)
 
-                self.run_display = False
-                self.game.paused = False
+            self.run_display = False
+            self.game.paused = False
+
+
+
+                # # if answer == false, add pillar to backpack || else: relocate pillar
+                # if self.answer == self.state:
+                #     print('You have chosen correctly')  # add pillar to backpack
+                # else:
+                #     print('you failed')  # relocate pillar
+                #
+                # self.run_display = False
+                # self.game.paused = False
 
 
 class GameOver(Menu):

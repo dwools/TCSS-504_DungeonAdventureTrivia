@@ -15,9 +15,10 @@ from pygame.font import Font
 import config as c
 import assets as a
 import item_factory
-import item
+from item import Item
 from item_health_potion import *
 from item_pit_trap import *
+from pillar import Pillar
 import monster_gremlin
 import monster_ogre
 from monster import *
@@ -42,7 +43,7 @@ Contains the main logic for playing the game
 """
 
 
-class DungeonAdventure(Maze):
+class DungeonAdventure():
     """
     Class Dungeon Adventure:
     Holds main gameplay loop and generates the GUI.
@@ -50,13 +51,8 @@ class DungeonAdventure(Maze):
     """
 
     def __init__(self):
-        # pg.init()
-        self.__loaded_game = False
-        if self.__loaded_game == True:
-            self.set_maze("dungeon_adventure.pickle")
-            # We want to
-        else:
-            super().__init__(15, 20)
+        self.__maze = None
+
 
         # Controls
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
@@ -73,7 +69,7 @@ class DungeonAdventure(Maze):
         self.load_games = LoadSaveGamesMenu(self)
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
-        self.trivia_ui = TriviaUI(self)
+        # self.trivia_ui = TriviaUI(self)
         self.combat_ui = Combat(self)
         self.attack_menu = AttackMenu(self)
         self.inventory_menu = InventoryMenu(self)
@@ -108,69 +104,104 @@ class DungeonAdventure(Maze):
         self.m_factory = monster_factory.MonsterFactory()
 
         self.monsters = []
-        self.monster_rects = []
+        # self.monster_rects = []
 
         # Place/spawn monsters
-        for _ in range(2):
-            creature = self.m_factory.choose_monster()
-            creature_position = self.coords_generator.get_random_coords()
-            creature.set_position(creature_position)  # Set monster initial position to random coords
-            creature_x, creature_y = creature.get_position()
-            creature_rect = creature.set_character_rect(creature_x, creature_y)  # Use random coords to create a rect at coords
-            self.monster_rects.append(creature_rect)
-            self.monsters.append(creature)
+        for _ in range(0):
+            self.place_monsters()
+
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.i_factory = item_factory.ItemFactory()
-
-        self.__items = []
-        self.__asleep = False
+        self.items = []
         # self.__item_rects = []
 
         # Place/spawn items
-        for _ in range(10):
-            item = self.i_factory.choose_item()
-            item_position = self.coords_generator.get_random_coords()
-            item.set_item_position(item_position)
-            item_x, item_y = item.get_item_position()
-            if isinstance(item, HealthPotion):
-                item.set_item_rect(item_x+4, item_y+4)
-            else:
-                item.set_item_rect(item_x, item_y)
-            # item_rect = item.set_item_rect(item_x, item_y)
-            # self.__item_rects.append(item_rect)
-            self.__items.append(item)
+        for _ in range(1):
+            self.place_items()
+
+        # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 
 
         # Load up base images
-        self.gremlin_image = pg.image.load(a.south_gremlin)
-        self.skelly_image = pg.image.load(a.south_skelly)
-        self.ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
+        self.__gremlin_image = pg.image.load(a.south_gremlin)
+        self.__skelly_image = pg.image.load(a.south_skelly)
+        self.__ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
         self.__health_potion_image = pg.image.load(a.health_potion)
         self.__fire_trap_image = pg.image.load(a.fire_trap)
+        self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
+        self.__encapsulation_pillar_image = pg.image.load(a.encapsulation_pillar)
+        self.__inheritance_pillar_image = pg.image.load(a.inheritance_pillar)
+        self.__polymorphism_pillar_image = pg.image.load(a.polymorphism_pillar)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
-        self.dungeon_font = c.dungeon_font
-        self.normal_cont = c.system_font
-        self.font_color = c.WHITE
-        self.PURPLE = c.PURPLE
-        self.BLACK = c.BLACK
-        self.WHITE = c.WHITE
+        self.__dungeon_font = c.dungeon_font
+        self.__normal_cont = c.system_font
+        self.__font_color = c.WHITE
+        self.__PURPLE = c.PURPLE
+        self.__BLACK = c.BLACK
+        self.__WHITE = c.WHITE
 
-    # How can we set our character player while avoiding circular imports?
-    # def get_save_status(self):
-    #     if self.pause_menu.get_save_game() == True:
-    #         SaveGame.pickle(DungeonAdventure)
-    #         self.pause_menu.set_save_game(False)
 
-    def get_loaded_game(self):
-        return self.__loaded_game
 
-    def set_loaded_game(self, bool):
-        self.__loaded_game = bool
+        self.__abstraction_pillar = Pillar("Abstraction")
+        self.__encapsulation_pillar = Pillar("Encapsulation")
+        self.__inheritance_pillar = Pillar("Inheritance")
+        self.__polymorphism_pillar = Pillar("Polymorphism")
+        self.__pillars = [self.__abstraction_pillar, self.__encapsulation_pillar, self.__inheritance_pillar,
+                          self.__polymorphism_pillar]
+
+        # Place/spawn pillars
+        for pillar in self.__pillars:
+            self.place_pillar(pillar)
+
+    def remove_pillar(self, pillar):
+        if pillar.get_pillar_name() == 'Abstraction':
+            self.__pillars.remove(self.__abstraction_pillar)
+        elif pillar.get_pillar_name() == 'Encapsulation':
+            self.__pillars.remove(self.__encapsulation_pillar)
+        elif pillar.get_pillar_name() == 'Inheritance':
+            self.__pillars.remove(self.__inheritance_pillar)
+        elif pillar.get_pillar_name() == 'Polymorphism':
+            self.__pillars.remove(self.__polymorphism_pillar)
+
+    def get_pillar(self, pillar):
+        if pillar == 'Abstraction':
+            return self.__abstraction_pillar
+        elif pillar == 'Encapsulation':
+            return self.__encapsulation_pillar
+        elif pillar == 'Inheritance':
+            return self.__inheritance_pillar
+        elif pillar == 'Polymorphism':
+            return self.__polymorphism_pillar
+
+    def get_abstraction_pillar(self):
+        return self.__abstraction_pillar
+
+    def get_encapsulation_pillar(self):
+        return self.__encapsulation_pillar
+
+    def get_inheritance_pillar(self):
+        return self.__inheritance_pillar
+
+    def get_polymorphism_pillar(self):
+        return self.__polymorphism_pillar
+
+    def place_pillar(self, pillar):
+        pillar.set_pillar_position(self.coords_generator.get_random_coords())
+        pillar_x, pillar_y = pillar.get_pillar_position()
+        pillar.set_pillar_rect(pillar_x + 4, pillar_y + 4)
+
+    # def get_loaded_game(self):
+    #     return self.__loaded_game
+    #
+    # def set_loaded_game(self, value):
+    #     self.__loaded_game = value
 
     def get_player_character(self):
         return self.__player_character
@@ -291,7 +322,7 @@ class DungeonAdventure(Maze):
             self.check_events()
 
             # Reset the screen Background
-            self.display.fill(self.PURPLE)
+            self.display.fill(self.__PURPLE)
 
             # Basically the camera tracking/ following the player sprite
             self.camera_scroll[0] += (self.player_rect.x - self.camera_scroll[0] - 160)
@@ -332,14 +363,36 @@ class DungeonAdventure(Maze):
                 y += 1
 
             # I think item collisions should go right here
-            for item in self.__items:
+            for item in self.items:
                     item_rect = item.get_item_rect()
                     if self.player_rect.colliderect(item_rect):
                         if isinstance(item, FireTrap):
                             self.__player_character.damage(1)
                         else:
                             self.__player_character.add_to_backpack(item)
-                            self.__items.remove(item)
+                            self.items.remove(item)
+
+            for pillar in self.__pillars:
+                pillar_rect = pillar.get_pillar_rect()
+                if self.player_rect.colliderect(pillar_rect):
+                    if pillar == self.__abstraction_pillar:
+                        #prompt Astronomy trivia
+                        self.trivia_ui = TriviaUI(self, "Abstraction")
+                    elif pillar == self.__encapsulation_pillar:
+                        # prompt Elapid trivia
+                        self.trivia_ui = TriviaUI(self, "Encapsulation")
+                    elif pillar == self.__inheritance_pillar:
+                        # prompt International trivia
+                        self.trivia_ui = TriviaUI(self, "Inheritance")
+                    elif pillar == self.__polymorphism_pillar:
+                        # prompt Pokemon trivia
+                        self.trivia_ui = TriviaUI(self, "Polymorphism")
+                    self.paused = True
+                    self.current_menu = self.trivia_ui
+                    # self.__player_character.add_to_backpack(pillar)
+                    # self.__pillars.remove(pillar)
+
+
 
 
             #     self.
@@ -402,8 +455,8 @@ class DungeonAdventure(Maze):
                     self.gremlin_image = monster.get_monster_sprite()
                     self.display.blit(self.gremlin_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
-                    print("Gameloop rect.x: ", rect.x)  # Rect x is the position where the monster is being drawn
-                    print("Gameloop rect.y: ", rect.y)  # same for y
+                    # print("Gameloop rect.x: ", rect.x)  # Rect x is the position where the monster is being drawn
+                    # print("Gameloop rect.y: ", rect.y)  # same for y
 
                 if isinstance(monster, Skeleton):
                     monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
@@ -417,8 +470,8 @@ class DungeonAdventure(Maze):
                     self.skelly_image = monster.get_monster_sprite()
                     self.display.blit(self.skelly_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                    print("Gameloop rect.x: ", rect.x)
-                    print("Gameloop rect.y: ", rect.y)
+                    # print("Gameloop rect.x: ", rect.x)
+                    # print("Gameloop rect.y: ", rect.y)
 
                 if isinstance(monster, Ogre):
                     monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
@@ -434,7 +487,7 @@ class DungeonAdventure(Maze):
                     # print("Gameloop rect.x: ", rect.x)
                     # print("Gameloop rect.y: ", rect.y)
 
-            for item in self.__items:
+            for item in self.items:
                 item.set_player_scroll(self.camera_scroll)
                 rect = item.get_item_rect()
                 if isinstance(item, HealthPotion):
@@ -445,6 +498,27 @@ class DungeonAdventure(Maze):
                     item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
                     self.__health_potion_image = item.get_fire_trap_sprite()
                     self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+
+            for pillar in self.__pillars:
+                pillar.set_player_scroll(self.camera_scroll)
+                rect = pillar.get_pillar_rect()
+                if pillar == self.__abstraction_pillar:
+                    pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))
+                    self.__abstraction_pillar_image = pillar.get_abstraction_sprite()
+                    self.display.blit(self.__abstraction_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                elif pillar == self.__encapsulation_pillar:
+                    pillar.set_encapsulation_sprite(pg.image.load(a.encapsulation_pillar))
+                    self.display.blit(self.__encapsulation_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                elif pillar == self.__inheritance_pillar:
+                    pillar.set_inheritance_sprite(pg.image.load(a.inheritance_pillar))
+                    self.display.blit(self.__inheritance_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                elif pillar == self.__polymorphism_pillar:
+                    pillar.set_polymorphism_sprite(pg.image.load(a.polymorphism_pillar))
+                    self.display.blit(self.__polymorphism_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+
+
+
+
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -567,18 +641,49 @@ class DungeonAdventure(Maze):
 
 
     def load_game(self):
-        self.set_loaded_game(True)
+        self.dungeon_map = pickle.load(open('dungeon.txt.pickle', 'rb'))
         if os.path.exists("dungeon_adventure.pickle"):
             with open("dungeon_adventure.pickle", "rb") as f:
                 game_data = pickle.load(f)
             self.player_position = game_data['player_position']
             self.monsters = game_data['monsters']
-            self.monster_rects = game_data['monster_rects']
-            self.items = game_data['items']
+            # self.monster_rects = game_data['monster_rects']
+            # self.items = game_data['items']
             # self.item_rects = game_data['item_rects']
             self.player_rect = game_data['player_rect']
-            self.dungeon_map = game_data['dungeon_map']
-            self.maze = game_data['maze']
+            # self.dungeon_map = game_data['dungeon_map']
+            # self.maze = game_data['maze']
+
+    def place_monsters(self):
+        creature = self.m_factory.choose_monster()
+        creature.set_position(self.coords_generator.get_random_coords())  # Set monster initial position to random coords
+        creature_x, creature_y = creature.get_position()
+        creature.set_character_rect(creature_x, creature_y)
+        # creature_rect = creature.set_character_rect(creature_x,
+        #                                             creature_y)  # Use random coords to create a rect at coords
+        # self.monster_rects.append(creature_rect)
+        self.monsters.append(creature)
+
+    def place_items(self):
+        item = self.i_factory.choose_item()
+        item.set_item_position(self.coords_generator.get_random_coords())
+        item_x, item_y = item.get_item_position()
+        if isinstance(item, HealthPotion):
+            item.set_item_rect(item_x + 4, item_y + 4)
+        else:
+            item.set_item_rect(item_x, item_y)
+        # item_rect = item.set_item_rect(item_x, item_y)
+        # self.__item_rects.append(item_rect)
+        self.items.append(item)
+
+    def add_to_backpack(self, object):
+        self.__player_character.add_to_backpack(object)
+
+    def get_maze(self):
+        return self.__maze
+
+    def set_maze(self, maze):
+        self.__maze = maze
 
 
 

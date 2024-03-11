@@ -1,28 +1,25 @@
 import random
+import os
 from room import Room
 from collections import deque
+# from dungeon_adventure import DungeonAdventure
+import pickle
 
 
 class Maze:
     def __init__(self, rows, columns):
         self.__rows = rows
         self.__columns = columns
-        self.__dungeon_output_file = open("dungeon.txt", 'w')
-        self.__maze = []
-        self.__loaded_maze = False
-        if self.__loaded_maze == True:
-            self.set_maze("dungeon_adventure.pickle")
+
         # Here: See if pickling saves a maze list or a dungeon.txt file. If it does, pass it into the above setter method. If not, figure out how to preserve the maze or text file.
-        else:
-            self.generate_maze()
+
+
+    def new_maze(self):
+        self.__dungeon_output_file = open("dungeon.txt", 'w')
+        self.generate_maze()
         self.write_dungeon_output()
         self.__dungeon_output_file.close()
 
-    def get_maze(self):
-        return self.__maze
-
-    def set_maze(self, maze):
-        self.__maze = maze
 
     def get_neighbors(self, curr, visited):
         """
@@ -74,6 +71,7 @@ class Maze:
         Assemble maze
         :return: list
         """
+        self.__maze = []
         for i in range(self.__rows):
             self.__maze.append([])
             for j in range(self.__columns):
@@ -93,7 +91,6 @@ class Maze:
                 visited.append(neighbor)
                 self.create_doors(curr, neighbor)
             else: stack.pop()
-
 
         origin = self.__maze[0][0]
         target = self.__maze[self.__rows - 1][self.__columns - 1]
@@ -152,78 +149,78 @@ class Maze:
 
 
 
-    def traverse(self):
-        """
-        Traverses maze to ensure all rooms are accessible.
-        """
-        row = 0
-        column = 0
-        curr = self.__maze[0][0]
-        not_yet_visited = deque()
-        not_yet_visited.append((curr, row, column))     # This is a tuple by definition with the ()
+    # def traverse(self):
+    #     """
+    #     Traverses maze to ensure all rooms are accessible.
+    #     """
+    #     row = 0
+    #     column = 0
+    #     curr = self.__maze[0][0]
+    #     not_yet_visited = deque()
+    #     not_yet_visited.append((curr, row, column))     # This is a tuple by definition with the ()
+    #
+    #
+    #     while len(not_yet_visited) > 0:
+    #         curr, row, column = not_yet_visited.popleft()
+    #         if row == self.__rows - 1 and column == self.__columns - 1:
+    #             return True
+    #
+    #         if curr.entered == True:
+    #             continue
+    #
+    #         else:
+    #             curr.set_entered()
+    #
+    #             # Try moving south
+    #             if curr.get_southdoor() == True:
+    #                 not_yet_visited.append((self.__maze[row + 1][column], row + 1, column))
+    #
+    #             # Try moving east
+    #             if curr.get_eastdoor() == True:
+    #                 not_yet_visited.append((self.__maze[row][column + 1], row, column + 1))
+    #
+    #             # Try moving north
+    #             if curr.get_northdoor() == True:
+    #                 not_yet_visited.append((self.__maze[row - 1][column], row - 1, column))
+    #
+    #             # Try moving west
+    #             if curr.get_westdoor() == True:
+    #                 not_yet_visited.append((self.__maze[row][column - 1], row, column - 1))
+    #     return False
 
 
-        while len(not_yet_visited) > 0:
-            curr, row, column = not_yet_visited.popleft()
-            if row == self.__rows - 1 and column == self.__columns - 1:
-                return True
-
-            if curr.entered == True:
-                continue
-
-            else:
-                curr.set_entered()
-
-                # Try moving south
-                if curr.get_southdoor() == True:
-                    not_yet_visited.append((self.__maze[row + 1][column], row + 1, column))
-
-                # Try moving east
-                if curr.get_eastdoor() == True:
-                    not_yet_visited.append((self.__maze[row][column + 1], row, column + 1))
-
-                # Try moving north
-                if curr.get_northdoor() == True:
-                    not_yet_visited.append((self.__maze[row - 1][column], row - 1, column))
-
-                # Try moving west
-                if curr.get_westdoor() == True:
-                    not_yet_visited.append((self.__maze[row][column - 1], row, column - 1))
-        return False
-
-
-    def place_items(self, pit_prob=10, health_prob=10):
-        """
-        Lays down items in the maze
-        :param pit_prob:
-        :param health_prob:
-        :return:
-        """
-        entrance = (0, 0)
-        singular_items = ["i", "o", "A", "E", "I", "P"]
-        while len(singular_items) != 0:
-            i = random.randint(0, self.__rows - 1)
-            j = random.randint(0, self.__columns - 1)
-            room = self.__maze[i][j]
-            if len(room.items) == 0:
-                item = singular_items.pop(0)
-                room.place_item(item)
-                if item == 'i':
-                    room.set_entrance(True)
-                    entrance = (i, j)
-
-            for i in range(self.__rows):
-                for j in range(self.__columns):
-                    room = self.__maze[i][j]
-                    if len(room.items) == 0 and room.items[0] in singular_items:
-                        pass
-                    else:
-                        if random.randint(0, 100) <= pit_prob:
-                            room.place_item("X")
-                        if random.randint(0, 100) <= health_prob:
-                            room.place_item("H")
-
-        return entrance
+    # def place_items(self, pit_prob=10, health_prob=10):
+    #     """
+    #     Lays down items in the maze
+    #     :param pit_prob:
+    #     :param health_prob:
+    #     :return:
+    #     """
+    #     entrance = (0, 0)
+    #     singular_items = ["i", "o", "A", "E", "I", "P"]
+    #     while len(singular_items) != 0:
+    #         i = random.randint(0, self.__rows - 1)
+    #         j = random.randint(0, self.__columns - 1)
+    #         room = self.__maze[i][j]
+    #         if len(room.items) == 0:
+    #             item = singular_items.pop(0)
+    #             room.place_item(item)
+    #             if item == 'i':
+    #                 room.set_entrance(True)
+    #                 entrance = (i, j)
+    #
+    #         for i in range(self.__rows):
+    #             for j in range(self.__columns):
+    #                 room = self.__maze[i][j]
+    #                 if len(room.items) == 0 and room.items[0] in singular_items:
+    #                     pass
+    #                 else:
+    #                     if random.randint(0, 100) <= pit_prob:
+    #                         room.place_item("X")
+    #                     if random.randint(0, 100) <= health_prob:
+    #                         room.place_item("H")
+    #
+    #     return entrance
 
 
 

@@ -31,7 +31,7 @@ class Pathfinder:
     def create_path(self, monster):
         # start cell
         monster_start = monster.get_character_rect()
-        print(f"MONSTER START: {monster_start} \n")
+        # print(f"MONSTER START: {monster_start} \n")
         start_x, start_y = monster_start.x, monster_start.y
         start = self.__grid.node(start_x // 16, start_y // 16)
 

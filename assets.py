@@ -47,3 +47,9 @@ main_menu_bg = 'assets/backgrounds/mainMenu.JPEG'
 # Items
 health_potion = 'assets/ItemsAssets/HealthPotion.png'
 fire_trap = 'assets/ItemsAssets/FireTrap.png'
+
+# Pillars
+abstraction_pillar = 'assets/ItemsAssets/AstronomyPillar.png'
+encapsulation_pillar = 'assets/ItemsAssets/ElapidPillar.png'
+inheritance_pillar = 'assets/ItemsAssets/InternationalPillar.png'
+polymorphism_pillar = 'assets/ItemsAssets/PokemonPillar.png'

@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from item import Item
 from item_health_potion import HealthPotion
 from item_pit_trap import FireTrap
+from pillar import Pillar
 
 
 class Hero(DungeonCharacter):
@@ -51,6 +52,11 @@ class Hero(DungeonCharacter):
             self.__health_potions.append(item)
             print("You have added the health potion to your bag!")
             print(f"Health potions: {len(self.__health_potions)}")
+
+        if isinstance(item, Pillar):
+            self.__pillars.append(item)
+            print(f"Congratulations! You have acquired {len(self.__pillars)} out of 4 pillars!")
+
         # if isinstance(item, Pillar):
         #     self.__pillars.append(item)
 

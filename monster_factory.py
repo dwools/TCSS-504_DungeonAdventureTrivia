@@ -76,14 +76,14 @@ class MonsterFactory:
     def choose_monster(self):
         monster_choice = random.randint(1, 3)
         if monster_choice == 1:
-            choice = self.create_ogre()
-            return choice
-        if monster_choice == 2:
-            choice = self.create_gremlin()
-            return choice
-        if monster_choice == 3:
-            choice = self.create_skeleton()
-            return choice
+            return self.create_ogre()
+
+        elif monster_choice == 2:
+            return self.create_gremlin()
+            # return choice
+        elif monster_choice == 3:
+            return self.create_skeleton()
+            # return choice
 
     def create_monster(self):
         name = self.read_name_database()
