@@ -1,7 +1,7 @@
 import os
 import pickle
 from dungeon_adventure import DungeonAdventure
-# from combat import Combat
+from dungeon import Maze
 
 
 class LoadGame:
@@ -19,5 +19,11 @@ class LoadGame:
             dungeon_adventure.item_rects = game_data['item_rects']
             dungeon_adventure.player_rect = game_data['player_rect']
             dungeon_adventure.dungeon_map = game_data['dungeon_map']  # if anything breaks it's this
+
+            with open('dungeon.txt','r') as file:
+                text_content = file.read()
+
+            with open('dungeon.txt.pkl','wb') as pkl_file:
+                pickle.dump(text_content, pkl_file)
 
             return dungeon_adventure  # returning the loaded game data
