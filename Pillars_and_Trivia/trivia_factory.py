@@ -23,14 +23,11 @@ class TriviaFactory:
         cursor = self.__conn.cursor()
         cursor.execute(f'SELECT * FROM astronomy_trivia WHERE rowid = "{num}"')
         return cursor.fetchone()
-        # astronomy_trivia = cursor.fetchone()
-        # return astronomy_trivia
 
     def read_pokemon_table(self, num):
         cursor = self.__conn.cursor()
         cursor.execute(f'SELECT * FROM pokemon_trivia WHERE rowid = "{num}"')
-        pokemon_trivia = cursor.fetchone()
-        return pokemon_trivia
+        return cursor.fetchone()
 
     def read_international_table(self, num):
         cursor = self.__conn.cursor()
@@ -40,16 +37,11 @@ class TriviaFactory:
     def create_elapid_question(self, num):
         return self.read_elapids_table(num)
 
-
     def create_astronomy_question(self, num):
         return self.read_astronomy_table(num)
-        # astronomy_question = self.read_astronomy_table(num)
-        # return astronomy_question
 
     def create_pokemon_question(self, num):
         return self.read_pokemon_table(num)
-        # pokemon_question = self.read_pokemon_table(num)
-        # return pokemon_question
 
     def create_international_question(self, num):
         return self.read_international_table(num)

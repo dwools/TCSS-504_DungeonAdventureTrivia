@@ -94,6 +94,7 @@ class DungeonAdventure():
         self.m_factory = monster_factory.MonsterFactory()
 
         self.__monsters = []
+        # self.__monster = None
         # self.monster_rects = []
 
         # Place/spawn monsters
@@ -345,7 +346,7 @@ class DungeonAdventure():
                     x += 1
                 y += 1
 
-            # I think item collisions should go right here.
+            # Item collisions
             for item in self.__items:
                 if self.player_rect.colliderect(item.get_item_rect()):
                     if item.get_item_name() == "Fire Trap":
@@ -354,7 +355,7 @@ class DungeonAdventure():
                         self.__player_character.add_to_backpack(item)
                         self.__items.remove(item)
 
-            # Pillar collision. When player collides with pillar, the Trivia UI opens with the corresponding category of question..
+            # Pillar collision. When player collides with pillar, the Trivia UI opens with the corresponding category of question..=
             for pillar in self.__pillars:
                 pillar_rect = pillar.get_pillar_rect()
                 if self.player_rect.colliderect(pillar_rect):
@@ -415,7 +416,6 @@ class DungeonAdventure():
                 """ For monster in list of monsters, get monster rect, get monster position, 
                 calculate monster's path to the player, update monster position based on path to the player.
                 """
-
                 monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
                 monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
                 # pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
@@ -716,6 +716,15 @@ class DungeonAdventure():
 
     def set_test_game(self, value):
         self.__test_game = value
+
+    def get_player_character(self):
+        return self.__player_character
+
+    # def set_monster(self, monster):
+    #     self.__monster = monster
+    #
+    # def get_monster(self):
+    #     return self.__monster
 
 
 if __name__ == "__main__":

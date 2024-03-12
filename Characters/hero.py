@@ -79,12 +79,12 @@ class Hero(DungeonCharacter):
         if 0 < len(self.__player_health_potions):
             health_potion = self.__player_health_potions.pop()
             added_health_points = health_potion.get_health_change_value()
-            self.__current_hit_points += added_health_points
-            if self.__current_hit_points > self.__max_hit_points:
-                self.__current_hit_points = self.__max_hit_points
+            self.set_current_hit_points(self.get_current_hit_points() + added_health_points)
+            if self.get_current_hit_points() > self.get_max_hit_points():
+                self.set_current_hit_points(self.get_max_hit_points())
 
             print(f"Drinking that potion increased your health by {added_health_points}!"
-                  f"\n\nYou now have {self.__current_hit_points} Hit Points.")
+                  f"\n\nYou now have {self.get_current_hit_points()} Hit Points.")
         else:
             print("You don't have any healing potions!")
             pass
