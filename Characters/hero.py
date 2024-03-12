@@ -4,7 +4,6 @@ from Items.item import Item
 from Pillars_and_Trivia.pillar import Pillar
 
 
-
 class Hero(DungeonCharacter):
     def __init__(self, name,
                  type,

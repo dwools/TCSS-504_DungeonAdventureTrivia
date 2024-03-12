@@ -34,7 +34,7 @@ class Room(Adventurer):
     def entrance_room(self):
 
         # print("You find yourself in an empty room.\nA small wooden door seems to lead deeper into the dungeon....")
-        return 'assets/room_maps/entrance_room'
+        return 'Assets/room_maps/entrance_room'
 
     def exit_room(self):
 

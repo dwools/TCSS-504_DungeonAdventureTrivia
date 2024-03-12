@@ -20,7 +20,7 @@ class DungeonCharacter(ABC):
         self.__position_x, self.__position_y = self.__position
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
 
-        # self.__chance_to_block = Noned
+        # self.__chance_to_block = None
         # self.__chance_to_heal = None
         # self.__minimum_heal_points = None
         # self.__maximum_heal_points = None

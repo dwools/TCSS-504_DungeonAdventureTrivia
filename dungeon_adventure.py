@@ -12,7 +12,6 @@ from Items import item_factory
 from Items.item import Item
 from Pillars_and_Trivia.pillar import Pillar
 
-
 from Characters import monster_factory
 
 from Databases import initialize_databases
@@ -23,12 +22,14 @@ from Characters.monster_ogre import Ogre
 from Characters.monster_skeleton import Skeleton
 from Characters.monster_gremlin import Gremlin
 from Gameplay.pathfinder import Pathfinder
+
 # from save_game import SaveGame
 
 """
 Contains the main logic for playing the game
 
 """
+
 
 class DungeonAdventure():
     """
@@ -59,7 +60,7 @@ class DungeonAdventure():
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
         # self.trivia_ui = TriviaUI(self)
-        # self.combat_ui = Combat(self)
+        self.combat_ui = Combat(self)
         self.attack_menu = AttackMenu(self)
         self.inventory_menu = InventoryMenu(self)
         self.game_over = GameOver(self)
@@ -80,7 +81,7 @@ class DungeonAdventure():
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = [16, 16]# self.coords_generator.get_random_coords()
+        self.player_position = [16, 16]  # self.coords_generator.get_random_coords()
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
@@ -96,10 +97,8 @@ class DungeonAdventure():
         # self.monster_rects = []
 
         # Place/spawn monsters
-        for _ in range(0):
+        for _ in range(10):
             self.place_monsters()
-
-
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__health_potion = Item("Health Potion")
@@ -114,10 +113,6 @@ class DungeonAdventure():
             self.place_items(item)
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
 
         # Load up base images
         self.__gremlin_image = pg.image.load(a.south_gremlin)
@@ -138,8 +133,6 @@ class DungeonAdventure():
         self.__PURPLE = c.PURPLE
         self.__BLACK = c.BLACK
         self.__WHITE = c.WHITE
-
-
 
         self.__abstraction_pillar = Pillar("Abstraction")
         self.__encapsulation_pillar = Pillar("Encapsulation")
@@ -354,19 +347,19 @@ class DungeonAdventure():
 
             # I think item collisions should go right here.
             for item in self.__items:
-                    if self.player_rect.colliderect(item.get_item_rect()):
-                        if item.get_item_name() == "Fire Trap":
-                            self.__player_character.damage(1)
-                        else:
-                            self.__player_character.add_to_backpack(item)
-                            self.__items.remove(item)
+                if self.player_rect.colliderect(item.get_item_rect()):
+                    if item.get_item_name() == "Fire Trap":
+                        self.__player_character.damage(1)
+                    else:
+                        self.__player_character.add_to_backpack(item)
+                        self.__items.remove(item)
 
             # Pillar collision. When player collides with pillar, the Trivia UI opens with the corresponding category of question..
             for pillar in self.__pillars:
                 pillar_rect = pillar.get_pillar_rect()
                 if self.player_rect.colliderect(pillar_rect):
                     if pillar == self.__abstraction_pillar:
-                        #prompt Astronomy trivia
+                        # prompt Astronomy trivia
                         self.trivia_ui = TriviaUI(self, "Abstraction")
                     elif pillar == self.__encapsulation_pillar:
                         # prompt Elapid trivia
@@ -380,17 +373,10 @@ class DungeonAdventure():
                     self.paused = True
                     self.current_menu = self.trivia_ui
 
-
             # If players' hit points hit 0, game pauses and opens "game over" menu. This can go here or in the item collision loop upon collision with the fire trap..
             if self.__player_character.get_death() == True:
                 self.paused = True
                 self.current_menu = self.game_over
-
-
-
-            #     self.
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             # Update Sprites for Player
 
@@ -437,6 +423,13 @@ class DungeonAdventure():
                 rect = monster.get_character_rect()  # Get the monster's rect to move
                 monster.update()  # Update the monsters position based on the above path
 
+                if self.player_rect.colliderect(monster.get_character_rect()):
+                    self.paused = True
+                    self.combat_ui.set_hero(self.__player_character)
+                    self.combat_ui.set_monster(monster)
+                    self.current_menu = self.combat_ui
+
+
                 if isinstance(monster, Gremlin):
                     monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
                     monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
@@ -456,7 +449,6 @@ class DungeonAdventure():
                     monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
                     monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
                     monster.set_west_monster_sprite(pg.image.load(a.west_skelly))
-
 
                     monster.set_monster_sprite(monster.get_south_monster_sprite())
 
@@ -486,11 +478,13 @@ class DungeonAdventure():
                 if item.get_item_name() == "Health Potion":
                     item.set_health_potion_sprite(pg.image.load(a.health_potion))
                     self.__health_potion_image = item.get_health_potion_sprite()
-                    self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    self.display.blit(self.__health_potion_image,
+                                      (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
                 elif item.get_item_name() == "Fire Trap":
                     item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
                     self.__health_potion_image = item.get_fire_trap_sprite()
-                    self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    self.display.blit(self.__health_potion_image,
+                                      (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
 
             for pillar in self.__pillars:
                 pillar.set_player_scroll(self.camera_scroll)
@@ -498,19 +492,20 @@ class DungeonAdventure():
                 if pillar == self.__abstraction_pillar:
                     pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))
                     self.__abstraction_pillar_image = pillar.get_abstraction_sprite()
-                    self.display.blit(self.__abstraction_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    self.display.blit(self.__abstraction_pillar_image,
+                                      (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
                 elif pillar == self.__encapsulation_pillar:
                     pillar.set_encapsulation_sprite(pg.image.load(a.encapsulation_pillar))
-                    self.display.blit(self.__encapsulation_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    self.display.blit(self.__encapsulation_pillar_image,
+                                      (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
                 elif pillar == self.__inheritance_pillar:
                     pillar.set_inheritance_sprite(pg.image.load(a.inheritance_pillar))
-                    self.display.blit(self.__inheritance_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+                    self.display.blit(self.__inheritance_pillar_image,
+                                      (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
                 elif pillar == self.__polymorphism_pillar:
                     pillar.set_polymorphism_sprite(pg.image.load(a.polymorphism_pillar))
-                    self.display.blit(self.__polymorphism_pillar_image,(rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-
-
-
+                    self.display.blit(self.__polymorphism_pillar_image,
+                                      (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
 
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -525,11 +520,16 @@ class DungeonAdventure():
 
             # Setup Health
             self.draw_text(c.system_font, f'Health: ', 10, 55, 30, c.BLACK)
-            # self.draw_text(c.system_font, f'{current_health} ', 12, 120, 30, c.BLACK)
-            # self.draw_text(c.system_font, f'/{max_health}', 12, 150, 30, c.BLACK)
+            self.draw_text(c.system_font, f'{self.__player_character.get_current_hit_points()}', 10, 120, 30, 'red')
 
             # Setup Pillars
-            self.draw_text(c.system_font, f'Pillars: ', 10, 55, 60, c.BLACK)
+            self.draw_text(c.system_font, f'Pillars: {len(self.__player_character.get_player_pillars())}', 10, 55, 60,
+                           c.BLACK)
+
+            # Winning condition
+            if len(self.__player_character.get_player_pillars()) == 4:
+                self.current_menu = self.game_over
+                self.paused = True
 
             # Setup Lives
             self.draw_text(c.system_font, f'Lives: ', 10, 50, 90, c.BLACK)
@@ -588,13 +588,8 @@ class DungeonAdventure():
                     print("The game is paused")
                     self.current_menu = self.pause_menu
 
-                if event.key == K_t:
-                    self.paused = True
-                    self.current_menu = self.trivia_ui
-
-                if event.key == K_c:
-                    self.paused = True
-                    self.current_menu = self.combat_ui
+                if event.key == K_h:
+                    self.__player_character.take_healing_potion()
 
                 if event.key == K_RETURN:
                     self.interacting = True
@@ -635,7 +630,6 @@ class DungeonAdventure():
         # Create the map for visuals, create the matrix for monsters
         # Map 20w x 15h
 
-
         # self.__dungeon_map = load_new_map()
 
     def load_game(self):
@@ -648,7 +642,6 @@ class DungeonAdventure():
             self.__monsters = game_data['monsters']
             self.__items = game_data['items']
             self.__pillars = game_data['pillars']
-
 
     @staticmethod
     def load_new_map():
@@ -703,7 +696,8 @@ class DungeonAdventure():
 
     def place_monsters(self):
         creature = self.m_factory.choose_monster()
-        creature.set_position(self.coords_generator.get_random_coords())  # Set monster initial position to random coords
+        creature.set_position(
+            self.coords_generator.get_random_coords())  # Set monster initial position to random coords
         creature_x, creature_y = creature.get_position()
         creature.set_character_rect(creature_x, creature_y)
         # creature_rect = creature.set_character_rect(creature_x,
@@ -716,6 +710,7 @@ class DungeonAdventure():
 
     def get_items_list(self):
         return self.__items
+
     def add_to_backpack(self, object):
         self.__player_character.add_to_backpack(object)
 

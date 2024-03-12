@@ -173,19 +173,19 @@ class DungeonAdventure:
             # player_movement = [0, 0]
             # if moving_east:
             #     player_movement[0] += 2
-            #     player_image = pg.image.load('assets/char_sprites/east_knight.png')
+            #     player_image = pg.image.load('Assets/char_sprites/east_knight.png')
             #
             # if moving_west:
             #     player_movement[0] -= 2
-            #     player_image = pg.image.load('assets/char_sprites/west_knight.png')
+            #     player_image = pg.image.load('Assets/char_sprites/west_knight.png')
             #
             # if moving_north:
             #     player_movement[1] -= 2
-            #     player_image = pg.image.load('assets/char_sprites/north_knight.png')
+            #     player_image = pg.image.load('Assets/char_sprites/north_knight.png')
             #
             # if moving_south:
             #     player_movement[1] += 2
-            #     player_image = pg.image.load('assets/char_sprites/south_knight.png')
+            #     player_image = pg.image.load('Assets/char_sprites/south_knight.png')
             #
             # player_rect, collisions = move(player_rect, player_movement, tile_rects)
             # display.blit(player_image, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
