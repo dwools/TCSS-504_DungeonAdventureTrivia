@@ -36,7 +36,7 @@ class HeroFactory:
          chance_to_block
          ) = priestess_stats
 
-        return Priestess(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_to_heal, minimum_heal_points, maximum_heal_points)
+        return Priestess(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
 
     def create_knight(self, chance_for_crushing_blow=0.4, minimum_crushing_damage=75, maximum_crushing_damage=175):
         name = self.read_name_database()
@@ -51,7 +51,7 @@ class HeroFactory:
          chance_to_block
          ) = knight_stats
 
-        return Knight(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_for_crushing_blow, minimum_crushing_damage, maximum_crushing_damage)
+        return Knight(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
 
     def create_rogue(self, chance_for_second_attack=0.4):
         name = self.read_name_database()
@@ -64,7 +64,7 @@ class HeroFactory:
          minimum_damage,
          maximum_damage,
          chance_to_block) = rogue_stats
-        return Rogue(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_for_second_attack)
+        return Rogue(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
 
     # def choose_monster(self):
     #     monster_choice = random.randint(1, 3)

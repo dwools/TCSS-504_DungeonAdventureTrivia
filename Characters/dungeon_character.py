@@ -20,21 +20,12 @@ class DungeonCharacter(ABC):
         self.__position_x, self.__position_y = self.__position
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
 
-        # self.__chance_to_block = None
-        # self.__chance_to_heal = None
-        # self.__minimum_heal_points = None
-        # self.__maximum_heal_points = None
-        # self.__chance_for_bonus_damage = None
-        # self.__minimum_bonus_damage = None
-        # self.__chance_for_second_attack = None
-        # self.__maximum_bonus_damage = None
-
     def get_name(self):
-        print(self.__name)
+        # print(self.__name)
         return self.__name
 
     def get_type(self):
-        print(self.__type)
+        # print(self.__type)
         return self.__type
 
     def get_current_hit_points(self):
@@ -66,6 +57,7 @@ class DungeonCharacter(ABC):
 
     def set_position(self, position):  # ensure that the tile is f before moving it.
         self.__position = position
+        self.__position_x, self.__position_y = position
 
     def get_character_rect(self):
         return self.__rect
@@ -73,11 +65,6 @@ class DungeonCharacter(ABC):
     def set_character_rect(self, x, y):
         self.__rect = pg.Rect(y, x, 16, 16)
 
-    def set_monster_rect(self, monster_rect):
-        self.__rect = monster_rect
-
-    def set_monster_position(self, monster_position):
-        self.__position = monster_position
 
         # Mechanic Methods
 
@@ -110,6 +97,26 @@ class DungeonCharacter(ABC):
     def set_maximum_damage(self, maximum_damage):
         self.__maximum_damage = maximum_damage
 
+    def simple_attack(self, enemy):
+        print(f'{self.__name} tries a simple attack...')
+        if random.randint(1, 100) <= self.__chance_to_hit:
+            damage = random.randint(self.__minimum_damage, self.__maximum_damage)
+            enemy.set_current_hit_points(enemy.get_current_hit_points() - damage)
+            print(f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
+        else:
+            print(f"{self.__name}'s attack missed!")
+            pass
+        #
+        # if random.randint(1, 100) <= self.__hero.get_chance_to_hit():
+        #     self.__monster.set_current_hit_points(
+        #         random.randint(self.__hero.get_minimum_damage(), self.__hero.get_maximum_damage()))
+        #     if self.__monster.get_current_hit_points <= 0:
+        #         self.__game.get_monsters_list().remove(self.__monster)
+        # else:
+        #     print("Your attack missed!")
+        #     pass
+        # if self.__monster.get_current_hit_points <= 0:
+        #     pass
 
     # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
     # Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.

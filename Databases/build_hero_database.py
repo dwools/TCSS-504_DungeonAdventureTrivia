@@ -43,11 +43,11 @@ def main():
     conn = create_connection(database)
     with conn:
         # create a new project
-        priestess = ('Priestess', '75', '5', '0.7', '25', '45', '0.3')
+        priestess = ('Priestess', '75', '5', '70', '25', '45', '30')
 
-        knight = ('Knight', '125', '4', '0.8', '35', '60', '0.2')
+        knight = ('Knight', '125', '4', '80', '35', '60', '20')
 
-        rogue = ('Rogue', '75', '6', '0.8', '20', '40', '0.4')
+        rogue = ('Rogue', '75', '6', '80', '20', '40', '40')
 
         create_hero(conn, priestess)
         create_hero(conn, knight)

@@ -1,9 +1,6 @@
 import random
 import sqlite3
 from Characters.monster import Monster
-from Characters.monster_ogre import Ogre
-from Characters.monster_gremlin import Gremlin
-from Characters.monster_skeleton import Skeleton
 
 
 class MonsterFactory:
@@ -37,7 +34,7 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = ogre_stats
-        return Ogre(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                     minimum_heal_points, maximum_heal_points)
 
     def create_gremlin(self):
@@ -53,7 +50,7 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = gremlin_stats
-        return Gremlin(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                        minimum_heal_points, maximum_heal_points)
 
     def create_skeleton(self):
@@ -69,7 +66,7 @@ class MonsterFactory:
          chance_to_heal,
          minimum_heal_points,
          maximum_heal_points) = skeleton_stats
-        return Skeleton(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
+        return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
                         minimum_heal_points, maximum_heal_points)
 
     def choose_monster(self):

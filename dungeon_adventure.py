@@ -6,21 +6,15 @@ from pygame.locals import *  # import the pygame modules
 
 # Import project files
 
-from Gameplay import config as c
-from Assets import assets as a
 from Items import item_factory
 from Items.item import Item
-from Pillars_and_Trivia.pillar import Pillar
 
 from Characters import monster_factory
 
 from Databases import initialize_databases
 from Gameplay.object_coordinates_generator import ValidCoordsGenerator
-from menu import *
-from combat import *
-from Characters.monster_ogre import Ogre
-from Characters.monster_skeleton import Skeleton
-from Characters.monster_gremlin import Gremlin
+from Gameplay.menu import *
+from Gameplay.combat import *
 from Gameplay.pathfinder import Pathfinder
 
 # from save_game import SaveGame
@@ -43,6 +37,43 @@ class DungeonAdventure():
         self.__dungeon_map = None
         self.__loaded_game = None
         self.__test_game = None
+
+        # Menu Status
+        self.main_menu = MainMenu(self)
+        self.character_select = CharacterSelectMenu(self)
+        self.options = OptionsMenu(self)
+        # self.how_to_play = HowToPlayMenu(self)  # need 2 build
+        # self.load_games = LoadSaveGamesMenu(self)
+        self.credits = CreditsMenu(self)
+        self.pause_menu = PauseMenu(self)
+        self.game_over = GameOver(self)
+        self.current_menu = self.main_menu  # Default menu is the main menu
+
+        # Window Setup
+        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
+        self.WINDOW_SIZE = c.WINDOW_SIZE
+        self.display = pg.Surface((640, 480))  # (640w, 480h)
+        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
+
+        # Load up base images
+        self.__gremlin_image = pg.image.load(a.south_gremlin)
+        self.__skelly_image = pg.image.load(a.south_skelly)
+        self.__ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
+        self.__health_potion_image = pg.image.load(a.health_potion)
+        self.__fire_trap_image = pg.image.load(a.fire_trap)
+        self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
+        self.__encapsulation_pillar_image = pg.image.load(a.encapsulation_pillar)
+        self.__inheritance_pillar_image = pg.image.load(a.inheritance_pillar)
+        self.__polymorphism_pillar_image = pg.image.load(a.polymorphism_pillar)
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Config
+        self.__dungeon_font = c.dungeon_font
+        self.__normal_cont = c.system_font
+        self.__font_color = c.WHITE
+        self.__PURPLE = c.PURPLE
+        self.__BLACK = c.BLACK
+        self.__WHITE = c.WHITE
 
         # Player setup
         # Player sprite setup, camera scrolling setup
@@ -81,7 +112,7 @@ class DungeonAdventure():
         # self.__item_rects = []
 
         # Place/spawn items
-        for item in range(20):
+        for item in range(0):
             item = self.i_factory.choose_item()
             self.place_items(item)
 
@@ -104,45 +135,7 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
-        # Menu Status
-        self.main_menu = MainMenu(self)
-        self.character_select = CharacterSelectMenu(self)
-        self.options = OptionsMenu(self)
-        # self.how_to_play = HowToPlayMenu(self)  # need 2 build
-        # self.load_games = LoadSaveGamesMenu(self)
-        self.credits = CreditsMenu(self)
-        self.pause_menu = PauseMenu(self)
-        self.game_over = GameOver(self)
-        self.current_menu = self.main_menu  # Default menu is the main menu
 
-
-        # Window Setup
-        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
-        self.WINDOW_SIZE = c.WINDOW_SIZE
-        self.display = pg.Surface((640, 480))  # (640w, 480h)
-        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
-
-
-
-        # Load up base images
-        self.__gremlin_image = pg.image.load(a.south_gremlin)
-        self.__skelly_image = pg.image.load(a.south_skelly)
-        self.__ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
-        self.__health_potion_image = pg.image.load(a.health_potion)
-        self.__fire_trap_image = pg.image.load(a.fire_trap)
-        self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
-        self.__encapsulation_pillar_image = pg.image.load(a.encapsulation_pillar)
-        self.__inheritance_pillar_image = pg.image.load(a.inheritance_pillar)
-        self.__polymorphism_pillar_image = pg.image.load(a.polymorphism_pillar)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Config
-        self.__dungeon_font = c.dungeon_font
-        self.__normal_cont = c.system_font
-        self.__font_color = c.WHITE
-        self.__PURPLE = c.PURPLE
-        self.__BLACK = c.BLACK
-        self.__WHITE = c.WHITE
 
 
     def place_items(self, item):
@@ -432,8 +425,8 @@ class DungeonAdventure():
                     self.attack_menu = AttackMenu(self)
                     self.current_menu = self.__combat_ui
 
-
-                if isinstance(monster, Gremlin):
+                if monster.get_type() == "Gremlin":
+                # if isinstance(monster, Gremlin):
                     monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
                     monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
                     monster.set_east_monster_sprite(pg.image.load(a.east_gremlin))
@@ -444,10 +437,10 @@ class DungeonAdventure():
                     self.gremlin_image = monster.get_monster_sprite()
                     self.display.blit(self.gremlin_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
-                    # print("Gameloop rect.x: ", rect.x)  # Rect x is the position where the monster is being drawn
-                    # print("Gameloop rect.y: ", rect.y)  # same for y
 
-                if isinstance(monster, Skeleton):
+
+                if monster.get_type() == "Skeleton":
+                # if isinstance(monster, Skeleton):
                     monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
                     monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
                     monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
@@ -458,10 +451,10 @@ class DungeonAdventure():
                     self.skelly_image = monster.get_monster_sprite()
                     self.display.blit(self.skelly_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                    # print("Gameloop rect.x: ", rect.x)
-                    # print("Gameloop rect.y: ", rect.y)
 
-                if isinstance(monster, Ogre):
+
+                if monster.get_type() == "Ogre":
+                # if isinstance(monster, Ogre):
                     monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
                     monster.set_north_monster_sprite(pg.image.load(a.north_rogue))
                     monster.set_east_monster_sprite(pg.image.load(a.east_rogue))
@@ -472,8 +465,6 @@ class DungeonAdventure():
                     self.ogre_image = monster.get_monster_sprite()
                     self.display.blit(self.ogre_image, (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                    # print("Gameloop rect.x: ", rect.x)
-                    # print("Gameloop rect.y: ", rect.y)
 
             for item in self.__items:
                 item.set_player_scroll(self.camera_scroll)
@@ -592,7 +583,7 @@ class DungeonAdventure():
                     self.current_menu = self.pause_menu
 
                 if event.key == K_h:
-                    self.__player_character.take_healing_potion()
+                    self.__player_character.drink_health_potion()
 
                 if event.key == K_RETURN:
                     self.interacting = True
@@ -726,6 +717,10 @@ class DungeonAdventure():
 
     def get_monsters_list(self):
         return self.__monsters
+
+    def get_combat_ui(self):
+        return self.__combat_ui
+
 
 if __name__ == "__main__":
     databases = initialize_databases.main()

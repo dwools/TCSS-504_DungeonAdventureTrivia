@@ -16,8 +16,6 @@ class TriviaFactory:
         cursor = self.__conn.cursor()
         cursor.execute(f'SELECT * FROM elapids_trivia WHERE rowid = "{num}"')
         return cursor.fetchone()
-        # elapids_trivia = cursor.fetchone()
-        # return elapids_trivia
 
     def read_astronomy_table(self, num):
         cursor = self.__conn.cursor()

@@ -1,3 +1,4 @@
+import random
 
 from Characters.dungeon_character import DungeonCharacter
 
@@ -39,12 +40,20 @@ class Monster(DungeonCharacter):
         self.__west_monster_sprite = None
         self.__current_sprite = self.__south_monster_sprite
 
+    def monster_heal(self):  # Heal Monster
+        if self.get_current_hit_points() <= self.get_max_hit_points() // 3: #(self.get_monster_health_max() // 3): # change this to chance to heal
+            if random.randint(1, 100) <= self.__chance_to_heal:
+                self.set_current_hit_points(self.get_current_hit_points() + random.randint(self.get_minimum_heal_points(), self.get_maximum_heal_points()))
+                if self.get_current_hit_points() >= self.get_max_hit_points():
+                    self.set_current_hit_points(self.__max_hit_points)
+
+
 
     def update(self):
         position = self.get_position()
         rectangle = self.get_character_rect()
         self.set_direction()
-        position += (self.__direction)
+        position += self.__direction
         self.set_position(position)
         rect_x, rect_y = position
         rectangle.center = rect_y+8, rect_x+8

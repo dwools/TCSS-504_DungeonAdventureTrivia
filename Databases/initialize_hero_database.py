@@ -41,10 +41,10 @@ def main():
                                     hero text PRIMARY KEY,
                                     hit_points integer,
                                     attack_speed integer,
-                                    chance_to_hit float,
+                                    chance_to_hit integer,
                                     minimum_damage integer,
                                     maximum_damage integer,
-                                    chance_to_block float
+                                    chance_to_block integer
                                     ); """
 
     # create a database connection

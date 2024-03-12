@@ -1,5 +1,8 @@
 import textwrap
+import time
+
 from Assets import assets as a
+from Characters.hero import Hero
 from Gameplay import config as c
 import pygame as pg
 import random
@@ -20,7 +23,7 @@ class Combat:
 
         # Setting UI Locations
         self.__attack_x, self.__attack_y = self.__middle_width + 175, self.__middle_height + 300
-        self.__open_bag_x, self.__open_bag_y = self.__middle_width + 225, self.__middle_height + 400
+        self.__drink_health_potion_x, self.__drink_health_potion_y = self.__middle_width + 225, self.__middle_height + 400
 
         self.__monster_name_x, self.__monster_name_y = self.__middle_width + 300, self.__middle_height - 400
         self.__monster_pos_x, self.__monster_pos_y = self.__middle_width + 300, self.__middle_height - 400
@@ -55,6 +58,68 @@ class Combat:
         self.__hero_chance_to_block = self.__hero.get_chance_to_block()
         self.__hero_chance_to_hit = self.__hero.get_chance_to_hit()
         self.__hero_heal_range = [self.__hero.get_minimum_heal_points(), self.__hero.get_maximum_heal_points()]
+
+        # Attack order
+        self.__attack_order = []
+        self.set_attack_order()
+
+    def set_attack_order(self):
+        if self.__hero_attack_speed > self.__monster_attack_speed:
+            self.__attack_order.extend([self.__hero, self.__monster])
+            # self.__attack_order.extend(["Hero's Turn", "Hero's Turn", "Monster's Turn"])
+        elif self.__hero_attack_speed < self.__monster_attack_speed:
+            self.__attack_order.extend([self.__monster, self.__hero])
+            # self.__attack_order.extend(["Monster's Turn", "Monster's Turn", "Hero's Turn"])
+        else:
+            if random.choice([1, 2]) == 1:
+                self.__attack_order.extend([self.__hero, self.__monster])
+            else:
+                self.__attack_order.extend([self.__monster, self.__hero])
+                # (self.__attack_order.extend(["Hero's Turn"]), self.__attack_order.extend(["Monster's Turn"])))
+
+    def simple_attack_sequence(self):
+        if self.__monster in self.__game.get_monsters_list():
+            for character in self.__attack_order:
+                if character == self.__hero:
+                    character.simple_attack(self.__monster)
+                    self.check_monster_hit_points()
+                elif character == self.__monster:
+                    character.simple_attack(self.__hero)
+                    self.check_hero_hit_points()
+                    character.monster_heal()
+        else:
+            pass
+
+    def special_attack_sequence(self):
+        if self.__monster in self.__game.get_monsters_list():
+            for character in self.__attack_order:
+                if character == self.__hero:
+                    if isinstance(character, Knight):
+                        character.special(self.__monster)
+                        self.check_monster_hit_points()
+                    elif isinstance(character, Priestess):
+                        character.special()
+                    elif isinstance(character, Rogue):
+                        character.special(self.__monster)
+                        self.check_monster_hit_points()
+                elif character == self.__monster:
+                    character.simple_attack(self.__hero)
+                    self.check_hero_hit_points()
+                    character.monster_heal()
+        else:
+            pass
+
+    def check_monster_hit_points(self):
+        if self.__monster.get_current_hit_points() <= 0:
+            self.__game.get_monsters_list().remove(self.__monster)
+        # self.__run_display = False
+        # self.__game.paused = False
+        # self.__game.playing = True
+
+    def check_hero_hit_points(self):
+        if self.__hero.get_current_hit_points() <= 0:
+            # self.__game.
+            self.__game.current_menu = self.__game.game_over
 
     def get_monster_health(self):
         return self.__monster_health_curr
@@ -234,7 +299,7 @@ class Combat:
             pg.draw.rect(self.__game.display, 'black', pg.Rect(350, 400, 280, 5))
 
             self.__game.draw_text(c.dungeon_font, 'Fight', 15, self.__attack_x, self.__attack_y, 'white')
-            self.__game.draw_text(c.dungeon_font, 'Backpack', 15, self.__open_bag_x, self.__open_bag_y, 'white')
+            self.__game.draw_text(c.dungeon_font, 'Health Potion', 15, self.__drink_health_potion_x, self.__drink_health_potion_y, 'white')
             self.write_main_text_box(text='What would you like to do?')
 
             self.draw_cursor()
@@ -248,19 +313,19 @@ class Combat:
 
         if self.__game.moving_south:
             if self.__state == 'Attack':
-                self.__cursor_rect.midtop = (self.__open_bag_x - 125, self.__open_bag_y)
-                self.__state = 'Open Bag'
+                self.__cursor_rect.midtop = (self.__drink_health_potion_x - 125, self.__drink_health_potion_y)
+                self.__state = 'Health Potion'
 
-            elif self.__state == 'Open Bag':
+            elif self.__state == 'Health Potion':
                 self.__cursor_rect.midtop = (self.__attack_x - 75, self.__attack_y)
                 self.__state = 'Attack'
 
         elif self.__game.moving_north:
             if self.__state == 'Attack':
-                self.__cursor_rect.midtop = (self.__open_bag_x - 125, self.__open_bag_y)
-                self.__state = 'Open Bag'
+                self.__cursor_rect.midtop = (self.__drink_health_potion_x - 125, self.__drink_health_potion_y)
+                self.__state = 'Health Potion'
 
-            elif self.__state == 'Open Bag':
+            elif self.__state == 'Health Potion':
                 self.__cursor_rect.midtop = (self.__attack_x - 75, self.__attack_y)
                 self.__state = 'Attack'
 
@@ -274,8 +339,8 @@ class Combat:
 
             if self.__state == 'Attack':
                 self.__game.current_menu = self.__game.attack_menu
-            elif self.__state == 'Open Bag':
-                self.__game.current_menu = self.__game.inventory_menu
+            elif self.__state == 'Health Potion':
+                self.__hero.drink_health_potion()
 
         self.__run_display = False
 
@@ -284,6 +349,7 @@ class AttackMenu(Combat):
     def __init__(self, game):
         Combat.__init__(self, game)
         self.__game = game
+
 
         # Window init
         self.__screen = self.get_screen()
@@ -412,21 +478,27 @@ class AttackMenu(Combat):
         if self.__game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
 
             if self.__state == 'Simple':
-                print("You are making a simple attack")
+                # print("You are making a simple attack")
                 self.write_main_text_box('Go Simple ATTACK!!!')
+                self.simple_attack_sequence()
 
             elif self.__state == 'Special':
                 print("You have used your special ability")
+                self.write_main_text_box('Go Special Ability!')
+                self.special_attack_sequence()
+
 
             elif self.__state == 'Go Back':
-                self.__game.current_menu = self.__game.__combat_ui
+                self.__game.current_menu = self.__game.get_combat_ui()
                 self.__run_display = False
 
         if self.__game.escaping:
-            self.__game.current_menu = self.__game.__combat_ui
+            self.__game.current_menu = self.__game.get_combat_ui()
             self.__run_display = False
 
         self.__run_display = False
+
+
 
 
 class InventoryMenu(Combat):
@@ -451,19 +523,77 @@ class CombatMechanics(Combat):
         elif self.get_hero_health_curr() <= 0:
             self.__game.current_menu = self.__game.game_over
 
-    def simple_attack(self):  # Hero's attack
-        # attack = random.randint(self.__game.get_player_character().get_minimum_damage(), self.__game.get_player_character().get_maximum_damage())
-        if random.randint(0, 100) <= self.__hero.get_chance_to_hit():
-            self.__monster.set_current_hit_points(0)
+    # def simple_attack(self, attacker, opponent):  # Hero's attack
+    #     if random.randint(1, 100) <= self.get_chance_to_hit():
+    #         attacker.set_current_hit_points(random.randint(attacker.get_minimum_damage(), attacker.get_maximum_damage()))
+    #     else:
+    #         if isinstance(attacker, Hero):
+    #             print("Your attack missed!")
+    #         if isinstance(opponent)
+    #         pass
+    #     if opponent.get_current_hit_points() <= 0:
+    #         pass
 
-
+    def hero_simple_attack(self):  # Hero's attack
+        if random.randint(1, 100) <= self.__hero.get_chance_to_hit():
+            self.__monster.set_current_hit_points(
+                random.randint(self.__hero.get_minimum_damage(), self.__hero.get_maximum_damage()))
+            if self.__monster.get_current_hit_points <= 0:
+                self.__game.get_monsters_list().remove(self.__monster)
+        else:
+            print("Your attack missed!")
+            pass
 
     def specials(self):
-        pass
+        # Crushing blow
+        if isinstance(self.__hero, Knight):
+            if random.randint(1, 100) <= self.__hero.get_chance_for_crushing_blow():
+                self.__monster.set_current_hit_points(
+                    random.randint(self.__hero.get_minimum_crushing_damage(), self.__hero.get_maximum_crushing_damage()))
+                if self.__monster.get_current_hit_points <= 0:
+                    self.__game.get_monsters_list().remove(self.__monster)
+            else:
+                print("Your Crushing Blow missed!")
+                pass
+
+
+        if isinstance(self.__hero, Priestess):
+            if random.randint(1, 100) <= self.__hero.get_chance_to_heal():
+                self.__hero.set_current_hit_points(random.randint(self.__hero.get_minimum_heal_points(), self.__hero.get_maximum_heal_points()))
+                if self.__hero.get_current_hit_points() >= self.__hero.get_max_hit_points():
+                    self.__hero.set_current_hit_points(self.__hero.get_max_hit_points())
+            else:
+                print("Your Special Healing Failed!")
+                pass
+
+        if isinstance(self.__hero, Rogue):
+            self.hero_simple_attack()
+            if random.randint(1, 100) <= self.__hero.get_chance_for_second_attack():
+                print("You try for a second attack!")
+                if random.randint(1, 100) <= self.__hero.get_chance_caught():
+                    self.hero_simple_attack()
+                else:
+                    print("But you got caught! Your second attack failed!")
+                    pass
+        #
+        # if isinstance(self.__hero, Rogue):
+        #     self.simple_attack(self.__hero, self.__monster)
+        #     if random.randint(1, 100) <= self.__hero.get_chance_for_second_attack():
+        #         print("You try for a second attack!")
+        #         if random.randint(1, 100) <= self.__hero.get_chance_caught():
+        #             self.simple_attack(self.__hero, self.__monster)
+        #         else:
+        #             print("But you got caught! Your second attack failed!")
+        #             pass
+
 
     def monsters_attack(self):  # Monster's attack
-
-        pass
+        if random.randint(1, 100) <= self.__monster.get_chance_to_hit():
+            self.__hero.set_current_hit_points(random.randint(self.__monster.get_minimum_damage(), self.__monster.get_maximum_damage()))
+        else:
+            print("The monster's attack missed!")
+        if self.__hero.get_current_hit_points() <= 0:
+            self.__game.current_menu = self.__game.game_over
 
     def monster_heal(self):  # Heal Monster
         if self.get_monster_health_curr() >= (self.get_monster_health_max() // 3): # change this to chance to heal
@@ -472,3 +602,9 @@ class CombatMechanics(Combat):
                 self.set_monster_health_curr(self.get_monster_health_max())
             else:
                 self.set_monster_health_curr(new_monster_health)
+
+    def monster_combat_sequence(self):
+        self.monsters_attack()
+        self.monster_heal()
+    def get_attack_order(self):
+        return self.__attack_order

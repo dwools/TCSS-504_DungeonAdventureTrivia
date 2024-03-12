@@ -1,14 +1,28 @@
 import unittest
 import pytest
-import config
-import initialize_databases
-from maze import Maze
-from dungeon_adventure import DungeonAdventure
-from save_game import SaveGame
-import pygame as pg
 
-class MyTestCase(unittest.TestCase):
+from Characters.hero_factory import HeroFactory
+from Characters.hero_knight import Knight
+from Characters.hero_priestess import Priestess
+from Characters.hero_rogue import Rogue
+from Characters.monster_factory import MonsterFactory
+from Gameplay import config
+from Gameplay.combat import Combat
 
+
+class CombatTest(unittest.TestCase):
+    def __init__(self):
+        super().__init__()
+        self.__knight = HeroFactory().create_knight()
+        self.__priestess = HeroFactory().create_priestess()
+        self.__rogue = HeroFactory().create_rogue()
+        self.__monster = MonsterFactory().create_monster()
+
+
+    def test_determine_attack_order(self):
+        pass
+
+    def test_simple_attack(self):
 
     # def test_something(self):
     #     self.assertEqual(True, False)  # add assertion here
@@ -52,7 +66,8 @@ class MyTestCase(unittest.TestCase):
 
 
     def test_item_generation(self):
-        assert ItemFactory().
+        pass
+        # assert ItemFactory().
         # main.main()
         # main.DungeonAdventure.playing = True
 

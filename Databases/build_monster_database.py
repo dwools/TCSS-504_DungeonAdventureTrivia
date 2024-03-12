@@ -43,9 +43,9 @@ def main():
     conn = create_connection(database)
     with conn:
         # create a new project
-        ogre = ('Ogre', '200', '2', '0.6', '30', '60', '0.1', '30', '60')
-        gremlin = ('Gremlin', '70', '5', '0.8', '15', '30', '0.4', '20', '40')
-        skeleton = ('Skeleton', '100', '3', '0.8', '30', '50', '0.3', '30', '50')
+        ogre = ('Ogre', '200', '2', '60', '30', '60', '10', '30', '60')
+        gremlin = ('Gremlin', '70', '50', '80', '15', '30', '40', '20', '40')
+        skeleton = ('Skeleton', '100', '30', '80', '30', '50', '30', '30', '50')
         create_monster(conn, ogre)
         create_monster(conn, gremlin)
         create_monster(conn, skeleton)
