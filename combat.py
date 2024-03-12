@@ -35,8 +35,7 @@ class Combat:
         self.__cursor_offset = - 350
 
         # Monster init
-        self.__m_factory = MonsterFactory()
-        self.__monster = self.__m_factory.create_skeleton()
+        self.__monster = self.__game.get_monsters_list()[0]
         self.__monster_health_curr = self.__monster.get_current_hit_points()
         self.__monster_health_max = self.__monster.get_max_hit_points()
         self.__monster_attack_speed = self.__monster.get_attack_speed()
@@ -48,8 +47,7 @@ class Combat:
         self.__monster_heal_max = self.__monster.get_maximum_heal_points()
 
         # Hero init
-        self.__h_factory = HeroFactory()
-        self.__hero = self.__h_factory.create_rogue()
+        self.__hero = self.__game.get_player_character()
         self.__hero_health = self.__hero.get_current_hit_points()
         self.__hero_attack_speed = self.__hero.get_attack_speed()
         self.__hero_name = self.__hero.get_name()
@@ -82,6 +80,10 @@ class Combat:
         return self.__hero_health
 
     def get_monster(self):
+        return self.__monster
+
+    def set_monster(self, monster):
+        self.__monster = monster
         return self.__monster
 
     def get_hero_attack_speed(self):
@@ -464,5 +466,3 @@ class CombatMechanics(Combat):
                 self.set_monster_health_curr(self.get_monster_health_max())
             else:
                 self.set_monster_health_curr(new_monster_health)
-
-

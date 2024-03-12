@@ -12,5 +12,5 @@ WHITE = (255, 255, 255)
 PURPLE = (11, 0, 11)
 
 # FONT
-dungeon_font = 'assets/Fonts/8-BIT WONDER.TTF'
+dungeon_font = 'Assets/Fonts/8-BIT WONDER.TTF'
 system_font = pygame.font.get_default_font()
