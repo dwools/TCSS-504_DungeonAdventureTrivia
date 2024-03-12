@@ -1,47 +1,34 @@
 # Import packages
 import os
 import pickle
-import random
 
-import sys
-import textwrap
-import time
-
-import pygame as pg  # import pygame
 from pygame.locals import *  # import the pygame modules
-from pygame.font import Font
+
 # Import project files
 
-import config as c
-import assets as a
-import item_factory
-from item import Item
-from item_health_potion import *
-from item_pit_trap import *
-from pillar import Pillar
-import monster_gremlin
-import monster_ogre
-from monster import *
+from Gameplay import config as c
+from Assets import assets as a
+from Items import item_factory
+from Items.item import Item
+from Pillars_and_Trivia.pillar import Pillar
 
-import monster_factory
 
-import room
-import initialize_databases
-from object_coordinates_generator import ValidCoordsGenerator
-from dungeon import Maze
+from Characters import monster_factory
+
+from Databases import initialize_databases
+from Gameplay.object_coordinates_generator import ValidCoordsGenerator
 from menu import *
 from combat import *
-from monster_ogre import Ogre
-from monster_skeleton import Skeleton
-from monster_gremlin import Gremlin
-from pathfinder import Pathfinder
+from Characters.monster_ogre import Ogre
+from Characters.monster_skeleton import Skeleton
+from Characters.monster_gremlin import Gremlin
+from Gameplay.pathfinder import Pathfinder
 # from save_game import SaveGame
 
 """
 Contains the main logic for playing the game
 
 """
-
 
 class DungeonAdventure():
     """
@@ -51,8 +38,10 @@ class DungeonAdventure():
     """
 
     def __init__(self):
-        self.__maze = None
-
+        # Maze set in MainMenu upon "Start Game" or "Load Saved Game" interaction
+        self.__dungeon_map = None
+        self.__loaded_game = None
+        self.__test_game = None
 
         # Controls
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
@@ -66,11 +55,11 @@ class DungeonAdventure():
         self.character_select = CharacterSelectMenu(self)
         self.options = OptionsMenu(self)
         self.how_to_play = HowToPlayMenu(self)  # need 2 build
-        self.load_games = LoadSaveGamesMenu(self)
+        # self.load_games = LoadSaveGamesMenu(self)
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
         # self.trivia_ui = TriviaUI(self)
-        self.combat_ui = Combat(self)
+        # self.combat_ui = Combat(self)
         self.attack_menu = AttackMenu(self)
         self.inventory_menu = InventoryMenu(self)
         self.game_over = GameOver(self)
@@ -103,7 +92,7 @@ class DungeonAdventure():
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.m_factory = monster_factory.MonsterFactory()
 
-        self.monsters = []
+        self.__monsters = []
         # self.monster_rects = []
 
         # Place/spawn monsters
@@ -113,13 +102,16 @@ class DungeonAdventure():
 
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.__health_potion = Item("Health Potion")
+        self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
-        self.items = []
+        self.__items = []
         # self.__item_rects = []
 
         # Place/spawn items
-        for _ in range(1):
-            self.place_items()
+        for item in range(20):
+            item = self.i_factory.choose_item()
+            self.place_items(item)
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -160,6 +152,15 @@ class DungeonAdventure():
         for pillar in self.__pillars:
             self.place_pillar(pillar)
 
+    def place_items(self, item):
+        item.set_item_position(self.coords_generator.get_random_coords())
+        item_x, item_y = item.get_item_position()
+        if item.get_item_name() == "Health Potion":
+            item.set_item_rect(item_x + 4, item_y + 4)
+        else:
+            item.set_item_rect(item_x, item_y)
+        self.__items.append(item)
+
     def remove_pillar(self, pillar):
         if pillar.get_pillar_name() == 'Abstraction':
             self.__pillars.remove(self.__abstraction_pillar)
@@ -192,16 +193,13 @@ class DungeonAdventure():
     def get_polymorphism_pillar(self):
         return self.__polymorphism_pillar
 
+    def get_pillars_list(self):
+        return self.__pillars
+
     def place_pillar(self, pillar):
         pillar.set_pillar_position(self.coords_generator.get_random_coords())
         pillar_x, pillar_y = pillar.get_pillar_position()
         pillar.set_pillar_rect(pillar_x + 4, pillar_y + 4)
-
-    # def get_loaded_game(self):
-    #     return self.__loaded_game
-    #
-    # def set_loaded_game(self, value):
-    #     self.__loaded_game = value
 
     def get_player_character(self):
         return self.__player_character
@@ -225,30 +223,22 @@ class DungeonAdventure():
         floor_image = pg.image.load(a.floor)
         TILE_SIZE = bottom_wall_image.get_width()
 
-        # Audio
-        background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
-        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
-        background_audio = pg.mixer.music.set_volume(0.0)  # scale of 0->1
+        # # Audio
+        # background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
+        # background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        # background_audio = pg.mixer.music.set_volume(0.0)  # scale of 0->1
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        # Create the map for visuals, create the matrix for monsters
-        # Map 20w x 15h
-        def load_map():
-            """ Reading-in the tilemap from the dungeon.txt map file.
-            """
-
-            file = open('dungeon.txt', 'r')
-            data = file.read()
-            file.close()
-            data = data.split('\n')
-            dungeon_map = []
-            for row in data:
-                dungeon_map.append((list(row)))
-            return dungeon_map
-
-        self.dungeon_map = load_map()
+        # Set up map for new game, test game, or loaded game
+        if self.__loaded_game is True:
+            self.set_dungeon_map(self.load_saved_map())  #
+            self.load_game()
+        elif self.__test_game is True:
+            self.set_dungeon_map(self.load_test_map())
+        else:
+            self.set_dungeon_map(self.load_new_map())  # load_new_map() reads in new dungeon.txt file
 
         def create_matrix(tile_set):
             # Creating a map underneath the visual map that monsters will use in the pathfinding algorithm
@@ -270,7 +260,7 @@ class DungeonAdventure():
 
             return tile_map
 
-        pathfinder = Pathfinder(create_matrix(self.dungeon_map))
+        pathfinder = Pathfinder(create_matrix(self.__dungeon_map))
 
         def tile_collision_test(rect, tiles):
             """ Testing whether a character collides with n tile. """
@@ -336,7 +326,7 @@ class DungeonAdventure():
             # Assign image sprites to the dungeon map txt values. Depending on the sprite add it to the collisions list.
 
             y = 0
-            for row in self.dungeon_map:
+            for row in self.__dungeon_map:
 
                 x = 0
                 for tile in row:
@@ -362,16 +352,16 @@ class DungeonAdventure():
                     x += 1
                 y += 1
 
-            # I think item collisions should go right here
-            for item in self.items:
-                    item_rect = item.get_item_rect()
-                    if self.player_rect.colliderect(item_rect):
-                        if isinstance(item, FireTrap):
+            # I think item collisions should go right here.
+            for item in self.__items:
+                    if self.player_rect.colliderect(item.get_item_rect()):
+                        if item.get_item_name() == "Fire Trap":
                             self.__player_character.damage(1)
                         else:
                             self.__player_character.add_to_backpack(item)
-                            self.items.remove(item)
+                            self.__items.remove(item)
 
+            # Pillar collision. When player collides with pillar, the Trivia UI opens with the corresponding category of question..
             for pillar in self.__pillars:
                 pillar_rect = pillar.get_pillar_rect()
                 if self.player_rect.colliderect(pillar_rect):
@@ -389,9 +379,12 @@ class DungeonAdventure():
                         self.trivia_ui = TriviaUI(self, "Polymorphism")
                     self.paused = True
                     self.current_menu = self.trivia_ui
-                    # self.__player_character.add_to_backpack(pillar)
-                    # self.__pillars.remove(pillar)
 
+
+            # If players' hit points hit 0, game pauses and opens "game over" menu. This can go here or in the item collision loop upon collision with the fire trap..
+            if self.__player_character.get_death() == True:
+                self.paused = True
+                self.current_menu = self.game_over
 
 
 
@@ -432,7 +425,7 @@ class DungeonAdventure():
 
             # Update the sprites for the monsters
 
-            for monster in self.monsters:
+            for monster in self.__monsters:
                 """ For monster in list of monsters, get monster rect, get monster position, 
                 calculate monster's path to the player, update monster position based on path to the player.
                 """
@@ -463,7 +456,7 @@ class DungeonAdventure():
                     monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
                     monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
                     monster.set_west_monster_sprite(pg.image.load(a.west_skelly))
-                    # monster.set_monster_sprite(pg.image.load(a.south_skelly))
+
 
                     monster.set_monster_sprite(monster.get_south_monster_sprite())
 
@@ -487,14 +480,14 @@ class DungeonAdventure():
                     # print("Gameloop rect.x: ", rect.x)
                     # print("Gameloop rect.y: ", rect.y)
 
-            for item in self.items:
+            for item in self.__items:
                 item.set_player_scroll(self.camera_scroll)
                 rect = item.get_item_rect()
-                if isinstance(item, HealthPotion):
+                if item.get_item_name() == "Health Potion":
                     item.set_health_potion_sprite(pg.image.load(a.health_potion))
                     self.__health_potion_image = item.get_health_potion_sprite()
                     self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
-                if isinstance(item, FireTrap):
+                elif item.get_item_name() == "Fire Trap":
                     item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
                     self.__health_potion_image = item.get_fire_trap_sprite()
                     self.display.blit(self.__health_potion_image, (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
@@ -639,20 +632,74 @@ class DungeonAdventure():
         text_rect.center = (x / 2, y / 2)
         self.display.blit(text_surface, text_rect)
 
+        # Create the map for visuals, create the matrix for monsters
+        # Map 20w x 15h
+
+
+        # self.__dungeon_map = load_new_map()
 
     def load_game(self):
-        self.dungeon_map = pickle.load(open('dungeon.txt.pickle', 'rb'))
         if os.path.exists("dungeon_adventure.pickle"):
             with open("dungeon_adventure.pickle", "rb") as f:
-                game_data = pickle.load(f)
+                game_data = pickle.load(f)[0]
+            self.__player_character = game_data["player_character"]
             self.player_position = game_data['player_position']
-            self.monsters = game_data['monsters']
-            # self.monster_rects = game_data['monster_rects']
-            # self.items = game_data['items']
-            # self.item_rects = game_data['item_rects']
             self.player_rect = game_data['player_rect']
-            # self.dungeon_map = game_data['dungeon_map']
-            # self.maze = game_data['maze']
+            self.__monsters = game_data['monsters']
+            self.__items = game_data['items']
+            self.__pillars = game_data['pillars']
+
+
+    @staticmethod
+    def load_new_map():
+        """ Reading-in the tilemap from the dungeon.txt map file.
+        """
+        file = open('dungeon.txt', 'r')
+        data = file.read()
+        file.close()
+        data = data.split('\n')
+        dungeon_map = []
+        for row in data:
+            dungeon_map.append((list(row)))
+        return dungeon_map
+
+    @staticmethod
+    def load_test_map():
+        file = open('test_maze.txt', 'r')
+        data = file.read()
+        file.close()
+        data = data.split('\n')
+        dungeon_map = []
+        for row in data:
+            dungeon_map.append((list(row)))
+        return dungeon_map
+
+    @staticmethod
+    def load_saved_map():
+        file = open('dungeon.txt', 'w')
+        saved_maze = pickle.load(open('dungeon_adventure.pickle', 'rb'))[1]
+        file.write(saved_maze)
+        file.close()
+        written_file = open('dungeon.txt', 'r')
+        data = written_file.read()
+        written_file.close()
+        data = data.split('\n')
+        dungeon_map = []
+        for row in data:
+            dungeon_map.append((list(row)))
+        return dungeon_map
+
+    def set_dungeon_map(self, dungeon_map):
+        self.__dungeon_map = dungeon_map
+
+    def get_dungeon_map(self):
+        return self.__dungeon_map
+
+    # def testing_game(self):
+    #     self.__dungeon_map = open('test_maze.txt', 'r')
+
+    def set_loaded_game(self, value):
+        self.__loaded_game = value
 
     def place_monsters(self):
         creature = self.m_factory.choose_monster()
@@ -662,29 +709,18 @@ class DungeonAdventure():
         # creature_rect = creature.set_character_rect(creature_x,
         #                                             creature_y)  # Use random coords to create a rect at coords
         # self.monster_rects.append(creature_rect)
-        self.monsters.append(creature)
+        self.__monsters.append(creature)
 
-    def place_items(self):
-        item = self.i_factory.choose_item()
-        item.set_item_position(self.coords_generator.get_random_coords())
-        item_x, item_y = item.get_item_position()
-        if isinstance(item, HealthPotion):
-            item.set_item_rect(item_x + 4, item_y + 4)
-        else:
-            item.set_item_rect(item_x, item_y)
-        # item_rect = item.set_item_rect(item_x, item_y)
-        # self.__item_rects.append(item_rect)
-        self.items.append(item)
+    def get_monsters_list(self):
+        return self.__monsters
 
+    def get_items_list(self):
+        return self.__items
     def add_to_backpack(self, object):
         self.__player_character.add_to_backpack(object)
 
-    def get_maze(self):
-        return self.__maze
-
-    def set_maze(self, maze):
-        self.__maze = maze
-
+    def set_test_game(self, value):
+        self.__test_game = value
 
 
 if __name__ == "__main__":

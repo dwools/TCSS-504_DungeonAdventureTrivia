@@ -4,19 +4,15 @@ import pygame as pg
 import sys
 import pygame.display
 
-import config as c
-import assets as a
-from pillar import Pillar
+from Gameplay import config as c
+from Assets import assets as a
+from Pillars_and_Trivia.pillar import Pillar
 # from pillar import Pillar
-from trivia_factory import TriviaFactory
-from save_game import SaveGame
-# from load_game import LoadGame
-from hero import Hero
-from hero_priestess import Priestess
-from hero_knight import Knight
-from hero_rogue import Rogue
-from hero_factory import HeroFactory
-from dungeon import Maze
+from Pillars_and_Trivia.trivia_factory import TriviaFactory
+from Gameplay.save_game import SaveGame
+
+from Characters.hero_factory import HeroFactory
+from Room_and_Maze.maze import Maze
 
 
 
@@ -140,7 +136,7 @@ class MainMenu(Menu):
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
 
             if self.state == 'Start Game':
-                self.game.set_maze(Maze(15, 20).new_maze())
+                Maze(15, 20).new_maze()  # create new dungeon.txt file
                 self.game.current_menu = self.game.character_select
                 # self.game.playing = True
 
@@ -148,7 +144,10 @@ class MainMenu(Menu):
                 self.game.current_menu = self.game.how_to_play
 
             elif self.state == 'Load Game':
-                self.game.current_menu = self.game.load_games
+                self.game.set_loaded_game(True)
+                self.game.playing = True  # Here is where we enter the saved game
+                # self.run_display = False  # end the current menu screen
+                # self.game.current_menu = self.game.load_games
 
             elif self.state == 'Options':
                 self.game.current_menu = self.game.options
@@ -348,85 +347,85 @@ class HowToPlayMenu(Menu):
                 pass
 
 
-class LoadSaveGamesMenu(Menu):  # WIP
-    def __init__(self, game):
-        Menu.__init__(self, game)
-
-        self.saved_games = [1, 2]  # Populate this from somewhere somehow?
-
-        if len(self.saved_games) != 0:  # if there are one or more saves
-            self.state = "Save One"
-            self.save_x, self.save_y = self.middle_width, self.middle_height
-            self.save_rect = None
-            self.saved_rects = []
-
-        else:
-            self.state = "No Saved Games"
-
-    def display_menu(self):
-        clock = pg.time.Clock()
-        self.run_display = True
-
-        while self.run_display:
-            self.game.check_events()
-            self.check_input()
-            self.mouse_position = pg.mouse.get_pos()
-
-            self.game.display.fill(c.PURPLE)
-
-            self.game.draw_text(c.dungeon_font, f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200,
-                                'forestgreen')
-
-            self.game.draw_text(c.dungeon_font, f'Left Click on a save to start that save', 10, self.middle_width,
-                                self.middle_height - 150, 'yellow')
-
-            if len(self.saved_games) != 0:
-                self.save_y = self.middle_height - 60
-
-                for save in self.saved_games:
-                    self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 50, 200, 50)
-
-                    if self.save_rect.collidepoint(self.mouse_position):
-
-                        self.game.font_color = 'teal'  # changes the color of the text (applying to the next, but we want it to apply to current
-
-                        if self.game.left_clicked:
-                            self.game.load_game()
-
-                            self.game.set_maze(Maze(15, 20))
-                            self.game.playing = True  # Here is where we enter the saved game
-                            self.run_display = False  # end the current menu screen
-
-                        self.game.left_clicked = False
-
-                    else:
-                        self.game.font_color = c.WHITE
-
-                    self.game.draw_text(c.dungeon_font, f'Save {self.saved_games[save - 1]}', 20, self.save_x,
-                                        self.save_y,
-                                        self.game.font_color)
-
-                    self.saved_rects.append(self.save_rect)
-                    self.save_y += 70
-
-            else:
-                self.game.draw_text(c.dungeon_font, f'No Saves Found', 15, self.middle_width, self.middle_height,
-                                    self.game.font_color)
-
-            self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
-                                self.middle_height + 250,
-                                c.WHITE)
-
-            self.blit_screen()
-
-            clock.tick(12)
-
-    def check_input(self):
-
-        if self.game.escaping:
-            self.game.current_menu = self.game.main_menu
-            self.run_display = False
-
+# class LoadSaveGamesMenu(Menu):  # WIP
+#     def __init__(self, game):
+#         Menu.__init__(self, game)
+#
+#         self.saved_games = [1, 2]  # Populate this from somewhere somehow?
+#
+#         if len(self.saved_games) != 0:  # if there are one or more saves
+#             self.state = "Save One"
+#             self.save_x, self.save_y = self.middle_width, self.middle_height
+#             self.save_rect = None
+#             self.saved_rects = []
+#
+#         else:
+#             self.state = "No Saved Games"
+#
+#     def display_menu(self):
+#         clock = pg.time.Clock()
+#         self.run_display = True
+#
+#         while self.run_display:
+#             self.game.check_events()
+#             self.check_input()
+#             self.mouse_position = pg.mouse.get_pos()
+#
+#             self.game.display.fill(c.PURPLE)
+#
+#             self.game.draw_text(c.dungeon_font, f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200,
+#                                 'forestgreen')
+#
+#             self.game.draw_text(c.dungeon_font, f'Left Click on a save to start that save', 10, self.middle_width,
+#                                 self.middle_height - 150, 'yellow')
+#
+#             if len(self.saved_games) != 0:
+#                 self.save_y = self.middle_height - 60
+#
+#                 for save in self.saved_games:
+#                     self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 50, 200, 50)
+#
+#                     if self.save_rect.collidepoint(self.mouse_position):
+#
+#                         self.game.font_color = 'teal'  # changes the color of the text (applying to the next, but we want it to apply to current
+#
+#                         if self.game.left_clicked:
+#                             # self.game.load_game()
+#
+#                             # self.game.set_maze(Maze(15, 20))
+#                             self.game.playing = True  # Here is where we enter the saved game
+#                             self.run_display = False  # end the current menu screen
+#
+#                         self.game.left_clicked = False
+#
+#                     else:
+#                         self.game.font_color = c.WHITE
+#
+#                     self.game.draw_text(c.dungeon_font, f'Save {self.saved_games[save - 1]}', 20, self.save_x,
+#                                         self.save_y,
+#                                         self.game.font_color)
+#
+#                     self.saved_rects.append(self.save_rect)
+#                     self.save_y += 70
+#
+#             else:
+#                 self.game.draw_text(c.dungeon_font, f'No Saves Found', 15, self.middle_width, self.middle_height,
+#                                     self.game.font_color)
+#
+#             self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
+#                                 self.middle_height + 250,
+#                                 c.WHITE)
+#
+#             self.blit_screen()
+#
+#             clock.tick(12)
+#
+#     def check_input(self):
+#
+#         if self.game.escaping:
+#             self.game.current_menu = self.game.main_menu
+#             self.run_display = False
+#
 
 class OptionsMenu(Menu):
     def __init__(self, game):

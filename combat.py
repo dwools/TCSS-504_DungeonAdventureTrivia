@@ -1,11 +1,11 @@
 import textwrap
-import assets as a
-import config as c
+from Assets import assets as a
+from Gameplay import config as c
 import pygame as pg
 
-from hero_factory import *
-from monster_factory import *
-from dungeon_character import DungeonCharacter
+from Characters.hero_factory import *
+from Characters.monster_factory import *
+from Characters.dungeon_character import DungeonCharacter
 
 
 class Combat:
