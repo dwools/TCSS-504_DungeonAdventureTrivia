@@ -2,7 +2,7 @@ import textwrap
 from Assets import assets as a
 from Gameplay import config as c
 import pygame as pg
-
+import random
 from Characters.hero_factory import *
 from Characters.monster_factory import *
 from Characters.dungeon_character import DungeonCharacter
@@ -35,7 +35,7 @@ class Combat:
         self.__cursor_offset = - 350
 
         # Monster init
-        self.__monster = self.__game.get_monsters_list()[0]
+        self.__monster = self.__game.get_monster()
         self.__monster_health_curr = self.__monster.get_current_hit_points()
         self.__monster_health_max = self.__monster.get_max_hit_points()
         self.__monster_attack_speed = self.__monster.get_attack_speed()
@@ -419,11 +419,11 @@ class AttackMenu(Combat):
                 print("You have used your special ability")
 
             elif self.__state == 'Go Back':
-                self.__game.current_menu = self.__game.combat_ui
+                self.__game.current_menu = self.__game.__combat_ui
                 self.__run_display = False
 
         if self.__game.escaping:
-            self.__game.current_menu = self.__game.combat_ui
+            self.__game.current_menu = self.__game.__combat_ui
             self.__run_display = False
 
         self.__run_display = False
@@ -452,7 +452,13 @@ class CombatMechanics(Combat):
             self.__game.current_menu = self.__game.game_over
 
     def simple_attack(self):  # Hero's attack
+        # attack = random.randint(self.__game.get_player_character().get_minimum_damage(), self.__game.get_player_character().get_maximum_damage())
+        if random.randint(0, 100) <= self.__hero.get_chance_to_hit():
+            self.__monster.set_current_hit_points(0)
 
+
+
+    def specials(self):
         pass
 
     def monsters_attack(self):  # Monster's attack

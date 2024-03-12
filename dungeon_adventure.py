@@ -44,34 +44,7 @@ class DungeonAdventure():
         self.__loaded_game = None
         self.__test_game = None
 
-        # Controls
-        self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
-        self.interacting, self.left_clicked, self.escaping = False, False, False
-
-        # Game Status
-        self.running, self.playing, self.paused = True, False, False
-
-        # Menu Status
-        self.main_menu = MainMenu(self)
-        self.character_select = CharacterSelectMenu(self)
-        self.options = OptionsMenu(self)
-        self.how_to_play = HowToPlayMenu(self)  # need 2 build
-        # self.load_games = LoadSaveGamesMenu(self)
-        self.credits = CreditsMenu(self)
-        self.pause_menu = PauseMenu(self)
-        # self.trivia_ui = TriviaUI(self)
-        self.combat_ui = Combat(self)
-        self.attack_menu = AttackMenu(self)
-        self.inventory_menu = InventoryMenu(self)
-        self.game_over = GameOver(self)
-        self.current_menu = self.main_menu  # Default menu is the main menu
-
-        # Window Setup
-        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
-        self.WINDOW_SIZE = c.WINDOW_SIZE
-        self.display = pg.Surface((640, 480))  # (640w, 480h)
-        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
-
+        # Player setup
         # Player sprite setup, camera scrolling setup
         self.__player_character = None
         self.player_movement = [0, 0]
@@ -89,7 +62,6 @@ class DungeonAdventure():
         self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
                                    self.player_image.get_height())  # start at 16, add 48 x or y for good position
         self.camera_scroll = [0, 0]
-
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.m_factory = monster_factory.MonsterFactory()
 
@@ -113,7 +85,44 @@ class DungeonAdventure():
             item = self.i_factory.choose_item()
             self.place_items(item)
 
-        # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Pillar setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.__abstraction_pillar = Pillar("Abstraction")
+        self.__encapsulation_pillar = Pillar("Encapsulation")
+        self.__inheritance_pillar = Pillar("Inheritance")
+        self.__polymorphism_pillar = Pillar("Polymorphism")
+        self.__pillars = [self.__abstraction_pillar, self.__encapsulation_pillar, self.__inheritance_pillar,
+                          self.__polymorphism_pillar]
+
+        # Place/spawn pillars
+        for pillar in self.__pillars:
+            self.place_pillar(pillar)
+
+        # Controls
+        self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
+        self.interacting, self.left_clicked, self.escaping = False, False, False
+
+        # Game Status
+        self.running, self.playing, self.paused = True, False, False
+
+        # Menu Status
+        self.main_menu = MainMenu(self)
+        self.character_select = CharacterSelectMenu(self)
+        self.options = OptionsMenu(self)
+        # self.how_to_play = HowToPlayMenu(self)  # need 2 build
+        # self.load_games = LoadSaveGamesMenu(self)
+        self.credits = CreditsMenu(self)
+        self.pause_menu = PauseMenu(self)
+        self.game_over = GameOver(self)
+        self.current_menu = self.main_menu  # Default menu is the main menu
+
+
+        # Window Setup
+        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
+        self.WINDOW_SIZE = c.WINDOW_SIZE
+        self.display = pg.Surface((640, 480))  # (640w, 480h)
+        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
+
+
 
         # Load up base images
         self.__gremlin_image = pg.image.load(a.south_gremlin)
@@ -135,16 +144,6 @@ class DungeonAdventure():
         self.__BLACK = c.BLACK
         self.__WHITE = c.WHITE
 
-        self.__abstraction_pillar = Pillar("Abstraction")
-        self.__encapsulation_pillar = Pillar("Encapsulation")
-        self.__inheritance_pillar = Pillar("Inheritance")
-        self.__polymorphism_pillar = Pillar("Polymorphism")
-        self.__pillars = [self.__abstraction_pillar, self.__encapsulation_pillar, self.__inheritance_pillar,
-                          self.__polymorphism_pillar]
-
-        # Place/spawn pillars
-        for pillar in self.__pillars:
-            self.place_pillar(pillar)
 
     def place_items(self, item):
         item.set_item_position(self.coords_generator.get_random_coords())
@@ -423,11 +422,15 @@ class DungeonAdventure():
                 rect = monster.get_character_rect()  # Get the monster's rect to move
                 monster.update()  # Update the monsters position based on the above path
 
+
                 if self.player_rect.colliderect(monster.get_character_rect()):
                     self.paused = True
-                    self.combat_ui.set_hero(self.__player_character)
-                    self.combat_ui.set_monster(monster)
-                    self.current_menu = self.combat_ui
+                    self.set_monster(monster)
+                    # self.__combat_ui.set_hero(self.__player_character)
+                    # self.__combat_ui.set_monster(monster)
+                    self.__combat_ui = Combat(self)
+                    self.attack_menu = AttackMenu(self)
+                    self.current_menu = self.__combat_ui
 
 
                 if isinstance(monster, Gremlin):
@@ -705,8 +708,6 @@ class DungeonAdventure():
         # self.monster_rects.append(creature_rect)
         self.__monsters.append(creature)
 
-    def get_monsters_list(self):
-        return self.__monsters
 
     def get_items_list(self):
         return self.__items
@@ -717,15 +718,14 @@ class DungeonAdventure():
     def set_test_game(self, value):
         self.__test_game = value
 
-    def get_player_character(self):
-        return self.__player_character
+    def set_monster(self, monster):
+        self.__monster = monster
 
-    # def set_monster(self, monster):
-    #     self.__monster = monster
-    #
-    # def get_monster(self):
-    #     return self.__monster
+    def get_monster(self):
+        return self.__monster
 
+    def get_monsters_list(self):
+        return self.__monsters
 
 if __name__ == "__main__":
     databases = initialize_databases.main()
