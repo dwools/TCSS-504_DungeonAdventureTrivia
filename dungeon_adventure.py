@@ -138,13 +138,22 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
-    def set_player_images(self, north_image, east_image, west_image, south_image):
-        self.player_image_north = pg.transform.scale(north_image, self.player_img_size)
-        self.player_image_east = pg.transform.scale(east_image, self.player_img_size)
-        self.player_image_west = pg.transform.scale(west_image, self.player_img_size)
-        self.player_image_south = pg.transform.scale(south_image, self.player_img_size)
-        self.player_image_current = pg.transform.scale(south_image, self.player_img_size)
+    def get_player_img_size(self):
+        return self.player_img_size
 
+    def set_player_images(self, north_image, east_image, west_image, south_image):
+        self.player_image_north = north_image
+        self.player_image_east = east_image
+        self.player_image_west = west_image
+        self.player_image_south = south_image
+        self.player_image_current = south_image
+
+    # def set_player_images(self, north_image, east_image, west_image, south_image):
+    #     self.player_image_north = pg.transform.scale(north_image, self.player_img_size)
+    #     self.player_image_east = pg.transform.scale(east_image, self.player_img_size)
+    #     self.player_image_west = pg.transform.scale(west_image, self.player_img_size)
+    #     self.player_image_south = pg.transform.scale(south_image, self.player_img_size)
+    #     self.player_image_current = pg.transform.scale(south_image, self.player_img_size)
     def place_items(self, item):
         item.set_item_position(self.coords_generator.get_random_coords())
         item_x, item_y = item.get_item_position()
@@ -642,6 +651,25 @@ class DungeonAdventure():
                     item.set_health_potion_sprite(pg.image.load(a.health_potion))
                 elif item.get_item_name() == "Fire Trap":
                     item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
+            if isinstance(self.__player_character, Knight):
+                self.set_player_images(pg.image.load(a.north_knight),
+                                            pg.image.load(a.east_knight),
+                                            pg.image.load(a.west_knight),
+                                            pg.image.load(a.south_knight),
+                                            )
+            elif isinstance(self.__player_character, Priestess):
+                self.set_player_images(pg.image.load(a.north_priestess),
+                                            pg.image.load(a.east_priestess),
+                                            pg.image.load(a.west_priestess),
+                                            pg.image.load(a.south_priestess),
+                                            )
+            elif isinstance(self.__player_character, Rogue):
+                self.set_player_images(pg.image.load(a.north_rogue),
+                                            pg.image.load(a.east_rogue),
+                                            pg.image.load(a.west_rogue),
+                                            pg.image.load(a.south_rogue),
+                                            )
+
 
 
 

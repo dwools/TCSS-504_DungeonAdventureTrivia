@@ -297,32 +297,34 @@ class CharacterSelectMenu(Menu):
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
             if self.state == 'Knight':
                 self.game.set_player_character(HeroFactory().create_knight())
-                self.game.set_player_images(pg.image.load(a.north_knight),
-                                            pg.image.load(a.east_knight),
-                                            pg.image.load(a.west_knight),
-                                            pg.image.load(a.south_knight),
-                                            pg.image.load(a.south_knight)
+                self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_knight), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.east_knight), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.west_knight), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.south_knight), self.game.get_player_img_size())
                                             )
                 self.game.playing = True
 
             elif self.state == 'Priestess':
                 self.game.set_player_character(HeroFactory().create_priestess())
-                self.game.set_player_images(pg.image.load(a.north_priestess),
-                                            pg.image.load(a.east_priestess),
-                                            pg.image.load(a.west_priestess),
-                                            pg.image.load(a.south_priestess),
-                                            pg.image.load(a.south_priestess)
+                self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_priestess), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.east_priestess), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.west_priestess), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.south_priestess), self.game.get_player_img_size())
                                             )
                 self.game.playing = True
 
             elif self.state == 'Rogue':
                 self.game.set_player_character(HeroFactory().create_rogue())
-                self.game.set_player_images(pg.image.load(a.north_rogue),
-                                            pg.image.load(a.east_rogue),
-                                            pg.image.load(a.west_rogue),
-                                            pg.image.load(a.south_rogue),
-                                            pg.image.load(a.south_rogue)
-                                            )                
+                self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_rogue), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.east_rogue), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.west_rogue), self.game.get_player_img_size()),
+                                            pg.transform.scale(pg.image.load(a.south_rogue), self.game.get_player_img_size())
+                                            )          
+                # self.game.set_player_images(pg.image.load(a.north_rogue),
+                #                             pg.image.load(a.east_rogue),
+                #                             pg.image.load(a.west_rogue),
+                #                             pg.image.load(a.south_rogue),
+                #                             )                
                 self.game.playing = True
 
             self.run_display = False

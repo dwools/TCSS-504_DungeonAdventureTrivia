@@ -32,6 +32,7 @@ class SaveGame:
             pillar.set_encapsulation_sprite(None)
             pillar.set_inheritance_sprite(None)
             pillar.set_polymorphism_sprite(None)
+        attributes['player_images'] = game_data.set_player_images(None, None, None, None)
         attributes['player_position'] = game_data.player_position
         attributes['player_rect'] = game_data.player_rect
         attributes['player_character'] = game_data.get_player_character()
