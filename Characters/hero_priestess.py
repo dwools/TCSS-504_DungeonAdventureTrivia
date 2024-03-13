@@ -12,7 +12,11 @@ class Priestess(Hero):
                  chance_to_hit,
                  minimum_damage,
                  maximum_damage,
-                 chance_to_block):
+                 chance_to_block,
+                 chance_to_heal,
+                 minimum_heal_points,
+                 maximum_heal_points
+                 ):
 
         super().__init__(name,
                          type,
@@ -22,9 +26,9 @@ class Priestess(Hero):
                          minimum_damage,
                          maximum_damage,
                          chance_to_block)
-        self.__chance_to_heal = 70
-        self.__minimum_heal_points = 30
-        self.__maximum_heal_points = 60
+        self.__chance_to_heal = chance_to_heal
+        self.__minimum_heal_points = minimum_heal_points
+        self.__maximum_heal_points = maximum_heal_points
 
     def get_chance_to_heal(self):
         return self.__chance_to_heal

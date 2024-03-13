@@ -23,7 +23,7 @@ class HeroFactory:
         monster_name = cursor.fetchone()
         return monster_name
 
-    def create_priestess(self, chance_to_heal=0.7, minimum_heal_points=30, maximum_heal_points=60):
+    def create_priestess(self, chance_to_heal=70, minimum_heal_points=30, maximum_heal_points=60):
         name = self.read_name_database()
         (name,) = name
         priestess_stats = self.read_hero_database("Priestess")
@@ -36,9 +36,9 @@ class HeroFactory:
          chance_to_block
          ) = priestess_stats
 
-        return Priestess(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
+        return Priestess(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_to_heal, minimum_heal_points, maximum_heal_points)
 
-    def create_knight(self, chance_for_crushing_blow=0.4, minimum_crushing_damage=75, maximum_crushing_damage=175):
+    def create_knight(self, chance_for_crushing_blow=40, minimum_crushing_damage=75, maximum_crushing_damage=175):
         name = self.read_name_database()
         (name,) = name
         knight_stats = self.read_hero_database("Knight")
@@ -51,9 +51,9 @@ class HeroFactory:
          chance_to_block
          ) = knight_stats
 
-        return Knight(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
+        return Knight(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_for_crushing_blow, minimum_crushing_damage, maximum_crushing_damage)
 
-    def create_rogue(self, chance_for_second_attack=0.4):
+    def create_rogue(self, chance_for_second_attack=40, chance_caught = 40):
         name = self.read_name_database()
         (name,) = name
         rogue_stats = self.read_hero_database("Rogue")
@@ -64,7 +64,7 @@ class HeroFactory:
          minimum_damage,
          maximum_damage,
          chance_to_block) = rogue_stats
-        return Rogue(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
+        return Rogue(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block, chance_for_second_attack, chance_caught)
 
 
 if __name__ == '__main__':

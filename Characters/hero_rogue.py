@@ -12,7 +12,10 @@ class Rogue(Hero):
                  chance_to_hit,
                  minimum_damage,
                  maximum_damage,
-                 chance_to_block):
+                 chance_to_block,
+                 chance_for_second_attack,
+                 chance_caught
+                 ):
 
         super().__init__(name,
                          type,
@@ -23,9 +26,8 @@ class Rogue(Hero):
                          maximum_damage,
                          chance_to_block)
 
-        self.__chance_for_second_attack = 40
-        self.__chance_caught = 20
-        # self.
+        self.__chance_for_second_attack = chance_for_second_attack
+        self.__chance_caught = chance_caught
 
     def get_chance_for_second_attack(self):
         return self.__chance_for_second_attack
