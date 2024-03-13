@@ -42,7 +42,7 @@ upper_wall = 'Assets/Environment/Dungeon Prison/Assets/upper_wall.png'
 floor = 'Assets/Environment/Dungeon Prison/Assets/floor1.png'
 
 # BG Images
-main_menu_bg = 'Assets/backgrounds/mainMenu.JPEG'
+victory_bg = 'Assets/Environment/fireworks.png'
 
 # Items
 health_potion = 'Assets/ItemsAssets/HealthPotion.png'

@@ -48,7 +48,7 @@ class DungeonAdventure():
         self.pause_menu = PauseMenu(self)
         self.game_over = GameOver(self)
         self.victory_screen = VictoryScreen(self)
-        self.current_menu = self.main_menu  # Default menu is the main menu
+        self.current_menu = self.victory_screen  # Default menu is the main menu
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
@@ -102,7 +102,7 @@ class DungeonAdventure():
         # self.monster_rects = []
 
         # Place/spawn monsters
-        for _ in range(10):
+        for _ in range(1):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

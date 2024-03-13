@@ -822,7 +822,7 @@ class VictoryScreen(Menu):
         self.main_menu_x, self.main_menu_y = self.middle_width, self.middle_height
         self.exit_game_x, self.exit_game_y = self.middle_width, self.middle_height + 100
 
-        self.cursor_rect.midtop = (self.main_menu_x + self.cursor_offset, self.main_menu_y)
+        self.cursor_rect.midtop = (self.main_menu_x - 200, self.main_menu_y)
 
     def display_menu(self):
         self.run_display = True
@@ -835,18 +835,21 @@ class VictoryScreen(Menu):
             self.game.display.fill(c.PURPLE)
             self.draw_cursor()
 
-            self.game.draw_text(c.dungeon_font, "V", 40, self.victory_x, self.victory_y, 'red')
-            self.game.draw_text(c.dungeon_font, "I", 40, self.victory_x + 5, self.victory_y, 'orange')
-            self.game.draw_text(c.dungeon_font, "C", 40, self.victory_x + 10, self.victory_y, 'yellow')
-            self.game.draw_text(c.dungeon_font, "T", 40, self.victory_x + 15, self.victory_y, 'green')
-            self.game.draw_text(c.dungeon_font, "O", 40, self.victory_x + 20, self.victory_y, 'blue')
-            self.game.draw_text(c.dungeon_font, "R", 40, self.victory_x + 25, self.victory_y, 'indigo')
-            self.game.draw_text(c.dungeon_font, "Y", 40, self.victory_x + 30, self.victory_y, 'violet')
+            bg_image = pg.transform.scale(pg.image.load(a.victory_bg), (700, 500))
+            self.game.display.blit(bg_image, (0, 0))
+
+            self.game.draw_text(c.dungeon_font, "V", 40, self.victory_x - 225, self.victory_y, 'red')
+            self.game.draw_text(c.dungeon_font, "I", 40, self.victory_x - 150, self.victory_y, 'orange')
+            self.game.draw_text(c.dungeon_font, "C", 40, self.victory_x - 75, self.victory_y, 'yellow')
+            self.game.draw_text(c.dungeon_font, "T", 40, self.victory_x, self.victory_y, 'green')
+            self.game.draw_text(c.dungeon_font, "O", 40, self.victory_x + 75, self.victory_y, 'blue')
+            self.game.draw_text(c.dungeon_font, "R", 40, self.victory_x + 150, self.victory_y, 'purple')
+            self.game.draw_text(c.dungeon_font, "Y", 40, self.victory_x + 225, self.victory_y, 'violet')
 
             self.game.draw_text(c.dungeon_font, "Main Menu", 20, self.main_menu_x, self.main_menu_y,
-                                self.game.font_color)
+                                'green')
             self.game.draw_text(c.dungeon_font, "Exit Game", 20, self.exit_game_x, self.exit_game_y,
-                                self.game.font_color)
+                                'red')
 
             self.blit_screen()
 
@@ -856,20 +859,20 @@ class VictoryScreen(Menu):
 
         if self.game.moving_south:
             if self.state == 'Main Menu':
-                self.cursor_rect.midtop = (self.exit_game_x + self.cursor_offset, self.exit_game_y)
+                self.cursor_rect.midtop = (self.exit_game_x - 200, self.exit_game_y)
                 self.state = 'Exit Game'
 
             elif self.state == 'Exit Game':
-                self.cursor_rect.midtop = (self.main_menu_x + self.cursor_offset, self.main_menu_y)
+                self.cursor_rect.midtop = (self.main_menu_x - 200, self.main_menu_y)
                 self.state = 'Main Menu'
 
         elif self.game.moving_north:
             if self.state == 'Main Menu':
-                self.cursor_rect.midtop = (self.exit_game_x + self.cursor_offset, self.exit_game_y)
+                self.cursor_rect.midtop = (self.exit_game_x - 200, self.exit_game_y)
                 self.state = 'Exit Game'
 
             elif self.state == 'Exit Game':
-                self.cursor_rect.midtop = (self.main_menu_x + self.cursor_offset, self.main_menu_y)
+                self.cursor_rect.midtop = (self.main_menu_x - 200, self.main_menu_y)
                 self.state = 'Main Menu'
 
     def check_input(self):
