@@ -23,7 +23,7 @@ class Combat:
 
         # Setting UI Locations
         self.__attack_x, self.__attack_y = self.__middle_width + 175, self.__middle_height + 300
-        self.__drink_health_potion_x, self.__drink_health_potion_y = self.__middle_width + 225, self.__middle_height + 400
+        self.__drink_health_potion_x, self.__drink_health_potion_y = self.__middle_width + 290, self.__middle_height + 400
 
         self.__monster_name_x, self.__monster_name_y = self.__middle_width + 300, self.__middle_height - 400
         self.__monster_pos_x, self.__monster_pos_y = self.__middle_width + 300, self.__middle_height - 400
@@ -313,7 +313,7 @@ class Combat:
 
         if self.__game.moving_south:
             if self.__state == 'Attack':
-                self.__cursor_rect.midtop = (self.__drink_health_potion_x - 125, self.__drink_health_potion_y)
+                self.__cursor_rect.midtop = (self.__drink_health_potion_x - 190, self.__drink_health_potion_y)
                 self.__state = 'Health Potion'
 
             elif self.__state == 'Health Potion':
@@ -322,7 +322,7 @@ class Combat:
 
         elif self.__game.moving_north:
             if self.__state == 'Attack':
-                self.__cursor_rect.midtop = (self.__drink_health_potion_x - 125, self.__drink_health_potion_y)
+                self.__cursor_rect.midtop = (self.__drink_health_potion_x - 190, self.__drink_health_potion_y)
                 self.__state = 'Health Potion'
 
             elif self.__state == 'Health Potion':

@@ -47,6 +47,7 @@ class DungeonAdventure():
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
         self.game_over = GameOver(self)
+        self.victory_screen = VictoryScreen(self)
         self.current_menu = self.main_menu  # Default menu is the main menu
 
         # Window Setup
@@ -522,7 +523,7 @@ class DungeonAdventure():
 
             # Winning condition
             if len(self.__player_character.get_player_pillars()) == 4:
-                self.current_menu = self.game_over
+                self.current_menu = self.victory_screen
                 self.paused = True
 
             # Setup Lives
