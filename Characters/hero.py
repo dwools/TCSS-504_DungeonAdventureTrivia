@@ -26,6 +26,7 @@ class Hero(DungeonCharacter):
         self.__player_health_potions = []
         self.__death = False
 
+
     def get_chance_to_block(self):
         return self.__chance_to_block
 

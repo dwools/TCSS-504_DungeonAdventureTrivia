@@ -26,6 +26,10 @@ west_gremlin = 'Assets/char_sprites/west_gremlin.png'
 east_gremlin = 'Assets/char_sprites/east_gremlin.png'
 
 # Ogre
+south_ogre = 'Assets/char_sprites/south_ogre.png'
+north_ogre = 'Assets/char_sprites/north_ogre.png'
+west_ogre = 'Assets/char_sprites/west_ogre.png'
+east_ogre = 'Assets/char_sprites/east_ogre.png'
 
 # Skeleton
 south_skelly = 'Assets/char_sprites/south_skelly.png'

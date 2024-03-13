@@ -25,6 +25,7 @@ class Rogue(Hero):
 
         self.__chance_for_second_attack = 40
         self.__chance_caught = 20
+        # self.
 
     def get_chance_for_second_attack(self):
         return self.__chance_for_second_attack

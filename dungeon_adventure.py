@@ -59,7 +59,7 @@ class DungeonAdventure():
         # Load up base images
         self.__gremlin_image = pg.image.load(a.south_gremlin)
         self.__skelly_image = pg.image.load(a.south_skelly)
-        self.__ogre_image = pg.image.load(a.south_rogue)  # to be replaced with Ogre sprite
+        self.__ogre_image = pg.image.load(a.south_ogre)  # to be replaced with Ogre sprite
         self.__health_potion_image = pg.image.load(a.health_potion)
         self.__fire_trap_image = pg.image.load(a.fire_trap)
         self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
@@ -617,11 +617,11 @@ class DungeonAdventure():
                     monster.set_current_sprite(pg.image.load(a.south_skelly))
 
                 elif monster.get_type() == "Ogre":
-                    monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
-                    monster.set_north_monster_sprite(pg.image.load(a.north_rogue))
-                    monster.set_east_monster_sprite(pg.image.load(a.east_rogue))
-                    monster.set_west_monster_sprite(pg.image.load(a.west_rogue))
-                    monster.set_current_sprite(pg.image.load(a.south_rogue))
+                    monster.set_south_monster_sprite(pg.image.load(a.south_ogre))
+                    monster.set_north_monster_sprite(pg.image.load(a.north_ogre))
+                    monster.set_east_monster_sprite(pg.image.load(a.east_ogre))
+                    monster.set_west_monster_sprite(pg.image.load(a.west_ogre))
+                    monster.set_current_sprite(pg.image.load(a.south_ogre))
             for pillar in self.__pillars:
                 if pillar.get_pillar_name() == "Abstraction":
                     pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))
@@ -699,33 +699,6 @@ class DungeonAdventure():
         monster_x, monster_y = monster.get_position()
         monster.set_character_rect(monster_x, monster_y)
         self.__monsters.append(monster)
-        # if monster.get_type() == "Gremlin":
-        #     # if isinstance(monster, Gremlin):
-        #     monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
-        #     monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
-        #     monster.set_east_monster_sprite(pg.image.load(a.east_gremlin))
-        #     monster.set_west_monster_sprite(pg.image.load(a.west_gremlin))
-        #
-        #     monster.set_monster_sprite(monster.get_south_monster_sprite())
-        #
-        #     if monster.get_type() == "Skeleton":
-        #         # if isinstance(monster, Skeleton):
-        #         monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
-        #         monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
-        #         monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
-        #         monster.set_west_monster_sprite(pg.image.load(a.west_skelly))
-        #
-        #         monster.set_monster_sprite(monster.get_south_monster_sprite())
-        #
-        #     if monster.get_type() == "Ogre":
-        #         # if isinstance(monster, Ogre):
-        #         monster.set_south_monster_sprite(pg.image.load(a.south_rogue))
-        #         monster.set_north_monster_sprite(pg.image.load(a.north_rogue))
-        #         monster.set_east_monster_sprite(pg.image.load(a.east_rogue))
-        #         monster.set_west_monster_sprite(pg.image.load(a.west_rogue))
-        #
-        #         monster.set_monster_sprite(monster.get_south_monster_sprite())
-
 
     def get_items_list(self):
         return self.__items

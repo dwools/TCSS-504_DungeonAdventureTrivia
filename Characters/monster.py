@@ -49,11 +49,11 @@ class Monster(DungeonCharacter):
             self.__current_sprite = pg.image.load(a.south_skelly)
         
         if self.get_type() == "Ogre":
-            self.__south_monster_sprite = pg.image.load(a.south_rogue)
-            self.__north_monster_sprite = pg.image.load(a.north_rogue)
-            self.__east_monster_sprite = pg.image.load(a.east_rogue)
-            self.__west_monster_sprite = pg.image.load(a.west_rogue)
-            self.__current_sprite = pg.image.load(a.south_rogue)
+            self.__south_monster_sprite = pg.image.load(a.south_ogre)
+            self.__north_monster_sprite = pg.image.load(a.north_ogre)
+            self.__east_monster_sprite = pg.image.load(a.east_ogre)
+            self.__west_monster_sprite = pg.image.load(a.west_ogre)
+            self.__current_sprite = pg.image.load(a.south_ogre)
             
 
     def monster_heal(self):  # Heal Monster
@@ -61,9 +61,7 @@ class Monster(DungeonCharacter):
             if random.randint(1, 100) <= self.__chance_to_heal:
                 self.set_current_hit_points(self.get_current_hit_points() + random.randint(self.get_minimum_heal_points(), self.get_maximum_heal_points()))
                 if self.get_current_hit_points() >= self.get_max_hit_points():
-                    self.set_current_hit_points(self.__max_hit_points)
-
-
+                    self.set_current_hit_points(self.get_max_hit_points())
 
     def update(self):
         position = self.get_position()

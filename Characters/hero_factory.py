@@ -66,35 +66,6 @@ class HeroFactory:
          chance_to_block) = rogue_stats
         return Rogue(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_block)
 
-    # def choose_monster(self):
-    #     monster_choice = random.randint(1, 3)
-    #     if monster_choice == 1:
-    #         choice = self.create_priestess()
-    #         return choice
-    #     if monster_choice == 2:
-    #         choice = self.create_knight()
-    #         return choice
-    #     if monster_choice == 3:
-    #         choice = self.create_rogue()
-    #         return choice
-
-    # def create_monster(self):
-    #     name = self.read_name_database()
-    #     (name,) = name
-    #     monster_stats = self.choose_monster()
-    #     (type,
-    #      hit_points,
-    #      attack_speed,
-    #      chance_to_hit,
-    #      minimum_damage,
-    #      maximum_damage,
-    #      chance_to_heal,
-    #      minimum_heal_points,
-    #      maximum_heal_points) = monster_stats
-    #
-    #     return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
-    #                    minimum_heal_points, maximum_heal_points)
-
 
 if __name__ == '__main__':
     h = HeroFactory()
