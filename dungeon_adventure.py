@@ -90,16 +90,18 @@ class DungeonAdventure():
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
-        self.player_image = pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
-        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image.get_width(),
-                                   self.player_image.get_height())  # start at 16, add 48 x or y for good position
-        self.camera_scroll = [0, 0]
-        # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        self.m_factory = monster_factory.MonsterFactory()
+        self.player_image_current = pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
+        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
+                                   self.player_image_current.get_height())  # start at 16, add 48 x or y for good position
 
+        self.player_image_north = None
+        self.player_image_south = None
+        self.player_image_east = None
+        self.player_image_west = None
+
+
+        # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        # self.__monster = None
-        # self.monster_rects = []
 
         # Place/spawn monsters
         for _ in range(10):
@@ -136,8 +138,12 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
-
-
+    def set_player_images(self, north_image, east_image, west_image, south_image):
+        self.player_image_north = pg.transform.scale(north_image, self.player_img_size)
+        self.player_image_east = pg.transform.scale(east_image, self.player_img_size)
+        self.player_image_west = pg.transform.scale(west_image, self.player_img_size)
+        self.player_image_south = pg.transform.scale(south_image, self.player_img_size)
+        self.player_image_current = pg.transform.scale(south_image, self.player_img_size)
 
     def place_items(self, item):
         item.set_item_position(self.coords_generator.get_random_coords())
@@ -380,24 +386,24 @@ class DungeonAdventure():
             self.player_movement = [0, 0]
             if self.moving_east:
                 self.player_movement[0] += 2
-                self.player_image = pg.transform.scale(pg.image.load(a.east_priestess), self.player_img_size)
+                self.player_image_current = self.player_image_east  # pg.transform.scale(pg.image.load(a.east_priestess), self.player_img_size)
 
             if self.moving_west:
                 self.player_movement[0] -= 2
-                self.player_image = pg.transform.scale(pg.image.load(a.west_priestess), self.player_img_size)
+                self.player_image_current = self.player_image_west  # pg.transform.scale(pg.image.load(a.west_priestess), self.player_img_size)
 
             if self.moving_north:
                 self.player_movement[1] -= 2
-                self.player_image = pg.transform.scale(pg.image.load(a.north_priestess), self.player_img_size)
+                self.player_image_current = self.player_image_north  # pg.transform.scale(pg.image.load(a.north_priestess), self.player_img_size)
 
             if self.moving_south:
                 self.player_movement[1] += 2
-                self.player_image = pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
+                self.player_image_current = self.player_image_south  # pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
 
             # adjust player position based on collision with n tiles
 
             self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
-            self.display.blit(self.player_image,
+            self.display.blit(self.player_image_current,
                               (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
 
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -693,7 +699,7 @@ class DungeonAdventure():
         self.__loaded_game = value
 
     def place_monsters(self):
-        monster = self.m_factory.choose_monster()
+        monster = MonsterFactory().choose_monster()
         monster.set_position(
             self.coords_generator.get_random_coords())  # Set monster initial position to random coords
         monster_x, monster_y = monster.get_position()

@@ -21,11 +21,9 @@ class DungeonCharacter(ABC):
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
 
     def get_name(self):
-        # print(self.__name)
         return self.__name
 
     def get_type(self):
-        # print(self.__type)
         return self.__type
 
     def get_current_hit_points(self):
