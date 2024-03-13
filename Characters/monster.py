@@ -70,7 +70,7 @@ class Monster(DungeonCharacter):
         position += self.__direction
         self.set_position(position)
         rect_x, rect_y = position
-        rectangle.center = rect_y+8, rect_x+8
+        rectangle.topleft = rect_y, rect_x
 
         self.check_collisions()
 
