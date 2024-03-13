@@ -302,6 +302,7 @@ class CharacterSelectMenu(Menu):
                                             pg.transform.scale(pg.image.load(a.west_knight), self.game.get_player_img_size()),
                                             pg.transform.scale(pg.image.load(a.south_knight), self.game.get_player_img_size())
                                             )
+                self.game.set_player_rect()
                 self.game.playing = True
 
             elif self.state == 'Priestess':
@@ -311,6 +312,7 @@ class CharacterSelectMenu(Menu):
                                             pg.transform.scale(pg.image.load(a.west_priestess), self.game.get_player_img_size()),
                                             pg.transform.scale(pg.image.load(a.south_priestess), self.game.get_player_img_size())
                                             )
+                self.game.set_player_rect()
                 self.game.playing = True
 
             elif self.state == 'Rogue':
@@ -319,12 +321,8 @@ class CharacterSelectMenu(Menu):
                                             pg.transform.scale(pg.image.load(a.east_rogue), self.game.get_player_img_size()),
                                             pg.transform.scale(pg.image.load(a.west_rogue), self.game.get_player_img_size()),
                                             pg.transform.scale(pg.image.load(a.south_rogue), self.game.get_player_img_size())
-                                            )          
-                # self.game.set_player_images(pg.image.load(a.north_rogue),
-                #                             pg.image.load(a.east_rogue),
-                #                             pg.image.load(a.west_rogue),
-                #                             pg.image.load(a.south_rogue),
-                #                             )                
+                                            )
+                self.game.set_player_rect()
                 self.game.playing = True
 
             self.run_display = False
