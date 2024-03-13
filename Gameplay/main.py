@@ -9,7 +9,7 @@ def main():
     adventure = DungeonAdventure()
 
     while adventure.running:
-        # initialize_databases.main()
+        initialize_databases.main()
         adventure.current_menu.display_menu()
         adventure.game_loop()
 
