@@ -7,7 +7,6 @@ import pygame.display
 from Gameplay import config as c
 from Assets import assets as a
 from Pillars_and_Trivia.pillar import Pillar
-# from pillar import Pillar
 from Pillars_and_Trivia.trivia_factory import TriviaFactory
 from Gameplay.save_game import SaveGame
 

@@ -101,12 +101,12 @@ class MonsterFactory:
     def main(self):
         pass
 
-
-if __name__ == '__main__':
-    u = MonsterFactory()
-    creature1 = u.choose_monster()
-    creature1.get_name()
-    creature1.get_type()
-    creature2 = u.choose_monster()
-    creature2.get_name()
-    creature2.get_type()
+#
+# if __name__ == '__main__':
+#     u = MonsterFactory()
+#     creature1 = u.choose_monster()
+#     creature1.get_name()
+#     creature1.get_type()
+#     creature2 = u.choose_monster()
+#     creature2.get_name()
+#     creature2.get_type()

@@ -40,7 +40,7 @@ class SaveGame:
         attributes['items'] = game_data.get_items_list()
 
 
-        with open('dungeon.txt', 'r') as file:
+        with open('../dungeon.txt', 'r') as file:
             text_content = file.read()
         with open('dungeon_adventure.pickle', 'wb') as saved_file:
             pickle.dump([attributes, text_content], saved_file)

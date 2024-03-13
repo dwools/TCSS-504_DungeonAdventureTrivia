@@ -13,7 +13,7 @@ from Characters import monster_factory
 
 from Databases import initialize_databases
 from Gameplay.object_coordinates_generator import ValidCoordsGenerator
-from Gameplay.menu import *
+from menu import *
 from Gameplay.combat import *
 from Gameplay.pathfinder import Pathfinder
 
