@@ -2,7 +2,7 @@ import random
 
 from Characters.dungeon_character import DungeonCharacter
 
-
+from Assets import assets as a
 import pygame as pg
 
 
@@ -33,12 +33,28 @@ class Monster(DungeonCharacter):
         self.__path = []
         self.__collision_rects = []
         self.__player_scroll = [0, 0]
-
-        self.__south_monster_sprite = None
-        self.__north_monster_sprite = None
-        self.__east_monster_sprite = None
-        self.__west_monster_sprite = None
-        self.__current_sprite = self.__south_monster_sprite
+        
+        if self.get_type() == "Gremlin":
+            self.__south_monster_sprite = pg.image.load(a.south_gremlin)
+            self.__north_monster_sprite = pg.image.load(a.north_gremlin)
+            self.__east_monster_sprite = pg.image.load(a.east_gremlin)
+            self.__west_monster_sprite = pg.image.load(a.west_gremlin)
+            self.__current_sprite = pg.image.load(a.south_gremlin)
+        
+        if self.get_type() == "Skeleton":
+            self.__south_monster_sprite = pg.image.load(a.south_skelly)
+            self.__north_monster_sprite = pg.image.load(a.north_skelly)
+            self.__east_monster_sprite = pg.image.load(a.east_skelly)
+            self.__west_monster_sprite = pg.image.load(a.west_skelly)
+            self.__current_sprite = pg.image.load(a.south_skelly)
+        
+        if self.get_type() == "Ogre":
+            self.__south_monster_sprite = pg.image.load(a.south_rogue)
+            self.__north_monster_sprite = pg.image.load(a.north_rogue)
+            self.__east_monster_sprite = pg.image.load(a.east_rogue)
+            self.__west_monster_sprite = pg.image.load(a.west_rogue)
+            self.__current_sprite = pg.image.load(a.south_rogue)
+            
 
     def monster_heal(self):  # Heal Monster
         if self.get_current_hit_points() <= self.get_max_hit_points() // 3: #(self.get_monster_health_max() // 3): # change this to chance to heal
@@ -160,10 +176,10 @@ class Monster(DungeonCharacter):
 
     # Sprite Getters / Setters
 
-    def set_monster_sprite(self, sprite):
-        self.__current_sprite = sprite
+    def set_current_sprite(self, sprite_path):
+        self.__current_sprite = sprite_path
 
-    def get_monster_sprite(self):
+    def get_current_sprite(self):
         return self.__current_sprite
 
     def get_south_monster_sprite(self):

@@ -314,36 +314,50 @@ class HowToPlayMenu(Menu):
 
     def __init__(self, game):
         Menu.__init__(self, game)
-        self.state = "First Slide"
         self.how_to_play_x, self.how_to_play_y = self.middle_width, self.middle_height - 200
+        self.text_x, self.text_y = self.middle_width, self.middle_height
 
     def display_menu(self):
         self.run_display = True
         clock = pg.time.Clock()
+
         while self.run_display:
             self.game.check_events()
             self.check_input()
+            self.text_y = self.middle_height - 150
 
             self.game.display.fill(c.PURPLE)
             self.game.draw_text(c.dungeon_font, 'How To Play', 20, self.middle_width, self.middle_height - 250,
                                 'forestgreen')
+
+            text = 'Use WASD or Arrow keys to move your character and navigate menus. \nPress H to use a health potion. \nPick up all four pillars to win the game. Avoid monsters and fire.'
+            wrapped_text = textwrap.wrap(text, 35)
+
+            for line in wrapped_text:
+                self.draw_wrapped_text(line, 20, self.text_x, self.text_y, c.WHITE)
+                self.text_y += 50
+
             self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
                                 self.middle_height + 250,
-                                self.game.font_color)
+                                'yellow')
 
-            self.draw_cursor()
             self.blit_screen()
             clock.tick(12)
+
+    def draw_wrapped_text(self, text, size, x, y, font_color):
+        """ Simple helper-function used to write text to the GUI. """
+        # pg.font.init()
+        font = pg.font.Font(c.system_font, size)
+        text_surface = font.render(text, True, font_color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x / 2, y / 2)
+        self.game.display.blit(text_surface, text_rect)
 
     def check_input(self):
 
         if self.game.escaping:
             self.game.current_menu = self.game.main_menu
             self.run_display = False
-
-        elif self.game.moving_east:
-            if self.state == 'First Slide':  # thinking seperate screens for each set of directions? Navigate with east/west keys
-                pass
 
 
 # class LoadSaveGamesMenu(Menu):  # WIP

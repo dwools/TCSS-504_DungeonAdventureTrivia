@@ -11,7 +11,7 @@ class SaveGame:
     def pickle(game_data):
         attributes = {}
         for monster in game_data.get_monsters_list():
-            monster.set_monster_sprite(None)
+            monster.set_current_sprite(None)
             monster.set_east_monster_sprite(None)
             monster.set_west_monster_sprite(None)
             monster.set_north_monster_sprite(None)
@@ -40,7 +40,7 @@ class SaveGame:
         attributes['items'] = game_data.get_items_list()
 
 
-        with open('../dungeon.txt', 'r') as file:
+        with open('dungeon.txt', 'r') as file:
             text_content = file.read()
         with open('dungeon_adventure.pickle', 'wb') as saved_file:
             pickle.dump([attributes, text_content], saved_file)

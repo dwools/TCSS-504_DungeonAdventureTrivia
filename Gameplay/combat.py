@@ -1,5 +1,4 @@
 import textwrap
-import time
 
 from Assets import assets as a
 from Characters.hero import Hero
@@ -78,47 +77,49 @@ class Combat:
                 # (self.__attack_order.extend(["Hero's Turn"]), self.__attack_order.extend(["Monster's Turn"])))
 
     def simple_attack_sequence(self):
-        if self.__monster in self.__game.get_monsters_list():
-            for character in self.__attack_order:
-                if character == self.__hero:
-                    character.simple_attack(self.__monster)
-                    self.check_monster_hit_points()
-                elif character == self.__monster:
-                    character.simple_attack(self.__hero)
-                    self.check_hero_hit_points()
-                    character.monster_heal()
-        else:
-            pass
+        # if self.__monster in self.__game.get_monsters_list():
+        for character in self.__attack_order:
+            if character == self.__hero:
+                character.simple_attack(self.__monster)
+                self.check_monster_hit_points()
+            elif character == self.__monster:
+                character.simple_attack(self.__hero)
+                self.check_hero_hit_points()
+                character.monster_heal()
+        # else:
+        #     pass
 
     def special_attack_sequence(self):
-        if self.__monster in self.__game.get_monsters_list():
-            for character in self.__attack_order:
-                if character == self.__hero:
-                    if isinstance(character, Knight):
-                        character.special(self.__monster)
-                        self.check_monster_hit_points()
-                    elif isinstance(character, Priestess):
-                        character.special()
-                    elif isinstance(character, Rogue):
-                        character.special(self.__monster)
-                        self.check_monster_hit_points()
-                elif character == self.__monster:
-                    character.simple_attack(self.__hero)
-                    self.check_hero_hit_points()
-                    character.monster_heal()
-        else:
-            pass
+        # if self.__monster in self.__game.get_monsters_list():
+        for character in self.__attack_order:
+            if character == self.__hero:
+                if isinstance(character, Knight):
+                    character.special(self.__monster)
+                    self.check_monster_hit_points()
+                elif isinstance(character, Priestess):
+                    character.special()
+                elif isinstance(character, Rogue):
+                    character.special(self.__monster)
+                    self.check_monster_hit_points()
+            elif character == self.__monster:
+                character.simple_attack(self.__hero)
+                self.check_hero_hit_points()
+                character.monster_heal()
+        # else:
+        #     pass
 
     def check_monster_hit_points(self):
         if self.__monster.get_current_hit_points() <= 0:
             self.__game.get_monsters_list().remove(self.__monster)
+            self.__game.paused = False
+            self.run_display = False
         # self.__run_display = False
         # self.__game.paused = False
         # self.__game.playing = True
 
     def check_hero_hit_points(self):
         if self.__hero.get_current_hit_points() <= 0:
-            # self.__game.
+            self.__game.paused = True
             self.__game.current_menu = self.__game.game_over
 
     def get_monster_health(self):
@@ -356,12 +357,14 @@ class AttackMenu(Combat):
         self.__middle_width, self.__middle_height = c.WIN_WIDTH / 2, c.WIN_HEIGHT / 2
 
         # Monster init
+        self.__monster = self.__game.get_monster()
         self.__monster_name = self.get_monster_name()
         self.__monster_health_curr = self.get_monster_health_curr()
         self.__monster_health_max = self.get_monster_health_max()
         self.__monster_name_x, self.__monster_name_y = self.get_monster_name_x(), self.get_monster_name_y()
 
         # Hero init
+        self.__hero = self.__game.get_player_character()
         self.__hero_name = self.get_hero_name()
         self.__hero_name_x, self.__hero_name_y = self.get_hero_name_x(), self.get_hero_name_y()
         self.__hero_health = self.get_hero_health()
@@ -392,7 +395,7 @@ class AttackMenu(Combat):
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
                                   self.__monster_name_y,
                                   'darkred')
-            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster_health_curr}', 15, self.__monster_name_x,
+            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster.get_current_hit_points()}', 15, self.__monster_name_x,
                                   self.__monster_name_y + 50,
                                   'white')
             pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(375, 90, 210, 50))
@@ -403,7 +406,7 @@ class AttackMenu(Combat):
             # Hero
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
                                   'darkgreen')
-            self.__game.draw_text(c.dungeon_font, f'HP {self.__hero_health}', 15, self.__hero_name_x,
+            self.__game.draw_text(c.dungeon_font, f'HP {self.__hero.get_current_hit_points()}', 15, self.__hero_name_x,
                                   self.__hero_name_y + 50, 'white')
 
             pg.draw.ellipse(self.__game.display, 'darkslategray', pg.Rect(70, 275, 210, 50))

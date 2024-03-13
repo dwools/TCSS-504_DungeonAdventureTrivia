@@ -1,14 +1,15 @@
 import pygame as pg
+from Assets import assets as a
 class Pillar():
     def __init__(self, pillar_name):
         self.__pillar_name = pillar_name
         self.__pillar_position = [0, 0]
         self.__pillar_position_x, self.__pillar_position_y = self.__pillar_position
         self.__rect = pg.Rect(self.__pillar_position_x, self.__pillar_position_y, 16, 16)
-        self.__abstraction_pillar_sprite = None
-        self.__encapsulation_pillar_sprite = None
-        self.__inheritance_pillar_sprite = None
-        self.__polymorphism_pillar_sprite = None
+        self.__abstraction_pillar_sprite = pg.image.load(a.abstraction_pillar)
+        self.__encapsulation_pillar_sprite = pg.image.load(a.encapsulation_pillar)
+        self.__inheritance_pillar_sprite = pg.image.load(a.inheritance_pillar)
+        self.__polymorphism_pillar_sprite = pg.image.load(a.polymorphism_pillar)
 
     def get_pillar_name(self):
         return self.__pillar_name

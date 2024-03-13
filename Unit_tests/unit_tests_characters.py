@@ -21,12 +21,11 @@ class CharacterUnitTests(unittest.TestCase):
         return self.knight
 
     def testTest(self):
-        initialize_databases.main()
-
-
-        priestess = HeroFactory().create_priestess()
-        rogue = HeroFactory().create_rogue()
-        monster = MonsterFactory().create_monster()
+        self.create_knight()
+        #
+        # priestess = HeroFactory().create_priestess()
+        # rogue = HeroFactory().create_rogue()
+        # monster = MonsterFactory().create_monster()
 
         x = 4
         self.assertEqual(x, 4)
