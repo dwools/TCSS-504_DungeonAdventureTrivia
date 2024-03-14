@@ -37,7 +37,7 @@ def create_monster(conn, monster):
 
 
 def main():
-    database = r"Databases/dungeon_monsters.db"
+    database = r"Databases/database_monsters.db"
 
     # create a database connection
     conn = create_connection(database)

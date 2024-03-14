@@ -37,7 +37,7 @@ def create_hero(conn, hero):
 
 
 def main():
-    database = r"Databases/dungeon_heroes.db"
+    database = r"Databases/database_heroes.db"
 
     # create a database connection
     conn = create_connection(database)

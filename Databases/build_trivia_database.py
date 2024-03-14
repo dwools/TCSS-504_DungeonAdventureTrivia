@@ -85,7 +85,7 @@ def create_elapids_trivia(conn, trivia):
 
 
 def main():
-    database = r"Databases/dungeon_trivia.db"
+    database = r"Databases/database_trivia.db"
 
     # create a database connection
     conn = create_connection(database)

@@ -35,7 +35,7 @@ def create_table(conn, create_table_sql):
 
 
 def main():
-    database = r"Databases/dungeon_trivia.db"
+    database = r"Databases/database_trivia.db"
 
     sql_create_elapids_trivia_table = """CREATE TABLE IF NOT EXISTS elapids_trivia (
                                             question text,

@@ -18,24 +18,24 @@ def create_connection(db_file):
 
     return conn
 
-def create_monster_name(conn, monster_names):
+def create_monster_name(conn, names):
     """
        Create a new task
        :param conn:
-       :param monster_names:
+       :param names:
        :return:
        """
 
-    sql = ''' INSERT OR REPLACE INTO monster_names(id, common_name, latin_name)
+    sql = ''' INSERT OR REPLACE INTO names(id, common_name, latin_name)
               VALUES(?,?,?) '''
 
     cur = conn.cursor()
-    cur.execute(sql, monster_names)
+    cur.execute(sql, names)
     conn.commit()
     return cur.lastrowid
 
 def main():
-    database = r"Databases/monster_names.db"
+    database = r"Databases/database_names.db"
 
     # create a database connection
     conn = create_connection(database)
@@ -50,7 +50,7 @@ def main():
         western_green_mamba = ('8', 'Western green mamba', 'Dendroaspis viridis')
         yellow_lipped_sea_krait = ('9', 'Yellow-lipped sea krait', 'Laticauda colubrina')
         eastern_coral_snake = ('10', 'Eastern coral snake', 'Micrurus fulvius')
-        egyptian_cobra = ('11', 'Egyptian cobra', 'Naje haje')
+        egyptian_cobra = ('11', 'Egyptian cobra', 'Naja haje')
         indian_cobra = ('12', 'Indian cobra', 'Naja naja')
         black_necked_spitting_cobra = ('13', 'Black-necked spitting cobra', 'Naja nigricollis')
         caspian_cobra = ('14', 'Caspian cobra', 'Naja oxiana')

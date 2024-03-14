@@ -35,7 +35,7 @@ def create_table(conn, create_table_sql):
 
 
 def main():
-    database = r"Databases/dungeon_heroes.db"
+    database = r"Databases/database_heroes.db"
 
     sql_create_heroes_table = """ CREATE TABLE IF NOT EXISTS heroes (
                                     hero text PRIMARY KEY,

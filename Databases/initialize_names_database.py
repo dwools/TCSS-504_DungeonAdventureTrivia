@@ -32,9 +32,9 @@ def create_table(conn, create_table_sql):
         print(e)
 
 def main():
-    database = r"Databases/monster_names.db"
+    database = r"Databases/database_names.db"
 
-    sql_monster_names_table = """ CREATE TABLE IF NOT EXISTS monster_names (
+    sql_database_names_table = """ CREATE TABLE IF NOT EXISTS names (
     id integer PRIMARY KEY, 
     common_name text,
     latin_name text); """
@@ -44,7 +44,7 @@ def main():
 
     # create tables
     if conn is not None:
-        create_table(conn, sql_monster_names_table)
+        create_table(conn, sql_database_names_table)
     else:
         print("Error! Cannot create the database connection")
 

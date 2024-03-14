@@ -5,7 +5,7 @@ from Pillars_and_Trivia.trivia_question import TriviaQuestion
 
 class TriviaFactory:
     def __init__(self, pillar):
-        self.__conn = sqlite3.connect('Databases/dungeon_trivia.db')
+        self.__conn = sqlite3.connect('Databases/database_trivia.db')
         self.__pillar = pillar  # Pillar value triggered by pick-up
         self.__elapids_count = random.randint(1, 10)
         self.__astronomy_count = random.randint(1, 10)

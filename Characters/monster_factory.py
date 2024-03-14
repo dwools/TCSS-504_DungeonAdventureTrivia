@@ -5,8 +5,8 @@ from Characters.monster import Monster
 
 class MonsterFactory:
     def __init__(self):
-        self.__conn1 = sqlite3.connect('Databases/dungeon_monsters.db')
-        self.__conn2 = sqlite3.connect('Databases/monster_names.db')
+        self.__conn1 = sqlite3.connect('Databases/database_monsters.db')
+        self.__conn2 = sqlite3.connect('Databases/database_names.db')
 
     def read_monster_database(self, row):
         cursor = self.__conn1.cursor()
@@ -16,8 +16,8 @@ class MonsterFactory:
 
     def read_name_database(self):
         cursor = self.__conn2.cursor()
-        cursor.execute(f'SELECT latin_name from monster_names WHERE rowid > ABS(random()) % ('
-                       f'SELECT max(rowid) from monster_names) LIMIT 1')
+        cursor.execute(f'SELECT latin_name from names WHERE rowid > ABS(random()) % ('
+                       f'SELECT max(rowid) from names) LIMIT 1')
         monster_name = cursor.fetchone()
         return monster_name
 
