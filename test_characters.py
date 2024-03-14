@@ -84,35 +84,11 @@ class CharacterUnitTests(unittest.TestCase):
         self.__skeleton_test_getters = get_monster_test_stats(self.__skeleton_test)
         self.__skeleton_test_values = ["Skeleton", 100, 100, 30, 80, 30, 50, 30, 30, 50]
 
-        self.__names = ['Acanthophis antarcticus',
-                        'Austrelaps labialis',
-                        'Austrelaps ramsayi',
-                        'Austrelaps superbus',
-                        'Dendroaspis angusticeps',
-                        'Dendroaspis jamesoni',
-                        'Dendroaspis polylepis',
-                        'Dendroaspis viridis',
-                        'Laticauda colubrina',
-                        'Micrurus fulvius',
-                        'Naja haje',
-                        'Naja Naja',
-                        'Naja nigricollis',
-                        'Naja oxiana',
-                        'Naja pallida',
-                        'Notechis scutatus',
-                        'Ophiophagus hannah',
-                        'Oxyuranus microlepidotus',
-                        'Oxyuranus scutellatus',
-                        'Pseudechis australis',
-                        'Pseudechis colleti',
-                        'Pseudechis porphryiacus',
-                        'Pseudonaja nuchalis',
-                        'Pseudonaja textilis'
-                        ]
-
+        # Pull latin names from names database into a list to test character name generation
         conn = sqlite3.connect("Databases/database_names.db")
         cursor = conn.cursor()
-        self.__names_test = [latin_name[0] for latin_name in cursor.execute("SELECT latin_name FROM names")] 
+        self.__names_test = [latin_name[0] for latin_name in cursor.execute("SELECT latin_name FROM names")]
+
     def test_create_knight(self):
         """
         Tests the ability to create a character object of Knight using HeroFactory(). Requires successful pulling from dungeon_hero database.
