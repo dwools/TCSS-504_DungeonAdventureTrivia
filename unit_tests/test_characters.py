@@ -85,7 +85,7 @@ class CharacterUnitTests(unittest.TestCase):
         self.__skeleton_test_values = ["Skeleton", 100, 100, 30, 80, 30, 50, 30, 30, 50]
 
         # Pull latin names from names database into a list to test character name generation
-        conn = sqlite3.connect("../Databases/database_names.db")
+        conn = sqlite3.connect("Databases/database_names.db")
         cursor = conn.cursor()
         self.__names_test = [latin_name[0] for latin_name in cursor.execute("SELECT latin_name FROM names")]
 
