@@ -110,9 +110,9 @@ class CharacterUnitTests(unittest.TestCase):
                         'Pseudonaja textilis'
                         ]
 
-        # conn = sqlite3.connect("Databases/database_names.db")
-        # cursor = conn.cursor()
-        # cursor.execute("SELECT latin_name FROM names")
+        conn = sqlite3.connect("Databases/database_names.db")
+        cursor = conn.cursor()
+        self.__names_test = [latin_name[0] for latin_name in cursor.execute("SELECT latin_name FROM names")] 
     def test_create_knight(self):
         """
         Tests the ability to create a character object of Knight using HeroFactory(). Requires successful pulling from dungeon_hero database.
@@ -166,9 +166,9 @@ class CharacterUnitTests(unittest.TestCase):
         Tests the names of each character object are pulled from the sqlite3 database of latin names for 24 elapid species
         :return:
         """
-        self.assertTrue(self.__knight_test.get_name() in self.__names)
-        self.assertTrue(self.__priestess_test.get_name() in self.__names)
-        self.assertTrue(self.__rogue_test.get_name() in self.__names)
-        self.assertTrue(self.__ogre_test.get_name() in self.__names)
-        self.assertTrue(self.__skeleton_test.get_name() in self.__names)
-        self.assertTrue(self.__gremlin_test.get_name() in self.__names)
+        self.assertIn(self.__knight_test.get_name(), self.__names_test)
+        self.assertIn(self.__priestess_test.get_name(), self.__names_test)
+        self.assertIn(self.__rogue_test.get_name(), self.__names_test)
+        self.assertIn(self.__ogre_test.get_name(), self.__names_test)
+        self.assertIn(self.__skeleton_test.get_name(), self.__names_test)
+        self.assertIn(self.__gremlin_test.get_name(), self.__names_test)
