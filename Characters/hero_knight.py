@@ -13,7 +13,11 @@ class Knight(Hero):
                  chance_to_hit,
                  minimum_damage,
                  maximum_damage,
-                 chance_to_block):
+                 chance_to_block,
+                 chance_for_crushing_blow,
+                 minimum_crushing_damage,
+                 maximum_crushing_damage
+                 ):
         super().__init__(name,
                          type,
                          hit_points,
@@ -23,9 +27,9 @@ class Knight(Hero):
                          maximum_damage,
                          chance_to_block)
 
-        self.__chance_for_crushing_blow = 40
-        self.__minimum_crushing_damage = 75
-        self.__maximum_crushing_damage = 125
+        self.__chance_for_crushing_blow = chance_for_crushing_blow
+        self.__minimum_crushing_damage = minimum_crushing_damage
+        self.__maximum_crushing_damage = maximum_crushing_damage
 
     def get_chance_for_crushing_blow(self):
         print(self.__chance_for_crushing_blow)
