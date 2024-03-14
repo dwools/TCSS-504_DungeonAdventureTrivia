@@ -44,8 +44,8 @@ def main():
     with conn:
         # create a new project
         ogre = ('Ogre', '200', '2', '60', '30', '60', '10', '30', '60')
-        gremlin = ('Gremlin', '70', '50', '80', '15', '30', '40', '20', '40')
-        skeleton = ('Skeleton', '100', '30', '80', '30', '50', '30', '30', '50')
+        gremlin = ('Gremlin', '70', '5', '80', '15', '30', '40', '20', '40')
+        skeleton = ('Skeleton', '100', '3', '80', '30', '50', '30', '30', '50')
         create_monster(conn, ogre)
         create_monster(conn, gremlin)
         create_monster(conn, skeleton)

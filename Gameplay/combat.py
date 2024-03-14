@@ -59,25 +59,37 @@ class Combat:
         self.__hero_heal_range = [self.__hero.get_minimum_heal_points(), self.__hero.get_maximum_heal_points()]
 
         # Attack order
-        self.__attack_order = []
         self.set_attack_order()
 
     def set_attack_order(self):
+        """
+        Pass hero and monster into a list ordered by either character's attack speed.
+        :return: list
+        """
+        # self.__attack_order = []
         if self.__hero_attack_speed > self.__monster_attack_speed:
-            self.__attack_order.extend([self.__hero, self.__monster])
-            # self.__attack_order.extend(["Hero's Turn", "Hero's Turn", "Monster's Turn"])
+            self.__attack_order = [self.__hero, self.__monster]
+            # self.__attack_order.extend([self.__hero, self.__monster])
+
         elif self.__hero_attack_speed < self.__monster_attack_speed:
-            self.__attack_order.extend([self.__monster, self.__hero])
-            # self.__attack_order.extend(["Monster's Turn", "Monster's Turn", "Hero's Turn"])
+            self.__attack_order = [self.__monster, self.__hero]
+            # self.__attack_order.extend([self.__monster, self.__hero])
+
         else:
             if random.choice([1, 2]) == 1:
-                self.__attack_order.extend([self.__hero, self.__monster])
+                self.__attack_order = [self.__hero, self.__monster]
+                # self.__attack_order.extend([self.__hero, self.__monster])
+
             else:
-                self.__attack_order.extend([self.__monster, self.__hero])
-                # (self.__attack_order.extend(["Hero's Turn"]), self.__attack_order.extend(["Monster's Turn"])))
+                self.__attack_order = [self.__monster, self.__hero]
+                # self.__attack_order.extend([self.__monster, self.__hero])
+
+        return self.__attack_order
+
+    def get_attack_order(self):
+        return self.__attack_order
 
     def simple_attack_sequence(self):
-        # if self.__monster in self.__game.get_monsters_list():
         for character in self.__attack_order:
             if character == self.__hero:
                 character.simple_attack(self.__monster)
@@ -90,7 +102,6 @@ class Combat:
         #     pass
 
     def special_attack_sequence(self):
-        # if self.__monster in self.__game.get_monsters_list():
         for character in self.__attack_order:
             if character == self.__hero:
                 if isinstance(character, Knight):
@@ -267,7 +278,7 @@ class Combat:
             self.check_input()
 
             self.__game.display.fill('darkgrey')
-            self.__game.font_color = c.BLACK
+            self.__game.combat_font_color = c.BLACK
 
             # Monster
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
@@ -389,7 +400,7 @@ class AttackMenu(Combat):
             self.check_input()
 
             self.__game.display.fill('darkgrey')
-            self.__game.font_color = c.BLACK
+            self.__game.combat_font_color = c.BLACK
 
             # Monster
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
@@ -609,5 +620,5 @@ class CombatMechanics(Combat):
     def monster_combat_sequence(self):
         self.monsters_attack()
         self.monster_heal()
-    def get_attack_order(self):
-        return self.__attack_order
+
+

@@ -70,7 +70,8 @@ class DungeonAdventure():
         # Config
         self.dungeon_font = c.dungeon_font
         self.normal_cont = c.system_font
-        self.font_color = c.WHITE
+        self.menu_font_color = c.WHITE
+        self.combat_font_color = c.BLACK
         self.PURPLE = c.PURPLE
         self.BLACK = c.BLACK
         self.WHITE = c.WHITE
@@ -103,7 +104,7 @@ class DungeonAdventure():
         self.__monsters = []
 
         # Place/spawn monsters
-        for _ in range(0):
+        for _ in range(5):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

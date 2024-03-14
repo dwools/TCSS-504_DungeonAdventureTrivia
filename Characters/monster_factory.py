@@ -81,23 +81,6 @@ class MonsterFactory:
             return self.create_skeleton()
             # return choice
 
-    def create_monster(self):
-        name = self.read_name_database()
-        (name,) = name
-        monster_stats = self.choose_monster()
-        (type,
-         hit_points,
-         attack_speed,
-         chance_to_hit,
-         minimum_damage,
-         maximum_damage,
-         chance_to_heal,
-         minimum_heal_points,
-         maximum_heal_points) = monster_stats
-
-        return Monster(name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage, chance_to_heal,
-                       minimum_heal_points, maximum_heal_points)
-
     def main(self):
         pass
 
