@@ -36,7 +36,6 @@ class DungeonAdventure():
         # Maze set in MainMenu upon "Start Game" or "Load Saved Game" interaction
         self.__dungeon_map = None
         self.__loaded_game = None
-        self.__test_game = None
 
         # Menu Status
         self.main_menu = MainMenu(self)
@@ -69,12 +68,12 @@ class DungeonAdventure():
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
-        self.__dungeon_font = c.dungeon_font
-        self.__normal_cont = c.system_font
-        self.__font_color = c.WHITE
-        self.__PURPLE = c.PURPLE
-        self.__BLACK = c.BLACK
-        self.__WHITE = c.WHITE
+        self.dungeon_font = c.dungeon_font
+        self.normal_cont = c.system_font
+        self.font_color = c.WHITE
+        self.PURPLE = c.PURPLE
+        self.BLACK = c.BLACK
+        self.WHITE = c.WHITE
 
         # Player setup
         # Player sprite setup, camera scrolling setup
@@ -222,8 +221,6 @@ class DungeonAdventure():
         if self.__loaded_game is True:
             self.set_dungeon_map(self.load_saved_map())  #
             self.load_game()
-        elif self.__test_game is True:
-            self.set_dungeon_map(self.load_test_map())
         else:
             self.set_dungeon_map(self.load_new_map())  # load_new_map() reads in new dungeon.txt file
 
@@ -299,7 +296,7 @@ class DungeonAdventure():
             self.check_events()
 
             # Reset the screen Background
-            self.display.fill(self.__PURPLE)
+            self.display.fill(self.PURPLE)
 
             # Basically the camera tracking/ following the player sprite
             self.camera_scroll[0] += (self.player_rect.x - self.camera_scroll[0] - 160)
@@ -705,9 +702,6 @@ class DungeonAdventure():
 
     def add_to_backpack(self, object):
         self.__player_character.add_to_backpack(object)
-
-    def set_test_game(self, value):
-        self.__test_game = value
 
     def set_monster(self, monster):
         self.__monster = monster
