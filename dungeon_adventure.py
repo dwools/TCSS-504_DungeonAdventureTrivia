@@ -69,12 +69,12 @@ class DungeonAdventure():
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
-        self.__dungeon_font = c.dungeon_font
-        self.__normal_cont = c.system_font
-        self.__font_color = c.WHITE
-        self.__PURPLE = c.PURPLE
-        self.__BLACK = c.BLACK
-        self.__WHITE = c.WHITE
+        self.dungeon_font = c.dungeon_font
+        self.normal_cont = c.system_font
+        self.font_color = c.WHITE
+        self.PURPLE = c.PURPLE
+        self.BLACK = c.BLACK
+        self.WHITE = c.WHITE
 
         # Player setup
         # Player sprite setup, camera scrolling setup
@@ -312,7 +312,7 @@ class DungeonAdventure():
             self.check_events()
 
             # Reset the screen Background
-            self.display.fill(self.__PURPLE)
+            self.display.fill(self.PURPLE)
 
             # Basically the camera tracking/ following the player sprite
             self.camera_scroll[0] += (self.player_rect.x - self.camera_scroll[0] - 160)
