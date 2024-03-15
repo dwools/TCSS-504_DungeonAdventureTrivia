@@ -102,7 +102,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 5
+        self.__monster_count = 1
 
         # Place/spawn monsters
         for _ in range(self.__monster_count):
@@ -412,6 +412,7 @@ class DungeonAdventure():
             self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
             self.display.blit(self.player_image_current,
                               (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
+            self.white_rect_player = pg.draw.rect(self.display, (255, 255, 255), self.player_rect)
 
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -428,6 +429,7 @@ class DungeonAdventure():
                 pathfinder.update(monster)  # Updating the monster's path based on player position
                 rect = monster.get_character_rect()  # Get the monster's rect to move
                 monster.update()  # Update the monsters position based on the above path
+                self.white_rect_monster = pg.draw.rect(self.display, (255, 255, 255), rect)
 
 
                 if self.player_rect.colliderect(monster.get_character_rect()):
@@ -450,6 +452,7 @@ class DungeonAdventure():
                 elif item.get_item_name() == "Fire Trap":
                     self.display.blit(item.get_fire_trap_sprite(),
                                       (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+
             for pillar in self.__pillars:
                 pillar.set_player_scroll(self.camera_scroll)
                 rect = pillar.get_pillar_rect()
@@ -474,8 +477,8 @@ class DungeonAdventure():
             # test health for hud
 
             # Drawing the HUDisplay
-            pg.draw.rect(self.display, 'black', pg.Rect(0, 0, 140, 90))  # outside background
-            pg.draw.rect(self.display, 'darkslategray', pg.Rect(5, 5, 130, 80))  # inside background
+            pg.draw.rect(self.display, 'black', pg.Rect(100, 0, 140, 90))  # outside background
+            pg.draw.rect(self.display, 'darkslategray', pg.Rect(105, 5, 130, 80))  # inside background
 
             # Setup Health
             self.draw_text(c.system_font, f'Health: ', 10, 55, 30, c.BLACK)
@@ -769,7 +772,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 5
+        self.__monster_count = 1
 
         # Place/spawn monsters
         for _ in range(self.__monster_count):
