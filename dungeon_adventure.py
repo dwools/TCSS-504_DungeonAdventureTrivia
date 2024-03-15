@@ -438,7 +438,7 @@ class DungeonAdventure():
                     self.current_menu = self.__combat_ui
 
 
-                self.display.blit(monster.get_current_sprite(), (
+                self.display.blit(monster.get_sprite_current(), (
                         rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
 
             for item in self.__items:
@@ -603,25 +603,25 @@ class DungeonAdventure():
             self.__pillars = game_data['pillars']
             for monster in self.__monsters:
                 if monster.get_type() == "Gremlin":
-                    monster.set_south_monster_sprite(pg.image.load(a.south_gremlin))
-                    monster.set_north_monster_sprite(pg.image.load(a.north_gremlin))
-                    monster.set_east_monster_sprite(pg.image.load(a.east_gremlin))
-                    monster.set_west_monster_sprite(pg.image.load(a.west_gremlin))
-                    monster.set_current_sprite(pg.image.load(a.south_gremlin))
+                    monster.set_sprite_south(pg.image.load(a.south_gremlin))
+                    monster.set_sprite_north(pg.image.load(a.north_gremlin))
+                    monster.set_sprite_east(pg.image.load(a.east_gremlin))
+                    monster.set_sprite_west(pg.image.load(a.west_gremlin))
+                    monster.set_monster_sprite_current(pg.image.load(a.south_gremlin))
 
                 elif monster.get_type() == "Skeleton":
-                    monster.set_south_monster_sprite(pg.image.load(a.south_skelly))
-                    monster.set_north_monster_sprite(pg.image.load(a.north_skelly))
-                    monster.set_east_monster_sprite(pg.image.load(a.east_skelly))
-                    monster.set_west_monster_sprite(pg.image.load(a.west_skelly))
-                    monster.set_current_sprite(pg.image.load(a.south_skelly))
+                    monster.set_sprite_south(pg.image.load(a.south_skelly))
+                    monster.set_sprite_north(pg.image.load(a.north_skelly))
+                    monster.set_sprite_east(pg.image.load(a.east_skelly))
+                    monster.set_sprite_west(pg.image.load(a.west_skelly))
+                    monster.set_monster_sprite_current(pg.image.load(a.south_skelly))
 
                 elif monster.get_type() == "Ogre":
-                    monster.set_south_monster_sprite(pg.image.load(a.south_ogre))
-                    monster.set_north_monster_sprite(pg.image.load(a.north_ogre))
-                    monster.set_east_monster_sprite(pg.image.load(a.east_ogre))
-                    monster.set_west_monster_sprite(pg.image.load(a.west_ogre))
-                    monster.set_current_sprite(pg.image.load(a.south_ogre))
+                    monster.set_sprite_south(pg.image.load(a.south_ogre))
+                    monster.set_sprite_north(pg.image.load(a.north_ogre))
+                    monster.set_sprite_east(pg.image.load(a.east_ogre))
+                    monster.set_sprite_west(pg.image.load(a.west_ogre))
+                    monster.set_monster_sprite_current(pg.image.load(a.south_ogre))
             for pillar in self.__pillars:
                 if pillar.get_pillar_name() == "Abstraction":
                     pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))

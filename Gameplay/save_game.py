@@ -11,11 +11,11 @@ class SaveGame:
     def pickle(game_data):
         attributes = {}
         for monster in game_data.get_monsters_list():
-            monster.set_current_sprite(None)
-            monster.set_east_monster_sprite(None)
-            monster.set_west_monster_sprite(None)
-            monster.set_north_monster_sprite(None)
-            monster.set_south_monster_sprite(None)
+            monster.set_monster_sprite_current(None)
+            monster.set_sprite_east(None)
+            monster.set_sprite_west(None)
+            monster.set_sprite_north(None)
+            monster.set_sprite_south(None)
         for pillar in game_data.get_pillars_list():
             pillar.set_abstraction_sprite(None)
             pillar.set_encapsulation_sprite(None)

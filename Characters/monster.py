@@ -35,26 +35,26 @@ class Monster(DungeonCharacter):
         self.__player_scroll = [0, 0]
         
         if self.get_type() == "Gremlin":
-            self.__south_monster_sprite = pg.image.load(a.south_gremlin)
-            self.__north_monster_sprite = pg.image.load(a.north_gremlin)
-            self.__east_monster_sprite = pg.image.load(a.east_gremlin)
-            self.__west_monster_sprite = pg.image.load(a.west_gremlin)
-            self.__current_sprite = pg.image.load(a.south_gremlin)
-        
+            self.__sprite_south = pg.image.load(a.south_gremlin)
+            self.__sprite_north = pg.image.load(a.north_gremlin)
+            self.__sprite_east = pg.image.load(a.east_gremlin)
+            self.__sprite_west = pg.image.load(a.west_gremlin)
+            self.__sprite_current = pg.image.load(a.south_gremlin)
+
         if self.get_type() == "Skeleton":
-            self.__south_monster_sprite = pg.image.load(a.south_skelly)
-            self.__north_monster_sprite = pg.image.load(a.north_skelly)
-            self.__east_monster_sprite = pg.image.load(a.east_skelly)
-            self.__west_monster_sprite = pg.image.load(a.west_skelly)
-            self.__current_sprite = pg.image.load(a.south_skelly)
-        
+            self.__sprite_south = pg.image.load(a.south_skelly)
+            self.__sprite_north = pg.image.load(a.north_skelly)
+            self.__sprite_east = pg.image.load(a.east_skelly)
+            self.__sprite_west = pg.image.load(a.west_skelly)
+            self.__sprite_current = pg.image.load(a.south_skelly)
+
         if self.get_type() == "Ogre":
-            self.__south_monster_sprite = pg.image.load(a.south_ogre)
-            self.__north_monster_sprite = pg.image.load(a.north_ogre)
-            self.__east_monster_sprite = pg.image.load(a.east_ogre)
-            self.__west_monster_sprite = pg.image.load(a.west_ogre)
-            self.__current_sprite = pg.image.load(a.south_ogre)
-            
+            self.__sprite_south = pg.image.load(a.south_ogre)
+            self.__sprite_north = pg.image.load(a.north_ogre)
+            self.__sprite_east = pg.image.load(a.east_ogre)
+            self.__sprite_west = pg.image.load(a.west_ogre)
+            self.__sprite_current = pg.image.load(a.south_ogre)
+
 
     def monster_heal(self):  # Heal Monster
         if self.get_current_hit_points() <= self.get_max_hit_points() // 3: #(self.get_monster_health_max() // 3): # change this to chance to heal
@@ -101,7 +101,7 @@ class Monster(DungeonCharacter):
 
         else:
             self.__direction = pg.math.Vector2(0, 0)
-            self.__current_sprite = self.__south_monster_sprite
+            self.__sprite_current = self.__sprite_south
             self.__path = []
     # Statistics
 
@@ -180,48 +180,38 @@ class Monster(DungeonCharacter):
 
     # Sprite Getters / Setters
 
-    def set_current_sprite(self, sprite_path):
-        self.__current_sprite = sprite_path
+    def set_sprite_current(self, sprite_path):
+        self.__sprite_current = sprite_path
 
-    def get_current_sprite(self):
-        return self.__current_sprite
+    def get_sprite_current(self):
+        return self.__sprite_current
 
-    def get_south_monster_sprite(self):
-        return self.__south_monster_sprite
+    def get_sprite_south(self):
+        return self.__sprite_south
 
-    def set_south_monster_sprite(self, sprite_path):
-        self.__south_monster_sprite = sprite_path
+    def set_sprite_south(self, sprite_path):
+        self.__sprite_south = sprite_path
 
-    def get_north_monster_sprite(self):
-        return self.__north_monster_sprite
+    def get_sprite_north(self):
+        return self.__sprite_north
 
-    def set_north_monster_sprite(self, sprite):
-        self.__north_monster_sprite = sprite
+    def set_sprite_north(self, sprite):
+        self.__sprite_north = sprite
 
-    def get_east_monster_sprite(self):
-        return self.__east_monster_sprite
+    def get_sprite_east(self):
+        return self.__sprite_east
 
-    def set_east_monster_sprite(self, sprite):
-        self.__east_monster_sprite = sprite
+    def set_sprite_east(self, sprite):
+        self.__sprite_east = sprite
 
-    def get_west_monster_sprite(self):
-        return self.__west_monster_sprite
+    def get_sprite_west(self):
+        return self.__sprite_west
 
-    def set_west_monster_sprite(self, sprite):
-        self.__west_monster_sprite = sprite
+    def set_sprite_west(self, sprite):
+        self.__sprite_west = sprite
 
     def set_player_scroll(self, scroll):
         self.__player_scroll = scroll
-
-    def monster_heal(self):  # Heal Monster
-        if random.randint(1, 100) <= self.__chance_to_heal:
-            heal_points = random.randint(self.__minimum_heal_points, self.__maximum_heal_points)
-
-            if self.get_current_hit_points() + heal_points > self.__maximum_heal_points:
-                heal_points = self.get_max_hit_points() - self.get_current_hit_points()
-
-            self.set_current_hit_points(self.get_current_hit_points() + heal_points)
-            print(f"{self.get_name()} increased its health by {heal_points} hit points!")
 
 
 
@@ -232,3 +222,10 @@ class Monster(DungeonCharacter):
 
 
 # Any set methods need to ensure the data being passed in looks okay, and if not, raise an exception.
+if __name__ == '__main__':
+    gremlin = Monster("Gremlin", 70, 70, 5, 80, 15, 30, 40, 20, 40)
+    ogre = Monster("Ogre", 200, 200, 2, 60, 30, 60, 10, 30, 60)
+    for _ in range(10):
+        gremlin.simple_attack(ogre)
+    for _ in range(5):
+        ogre.monster_heal()

@@ -28,6 +28,7 @@ class DungeonCharacter(ABC):
         self.__position_x, self.__position_y = self.__position
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
 
+
     def get_name(self):
         return self.__name
 
@@ -112,6 +113,23 @@ class DungeonCharacter(ABC):
             print(f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
         else:
             print(f"{self.__name}'s attack missed!")
+
+    @abstractmethod
+    def get_sprite_north(self):
+        pass
+
+    @abstractmethod
+    def get_sprite_east(self):
+        pass
+
+    @abstractmethod
+    def get_sprite_west(self):
+        pass
+
+    @abstractmethod
+    def get_sprite_south(self):
+        pass
+
 
 
     # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?

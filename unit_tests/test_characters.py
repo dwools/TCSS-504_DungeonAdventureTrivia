@@ -10,6 +10,9 @@ from Databases import initialize_databases
 
 
 class CharacterUnitTests(unittest.TestCase):
+    """
+    Unit tests for class DungeonCharacter objects' creation and methods.
+    """
     def setUp(self):
         """
         Create an object of class Knight, Rogue, Priestess, and three monsters of class Monster corresponding to ogre, gremlin, and skeleton specifications.
@@ -225,19 +228,33 @@ class CharacterUnitTests(unittest.TestCase):
     def test_rogue_special(self):
         """
         Using a decorator function around DungeonCharacter().simple_attack(enemy), Enumerate the successful executions
-        of simple_attack(enemy) when Rogue executes its special(enemy) method. Rogue().simple_attack(enemy) should be
-        executed more than the number of given iterations.
+        of simple_attack(enemy) when Rogue executes its special(enemy) method (roll for 2x simple attacks).
+        Rogue().simple_attack(enemy) should be executed more than the number of given iterations.
         :return:
         """
-        r = 10
-        simple_attacks_in_special = 0
+        r = 20
         initial_count = self.__rogue_test.simple_attack.special_simple_attack_count
-        for _ in range(r):
+        for _ in range(r+1):
             self.__rogue_test.special(self.__ogre_test)
         simple_attacks_in_special = self.__rogue_test.simple_attack.special_simple_attack_count - initial_count
-        # return simple_attacks_in_special
         self.assertGreater(simple_attacks_in_special, r)
 
+        self.__ogre_test.set_current_hit_points(self.__ogre_test.get_max_hit_points())
+
+    def test_monster_heal(self):
+        """
+        Test monster healing
+        :return:
+        """
+        for _ in range(10):
+            self.__rogue_test.simple_attack(self.__skeleton_test)
+
+        skeleton_pre_healing_hit_points = self.__skeleton_test.get_current_hit_points()
+        for _ in range(10):
+            self.__skeleton_test.monster_heal()
+        skeleton_post_healing_hit_points = self.__skeleton_test.get_current_hit_points()
+
+        self.assertGreater(skeleton_post_healing_hit_points, skeleton_pre_healing_hit_points)
 
 
 

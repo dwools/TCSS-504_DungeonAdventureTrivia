@@ -87,3 +87,19 @@ class Hero(DungeonCharacter):
     @abstractmethod
     def special(self, *args, **kwargs):
         pass
+
+    @abstractmethod
+    def get_sprite_north(self):
+        pass
+
+    @abstractmethod
+    def get_sprite_east(self):
+        pass
+
+    @abstractmethod
+    def get_sprite_west(self):
+        pass
+
+    @abstractmethod
+    def get_sprite_south(self):
+        pass

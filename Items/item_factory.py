@@ -16,7 +16,7 @@ class ItemFactory:
         # add_health = random.randint(5, 15)
         return Item("Health Potion")
 
-    def create_pit_trap(self):
+    def create_fire_trap(self):
         # location = self.get_location()
         # damage = random.randint(1, 20)
         return Item("Fire Trap")
@@ -26,7 +26,7 @@ class ItemFactory:
         if choice == 1:
             item_choice = self.create_health_potion()
         else:
-            item_choice = self.create_pit_trap()
+            item_choice = self.create_fire_trap()
         return item_choice
 
 
@@ -47,6 +47,6 @@ class ItemFactory:
 
 if __name__ == "__main__":
     u = ItemFactory()
-    trap = u.create_pit_trap()
+    trap = u.create_fire_trap()
     print(f"location = {trap.get_location()}, health_points = {trap.get_health_change()}")
 

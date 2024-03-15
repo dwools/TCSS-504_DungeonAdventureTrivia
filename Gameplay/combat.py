@@ -292,26 +292,33 @@ class Combat:
             self.__game.display.fill('darkgrey')
             self.__game.combat_font_color = c.BLACK
 
-            # Monster
+            # Monster stats
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
                                   self.__monster_name_y,
                                   'darkred')
             self.__game.draw_text(c.dungeon_font, f'HP {self.__monster.get_current_hit_points()}', 15, self.__monster_name_x,
                                   self.__monster_name_y + 50,
                                   'white')
-            pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(375, 90, 210, 50))
-            pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(380, 95, 200, 40))
 
-            # Monster Sprite
+            # Monster stage
+            pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(365, 80, 210, 50))
+            pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(370, 85, 200, 40))
 
-            # Hero
+            # Monster sprite
+            self.__game.display.blit(pg.transform.scale(self.__monster.get_sprite_south(), (55, 55)), (443, 65))
+
+            # Hero stats
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
                                   'darkgreen')
             self.__game.draw_text(c.dungeon_font, f'HP {self.__hero.get_current_hit_points()}', 15, self.__hero_name_x,
                                   self.__hero_name_y + 50, 'white')
 
+            # Hero stage
             pg.draw.ellipse(self.__game.display, 'darkslategray', pg.Rect(70, 275, 210, 50))
             pg.draw.ellipse(self.__game.display, 'lightgreen', pg.Rect(75, 280, 200, 40))
+
+            # Hero sprite
+            self.__game.display.blit(pg.transform.scale(self.__hero.get_sprite_north(), (65, 65)), (145, 245))
 
             # In combat actions menu
             pg.draw.rect(self.__game.display, 'black', pg.Rect(5, 330, 630, 150))  # outside background
@@ -425,6 +432,7 @@ class AttackMenu(Combat):
             pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(380, 95, 200, 40))
 
             # Monster Sprite
+            self.__game.display.blit(pg.transform.scale(self.__monster.get_sprite_south(), (55, 55)), (443, 65))
 
             # Hero
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
@@ -434,6 +442,9 @@ class AttackMenu(Combat):
 
             pg.draw.ellipse(self.__game.display, 'darkslategray', pg.Rect(70, 275, 210, 50))
             pg.draw.ellipse(self.__game.display, 'lightgreen', pg.Rect(75, 280, 200, 40))
+
+            # Hero sprite
+            self.__game.display.blit(pg.transform.scale(self.__hero.get_sprite_north(), (65, 65)), (145, 245))
 
             # In combat actions menu
             pg.draw.rect(self.__game.display, 'black', pg.Rect(5, 330, 630, 150))  # outside background

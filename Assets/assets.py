@@ -15,7 +15,7 @@ east_priestess = 'Assets/char_sprites/east_priestess.png'
 
 # Rogue
 south_rogue = 'Assets/char_sprites/south_rogue.png'
-north_rogue = 'Assets/char_sprites/south_rogue.png'
+north_rogue = 'Assets/char_sprites/north_rogue.png'
 west_rogue = 'Assets/char_sprites/west_rogue.png'
 east_rogue = 'Assets/char_sprites/east_rogue.png'
 
