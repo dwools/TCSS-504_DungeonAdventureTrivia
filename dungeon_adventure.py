@@ -102,9 +102,10 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
+        self.__monster_count = 5
 
         # Place/spawn monsters
-        for _ in range(0):
+        for _ in range(self.__monster_count):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -112,9 +113,10 @@ class DungeonAdventure():
         self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
         self.__items = []
+        self.__item_count = 10
 
         # Place/spawn items
-        for item in range(0):
+        for item in range(self.__item_count):
             item = self.i_factory.choose_item()
             self.place_items(item)
 
@@ -739,44 +741,7 @@ class DungeonAdventure():
         self.__dungeon_map = None
         self.__loaded_game = None
 
-        # Menu Status
-        self.main_menu = MainMenu(self)
-        self.character_select = CharacterSelectMenu(self)
-        self.options = OptionsMenu(self)
-        self.how_to_play = HowToPlayMenu(self)
-        # self.load_games = LoadSaveGamesMenu(self)
-        self.credits = CreditsMenu(self)
-        self.pause_menu = PauseMenu(self)
-        self.game_over = GameOver(self)
-        self.victory_screen = VictoryScreen(self)
-        self.current_menu = self.main_menu  # Default menu is the main menu
 
-        # Window Setup
-        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
-        self.WINDOW_SIZE = c.WINDOW_SIZE
-        self.display = pg.Surface((640, 480))  # (640w, 480h)
-        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
-
-        # Load up base images
-        self.__gremlin_image = pg.image.load(a.south_gremlin)
-        self.__skelly_image = pg.image.load(a.south_skelly)
-        self.__ogre_image = pg.image.load(a.south_ogre)  # to be replaced with Ogre sprite
-        self.__health_potion_image = pg.image.load(a.health_potion)
-        self.__fire_trap_image = pg.image.load(a.fire_trap)
-        self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
-        self.__encapsulation_pillar_image = pg.image.load(a.encapsulation_pillar)
-        self.__inheritance_pillar_image = pg.image.load(a.inheritance_pillar)
-        self.__polymorphism_pillar_image = pg.image.load(a.polymorphism_pillar)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Config
-        self.dungeon_font = c.dungeon_font
-        self.normal_cont = c.system_font
-        self.menu_font_color = c.WHITE
-        self.combat_font_color = c.BLACK
-        self.PURPLE = c.PURPLE
-        self.BLACK = c.BLACK
-        self.WHITE = c.WHITE
 
         # Player setup
         # Player sprite setup, camera scrolling setup
@@ -804,9 +769,10 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
+        self.__monster_count = 5
 
         # Place/spawn monsters
-        for _ in range(0):
+        for _ in range(self.__monster_count):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -814,9 +780,10 @@ class DungeonAdventure():
         self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
         self.__items = []
+        self.__item_count = 10
 
         # Place/spawn items
-        for item in range(0):
+        for item in range(self.__item_count):
             item = self.i_factory.choose_item()
             self.place_items(item)
 
