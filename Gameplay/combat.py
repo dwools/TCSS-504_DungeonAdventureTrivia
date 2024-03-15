@@ -613,24 +613,7 @@ class CombatMechanics(Combat):
         #             pass
 
 
-    def monsters_attack(self):  # Monster's attack
-        if random.randint(1, 100) <= self.__monster.get_chance_to_hit():
-            self.__hero.set_current_hit_points(random.randint(self.__monster.get_minimum_damage(), self.__monster.get_maximum_damage()))
-        else:
-            print("The monster's attack missed!")
-        if self.__hero.get_current_hit_points() <= 0:
-            self.__game.current_menu = self.__game.game_over
 
-    def monster_heal(self):  # Heal Monster
-        if self.get_monster_health_curr() >= (self.get_monster_health_max() // 3): # change this to chance to heal
-            new_monster_health = (self.get_monster_health_curr() + (random.randint(self.get_monster_heal_min(), self.get_monster_heal_max())))
-            if new_monster_health >= self.get_monster_health_max():
-                self.set_monster_health_curr(self.get_monster_health_max())
-            else:
-                self.set_monster_health_curr(new_monster_health)
 
-    def monster_combat_sequence(self):
-        self.monsters_attack()
-        self.monster_heal()
 
 

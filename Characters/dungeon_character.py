@@ -112,23 +112,8 @@ class DungeonCharacter(ABC):
             print(f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
         else:
             print(f"{self.__name}'s attack missed!")
-            pass
-        #
-        # if random.randint(1, 100) <= self.__hero.get_chance_to_hit():
-        #     self.__monster.set_current_hit_points(
-        #         random.randint(self.__hero.get_minimum_damage(), self.__hero.get_maximum_damage()))
-        #     if self.__monster.get_current_hit_points <= 0:
-        #         self.__game.get_monsters_list().remove(self.__monster)
-        # else:
-        #     print("Your attack missed!")
-        #     pass
-        # if self.__monster.get_current_hit_points <= 0:
-        #     pass
+
 
     # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?
     # Answer: It tells us that any concrete chidren of this ABC must include this method with the specified parameters, analagous to an object's parameters being required when it's instantiated.
 
-    # @abstractmethod
-    # def flee(self):
-    #     pass
-# if __name__ == '__main__':

@@ -41,9 +41,11 @@ class Priestess(Hero):
 
     def special(self):
         if random.randint(1, 100) <= self.__chance_to_heal:
-            self.set_current_hit_points(self.get_current_hit_points() + random.randint(self.__minimum_heal_points, self.__maximum_heal_points))
-            if self.get_current_hit_points() >= self.get_max_hit_points():
-                self.set_current_hit_points(self.get_max_hit_points())
+            heal_points = random.randint(self.__minimum_heal_points, self.__maximum_heal_points)
+            if self.get_current_hit_points() + heal_points > self.__maximum_heal_points:
+                heal_points = self.get_max_hit_points() - self.get_current_hit_points()
+            self.set_current_hit_points(self.get_current_hit_points() + heal_points)
+            print(f"Your special healing increased your hit points by {heal_points}!")
         else:
             print("Your Special Healing Failed!")
 
