@@ -14,7 +14,6 @@ from Characters.hero_factory import HeroFactory
 from Room_and_Maze.maze import Maze
 
 
-
 class Menu:
 
     def __init__(self, game):
@@ -29,7 +28,6 @@ class Menu:
         # Mouse Configuration
         self.mouse_position = pg.mouse.get_pos()
 
-
     def draw_cursor(self):
         # Draw the pointer next to the buttons
         self.game.draw_text(c.dungeon_font, '*', 15, self.cursor_rect.x, self.cursor_rect.y, 'red')
@@ -39,8 +37,6 @@ class Menu:
         window_surface = pg.transform.scale(self.game.display, c.WINDOW_SIZE)
         self.screen.blit(window_surface, (0, 0))
         pg.display.update()  # Update the Display
-
-
 
 
 class MainMenu(Menu):
@@ -74,8 +70,10 @@ class MainMenu(Menu):
                                 self.game.menu_font_color)
             self.game.draw_text(c.dungeon_font, 'Load Save', 20, self.load_game_x, self.load_game_y,
                                 self.game.menu_font_color)
-            self.game.draw_text(c.dungeon_font, 'Options', 20, self.options_x, self.options_y, self.game.menu_font_color)
-            self.game.draw_text(c.dungeon_font, 'Credits', 20, self.credits_x, self.credits_y, self.game.menu_font_color)
+            self.game.draw_text(c.dungeon_font, 'Options', 20, self.options_x, self.options_y,
+                                self.game.menu_font_color)
+            self.game.draw_text(c.dungeon_font, 'Credits', 20, self.credits_x, self.credits_y,
+                                self.game.menu_font_color)
             self.draw_cursor()
             self.blit_screen()
             clock.tick(12)
@@ -304,7 +302,7 @@ class CharacterSelectMenu(Menu):
 
             elif self.state == 'Rogue':
                 self.game.set_player_character(HeroFactory().create_rogue())
-            #if self.state == 'Knight':
+            # if self.state == 'Knight':
             #     self.game.set_player_character(HeroFactory().create_knight())
             #     self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_knight), self.game.get_player_img_size()),
             #                                 pg.transform.scale(pg.image.load(a.east_knight), self.game.get_player_img_size()),
@@ -426,7 +424,7 @@ class HowToPlayMenu(Menu):
 #                                 self.middle_height - 150, 'yellow')
 #
 #             if len(self.saved_games) != 0:
-#                 self.save_y = self.middle_height - 60
+#                 self.save_y = self.middle_height - 12
 #
 #                 for save in self.saved_games:
 #                     self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 50, 200, 50)
@@ -479,6 +477,8 @@ class OptionsMenu(Menu):
 
         self.state = 'Volume'
         self.volume_x, self.volume_y = self.middle_width, self.middle_height + 20
+        self.difficulty_x, self.difficulty_y = self.middle_width, self.middle_height + 120
+
         self.cursor_rect.midtop = (self.volume_x + self.cursor_offset, self.volume_y)
 
     def display_menu(self):
@@ -490,9 +490,18 @@ class OptionsMenu(Menu):
             self.check_input()
 
             self.game.display.fill(c.PURPLE)
-            self.game.draw_text(c.dungeon_font, 'Options', 30, self.middle_width, self.middle_height - 100,
+            self.game.draw_text(c.dungeon_font, 'Options', 30, self.middle_width, self.middle_height - 120,
                                 'forestgreen')
             self.game.draw_text(c.dungeon_font, 'Volume', 20, self.volume_x, self.volume_y, self.game.menu_font_color)
+            self.game.draw_text(c.system_font, f'{self.game.get_volume()}', 12, self.volume_x, self.volume_y + 50,
+                                self.game.menu_font_color)
+
+            self.game.draw_text(c.dungeon_font, 'Difficulty', 20, self.difficulty_x, self.difficulty_y,
+                                self.game.menu_font_color)
+            self.game.draw_text(c.system_font, f'{self.game.get_monster_count()}', 12, self.difficulty_x,
+                                self.difficulty_y + 50,
+                                self.game.menu_font_color)
+
             self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
                                 self.middle_height + 250,
                                 self.game.menu_font_color)
@@ -504,6 +513,8 @@ class OptionsMenu(Menu):
 
     def check_input(self):
 
+        self.move_cursor()
+
         if self.game.paused:
             if self.game.escaping:
                 self.game.current_menu = self.game.pause_menu
@@ -513,9 +524,48 @@ class OptionsMenu(Menu):
             self.game.current_menu = self.game.main_menu
             self.run_display = False
 
-        elif self.game.interacting:
-            if self.state == 'Volume':  # Create a volume control menu
-                self.game.current_menu = self.game.volume_menu
+        if self.state == 'Volume':  # Volume
+            if self.game.moving_east:
+                self.game.set_volume(self.game.get_volume() + 0.1)
+                if self.game.get_volume() > 1.0:
+                    self.game.set_volume(1.0)
+            elif self.game.moving_west:
+                self.game.set_volume(self.game.get_volume() - 0.1)
+                if self.game.get_volume() < 0.0:
+                    self.game.set_volume(0.0)
+
+        if self.state == 'Difficulty':  # Difficulty
+            if self.game.moving_east:
+                self.game.set_monster_count(self.game.get_monster_count() + 1)
+                if self.game.get_monster_count() > 25:
+                    self.game.set_monster_count(25)
+            elif self.game.moving_west:
+                self.game.set_monster_count(self.game.get_monster_count() - 1)
+                if self.game.get_monster_count() < 0:
+                    self.game.set_monster_count(0)
+
+    def move_cursor(self):
+        """ Adjust cursor position to notify user of their current choice / button.
+            Does a full loop through the menu allowing north and south traversal.
+        """
+
+        if self.game.moving_south:
+            if self.state == 'Volume':
+                self.cursor_rect.midtop = (self.difficulty_x + self.cursor_offset, self.difficulty_y)
+                self.state = 'Difficulty'
+
+            elif self.state == 'Difficulty':
+                self.cursor_rect.midtop = (self.volume_x + self.cursor_offset, self.volume_y)
+                self.state = 'Volume'
+
+        elif self.game.moving_north:
+            if self.state == 'Volume':
+                self.cursor_rect.midtop = (self.difficulty_x + self.cursor_offset, self.difficulty_y)
+                self.state = 'Difficulty'
+
+            elif self.state == 'Difficulty':
+                self.cursor_rect.midtop = (self.volume_x + self.cursor_offset, self.volume_y)
+                self.state = 'Volume'
 
 
 class CreditsMenu(Menu):
@@ -594,7 +644,8 @@ class PauseMenu(Menu):
             self.game.draw_text(c.dungeon_font, 'Save The Game', 15, self.save_game_x, self.save_game_y,
                                 self.game.menu_font_color)
             self.game.draw_text(c.dungeon_font, 'Main Menu', 15, self.main_x, self.main_y, self.game.menu_font_color)
-            self.game.draw_text(c.dungeon_font, 'Options', 15, self.options_x, self.options_y, self.game.menu_font_color)
+            self.game.draw_text(c.dungeon_font, 'Options', 15, self.options_x, self.options_y,
+                                self.game.menu_font_color)
             self.game.draw_text(c.dungeon_font, 'Exit Game', 20, self.exit_game_x, self.exit_game_y, 'red')
 
             self.game.draw_text(c.dungeon_font, 'Press ESCAPE to resume your game', 10, self.middle_width,
@@ -779,16 +830,14 @@ class TriviaUI(Menu):
             self.run_display = False
             self.game.paused = False
 
-
-
-                # # if answer == false, add pillar to backpack || else: relocate pillar
-                # if self.answer == self.state:
-                #     print('You have chosen correctly')  # add pillar to backpack
-                # else:
-                #     print('you failed')  # relocate pillar
-                #
-                # self.run_display = False
-                # self.game.paused = False
+            # # if answer == false, add pillar to backpack || else: relocate pillar
+            # if self.answer == self.state:
+            #     print('You have chosen correctly')  # add pillar to backpack
+            # else:
+            #     print('you failed')  # relocate pillar
+            #
+            # self.run_display = False
+            # self.game.paused = False
 
 
 class GameOver(Menu):

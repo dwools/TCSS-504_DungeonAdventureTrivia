@@ -291,6 +291,7 @@ class Combat:
 
             self.__game.display.fill('darkgrey')
             self.__game.combat_font_color = c.BLACK
+            self.__game.set_volume(0.0)
 
             # Monster stats
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,

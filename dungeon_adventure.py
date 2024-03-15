@@ -75,6 +75,7 @@ class DungeonAdventure():
         self.PURPLE = c.PURPLE
         self.BLACK = c.BLACK
         self.WHITE = c.WHITE
+        self.volume = 0.5
 
         # Player setup
         # Player sprite setup, camera scrolling setup
@@ -91,14 +92,14 @@ class DungeonAdventure():
 
         self.player_img_size = (14, 14)
 
-        self.player_image_current = None # pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
+        self.player_image_current = None  # pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
         self.player_image_north = None
         self.player_image_south = None
         self.player_image_east = None
         self.player_image_west = None
 
-        self.player_rect = None# pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
-                             #      self.player_image_current.get_height())  # start at 16, add 48 x or y for good position
+        self.player_rect = None  # pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
+        #      self.player_image_current.get_height())  # start at 16, add 48 x or y for good position
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
@@ -139,13 +140,18 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
-
-
-
     def set_player_rect(self):
-        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(), self.player_image_current.get_height())
+        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
+                                   self.player_image_current.get_height())
+
     def get_player_img_size(self):
         return self.player_img_size
+
+    def set_volume(self, volume):
+        self.volume = volume
+
+    def get_volume(self):
+        return self.volume
 
     def set_player_images(self, north_image, east_image, west_image, south_image):
         self.player_image_north = north_image
@@ -226,9 +232,9 @@ class DungeonAdventure():
         TILE_SIZE = bottom_wall_image.get_width()
 
         # # Audio
-        # background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
-        # background_audio = pg.mixer.music.play(-1)  # loops indefinitely
-        # background_audio = pg.mixer.music.set_volume(0.0)  # scale of 0->1
+        background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
+        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -429,7 +435,6 @@ class DungeonAdventure():
                 rect = monster.get_character_rect()  # Get the monster's rect to move
                 monster.update()  # Update the monsters position based on the above path
 
-
                 if self.player_rect.colliderect(monster.get_character_rect()):
                     self.paused = True
                     self.set_monster(monster)
@@ -437,9 +442,8 @@ class DungeonAdventure():
                     self.attack_menu = AttackMenu(self)
                     self.current_menu = self.__combat_ui
 
-
                 self.display.blit(monster.get_sprite_current(), (
-                        rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
+                    rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
 
             for item in self.__items:
                 item.set_player_scroll(self.camera_scroll)
@@ -489,9 +493,6 @@ class DungeonAdventure():
             if len(self.__player_character.get_player_pillars()) == 4:
                 self.current_menu = self.victory_screen
                 self.paused = True
-
-            # Setup Lives
-            self.draw_text(c.system_font, f'Lives: ', 10, 50, 90, c.BLACK)
 
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -638,27 +639,22 @@ class DungeonAdventure():
                     item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
             if isinstance(self.__player_character, Knight):
                 self.set_player_images(pg.image.load(a.north_knight),
-                                            pg.image.load(a.east_knight),
-                                            pg.image.load(a.west_knight),
-                                            pg.image.load(a.south_knight),
-                                            )
+                                       pg.image.load(a.east_knight),
+                                       pg.image.load(a.west_knight),
+                                       pg.image.load(a.south_knight),
+                                       )
             elif isinstance(self.__player_character, Priestess):
                 self.set_player_images(pg.image.load(a.north_priestess),
-                                            pg.image.load(a.east_priestess),
-                                            pg.image.load(a.west_priestess),
-                                            pg.image.load(a.south_priestess),
-                                            )
+                                       pg.image.load(a.east_priestess),
+                                       pg.image.load(a.west_priestess),
+                                       pg.image.load(a.south_priestess),
+                                       )
             elif isinstance(self.__player_character, Rogue):
                 self.set_player_images(pg.image.load(a.north_rogue),
-                                            pg.image.load(a.east_rogue),
-                                            pg.image.load(a.west_rogue),
-                                            pg.image.load(a.south_rogue),
-                                            )
-
-
-
-
-
+                                       pg.image.load(a.east_rogue),
+                                       pg.image.load(a.west_rogue),
+                                       pg.image.load(a.south_rogue),
+                                       )
 
     @staticmethod
     def load_new_map():
@@ -731,6 +727,12 @@ class DungeonAdventure():
     def get_monster(self):
         return self.__monster
 
+    def get_monster_count(self):
+        return self.__monster_count
+
+    def set_monster_count(self, count):
+        self.__monster_count = count
+
     def get_monsters_list(self):
         return self.__monsters
 
@@ -740,8 +742,6 @@ class DungeonAdventure():
     def reset_game(self):
         self.__dungeon_map = None
         self.__loaded_game = None
-
-
 
         # Player setup
         # Player sprite setup, camera scrolling setup
@@ -769,7 +769,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 5
+        self.__monster_count = 0
 
         # Place/spawn monsters
         for _ in range(self.__monster_count):
