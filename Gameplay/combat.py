@@ -90,6 +90,14 @@ class Combat:
         return self.__attack_order
 
     def simple_attack_sequence(self):
+        """
+        DungeonCharacter().simple_attack(enemy) is delivered by player_character to monster, and vice-versa,
+        based on either characters' attack_order index.
+        After each DungeonCharacter().simple_attack(enemy) is called, self.check_hero_hit_points or
+        self.check_monster_hit_points is called to query either characters' hit points
+        (see either method's documentation).
+        :return:
+        """
         for character in self.__attack_order:
             if character == self.__hero:
                 character.simple_attack(self.__monster)
@@ -102,6 +110,10 @@ class Combat:
         #     pass
 
     def special_attack_sequence(self):
+        """
+        Based on player_character's class, their specific *.special(*args, *kwargs) method is called.
+        :return:
+        """
         for character in self.__attack_order:
             if character == self.__hero:
                 if isinstance(character, Knight):
@@ -284,7 +296,7 @@ class Combat:
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
                                   self.__monster_name_y,
                                   'darkred')
-            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster_health_curr}', 15, self.__monster_name_x,
+            self.__game.draw_text(c.dungeon_font, f'HP {self.__monster.get_current_hit_points()}', 15, self.__monster_name_x,
                                   self.__monster_name_y + 50,
                                   'white')
             pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(375, 90, 210, 50))
@@ -295,7 +307,7 @@ class Combat:
             # Hero
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
                                   'darkgreen')
-            self.__game.draw_text(c.dungeon_font, f'HP {self.__hero_health}', 15, self.__hero_name_x,
+            self.__game.draw_text(c.dungeon_font, f'HP {self.__hero.get_current_hit_points()}', 15, self.__hero_name_x,
                                   self.__hero_name_y + 50, 'white')
 
             pg.draw.ellipse(self.__game.display, 'darkslategray', pg.Rect(70, 275, 210, 50))

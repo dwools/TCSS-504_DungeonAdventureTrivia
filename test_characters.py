@@ -6,6 +6,7 @@ from Characters.hero_priestess import Priestess
 from Characters.monster import Monster
 from Characters.monster_factory import MonsterFactory
 import sqlite3
+from Databases import initialize_databases
 
 
 class CharacterUnitTests(unittest.TestCase):
@@ -17,6 +18,8 @@ class CharacterUnitTests(unittest.TestCase):
         Set up list of extected names
         :return:
         """
+        initialize_databases.main()
+
         self.__knight_test = HeroFactory().create_knight()
         self.__knight_test_values = ["Knight", 125, 125, 4, 80, 35, 60, 20, 40, 75, 175]
         self.__knight_test_getters = [self.__knight_test.get_type(),
@@ -78,11 +81,11 @@ class CharacterUnitTests(unittest.TestCase):
 
         self.__gremlin_test = MonsterFactory().create_gremlin()
         self.__gremlin_test_getters = get_monster_test_stats(self.__gremlin_test)
-        self.__gremlin_test_values = ["Gremlin", 70, 70, 50, 80, 15, 30, 40, 20, 40]
+        self.__gremlin_test_values = ["Gremlin", 70, 70, 5, 80, 15, 30, 40, 20, 40]
 
         self.__skeleton_test = MonsterFactory().create_skeleton()
         self.__skeleton_test_getters = get_monster_test_stats(self.__skeleton_test)
-        self.__skeleton_test_values = ["Skeleton", 100, 100, 30, 80, 30, 50, 30, 30, 50]
+        self.__skeleton_test_values = ["Skeleton", 100, 100, 3, 80, 30, 50, 30, 30, 50]
 
         # Pull latin names from names database into a list to test character name generation
         conn = sqlite3.connect("Databases/database_names.db")
@@ -148,3 +151,96 @@ class CharacterUnitTests(unittest.TestCase):
         self.assertIn(self.__ogre_test.get_name(), self.__names_test)
         self.assertIn(self.__skeleton_test.get_name(), self.__names_test)
         self.assertIn(self.__gremlin_test.get_name(), self.__names_test)
+
+    def test_simple_attack(self):
+        """
+        Test that knight and ogre's current hit points have decreased after running 10x iterations of
+        DungeonCharacter.simple_attack(enemy) on each other.
+        
+        Reset both character's hit points after testing. 
+        :return:
+        """
+        self.__knight_pre_simple_attack_hit_points = self.__knight_test.get_current_hit_points()
+        self.__ogre_pre_simple_attack_hit_points = self.__ogre_test.get_current_hit_points()
+        for _ in range(0, 10):
+            self.__knight_test.simple_attack(self.__ogre_test)
+            self.__ogre_test.simple_attack(self.__knight_test)
+        self.__ogre_post_simple_attack_hit_points = self.__ogre_test.get_current_hit_points()
+        self.__knight_post_simple_attack_hit_points = self.__knight_test.get_current_hit_points()
+
+        self.assertGreater(self.__knight_pre_simple_attack_hit_points, self.__knight_post_simple_attack_hit_points)
+        self.assertGreater(self.__ogre_pre_simple_attack_hit_points, self.__ogre_post_simple_attack_hit_points)
+        
+        self.__knight_test.set_current_hit_points(self.__knight_test.get_max_hit_points())
+        self.__ogre_test.set_current_hit_points(self.__ogre_test.get_max_hit_points())
+
+    def test_knight_special(self):
+        """
+        Test that ogre's current hit points have decreased after run 10x iterations of Knight.special(ogre) toward
+        ogre.
+
+        Reset both character's hit points after testing.
+        :return: 
+        """
+        ogre_pre_special_hit_points = self.__ogre_test.get_current_hit_points()
+
+        for _ in range(10):
+            self.__knight_test.special(self.__ogre_test)
+
+        ogre_post_special_hit_points = self.__ogre_test.get_current_hit_points()
+
+        self.assertGreater(ogre_pre_special_hit_points, ogre_post_special_hit_points)
+
+        self.__ogre_test.set_current_hit_points(self.__ogre_test.get_max_hit_points())
+
+    def test_priestess_special(self):
+        """
+        1) Test that Priestess' hit points do not exceed her maximum hit points value running Priestess's special()
+         method (healing).
+
+        2) Test that Priestess' current hit points value increases after running Priestess's special() method after Ogre
+        inflicts simple_attack upon Priestess 10 times.
+        :return:
+        """
+        for _ in range(10):
+            self.__priestess_test.special()
+        priestess_post_healing_hit_points = self.__priestess_test.get_current_hit_points()
+
+        self.assertEqual(priestess_post_healing_hit_points, self.__priestess_test.get_max_hit_points())
+
+        for _ in range(10):
+            self.__ogre_test.simple_attack(self.__priestess_test)
+
+        priestess_pre_healing_hit_points = self.__priestess_test.get_current_hit_points()
+        for _ in range(10):
+            self.__priestess_test.special()
+        priestess_post_healing_hit_points = self.__priestess_test.get_current_hit_points()
+
+        self.assertGreater(priestess_post_healing_hit_points, priestess_pre_healing_hit_points)
+
+        self.__priestess_test.set_current_hit_points(self.__priestess_test.get_max_hit_points())
+
+    def test_rogue_special(self):
+        def call_counter(func):
+            def wrapper(*args, **kwargs):
+                wrapper.calls += 1
+                return func(*args, **kwargs)
+            wrapper.calls = 0
+            return wrapper()
+
+        @call_counter(self.__ogre_test.simple_attack(self.__ogre_test))
+        def test_rogue_special(self):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
