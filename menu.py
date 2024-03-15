@@ -914,6 +914,7 @@ class VictoryScreen(Menu):
         if self.game.interacting:
 
             if self.state == 'Main Menu':
+                self.game.reset_game()
                 self.game.current_menu = MainMenu(self.game)
                 self.game.paused = False
                 self.game.playing = False

@@ -104,7 +104,7 @@ class DungeonAdventure():
         self.__monsters = []
 
         # Place/spawn monsters
-        for _ in range(5):
+        for _ in range(0):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -114,7 +114,7 @@ class DungeonAdventure():
         self.__items = []
 
         # Place/spawn items
-        for item in range(10):
+        for item in range(0):
             item = self.i_factory.choose_item()
             self.place_items(item)
 
@@ -734,6 +734,110 @@ class DungeonAdventure():
 
     def get_combat_ui(self):
         return self.__combat_ui
+
+    def reset_game(self):
+        self.__dungeon_map = None
+        self.__loaded_game = None
+
+        # Menu Status
+        self.main_menu = MainMenu(self)
+        self.character_select = CharacterSelectMenu(self)
+        self.options = OptionsMenu(self)
+        self.how_to_play = HowToPlayMenu(self)
+        # self.load_games = LoadSaveGamesMenu(self)
+        self.credits = CreditsMenu(self)
+        self.pause_menu = PauseMenu(self)
+        self.game_over = GameOver(self)
+        self.victory_screen = VictoryScreen(self)
+        self.current_menu = self.main_menu  # Default menu is the main menu
+
+        # Window Setup
+        self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
+        self.WINDOW_SIZE = c.WINDOW_SIZE
+        self.display = pg.Surface((640, 480))  # (640w, 480h)
+        self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
+
+        # Load up base images
+        self.__gremlin_image = pg.image.load(a.south_gremlin)
+        self.__skelly_image = pg.image.load(a.south_skelly)
+        self.__ogre_image = pg.image.load(a.south_ogre)  # to be replaced with Ogre sprite
+        self.__health_potion_image = pg.image.load(a.health_potion)
+        self.__fire_trap_image = pg.image.load(a.fire_trap)
+        self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
+        self.__encapsulation_pillar_image = pg.image.load(a.encapsulation_pillar)
+        self.__inheritance_pillar_image = pg.image.load(a.inheritance_pillar)
+        self.__polymorphism_pillar_image = pg.image.load(a.polymorphism_pillar)
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Config
+        self.dungeon_font = c.dungeon_font
+        self.normal_cont = c.system_font
+        self.menu_font_color = c.WHITE
+        self.combat_font_color = c.BLACK
+        self.PURPLE = c.PURPLE
+        self.BLACK = c.BLACK
+        self.WHITE = c.WHITE
+
+        # Player setup
+        # Player sprite setup, camera scrolling setup
+        self.__player_character = None
+        self.player_movement = [0, 0]
+        self.camera_scroll = [0, 0]
+        self.player_direction = 0
+
+        self.coords_generator = ValidCoordsGenerator()
+        self.coords_generator.generate_coords()
+
+        self.player_position = [16, 16]  # self.coords_generator.get_random_coords()
+        self.player_x, self.player_y = self.player_position
+
+        self.player_img_size = (14, 14)
+
+        self.player_image_current = None  # pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
+        self.player_image_north = None
+        self.player_image_south = None
+        self.player_image_east = None
+        self.player_image_west = None
+
+        self.player_rect = None  # pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
+        #      self.player_image_current.get_height())  # start at 16, add 48 x or y for good position
+
+        # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.__monsters = []
+
+        # Place/spawn monsters
+        for _ in range(0):
+            self.place_monsters()
+
+        # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.__health_potion = Item("Health Potion")
+        self.__fire_trap = Item("Fire Trap")
+        self.i_factory = item_factory.ItemFactory()
+        self.__items = []
+
+        # Place/spawn items
+        for item in range(0):
+            item = self.i_factory.choose_item()
+            self.place_items(item)
+
+        # Pillar setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.__abstraction_pillar = Pillar("Abstraction")
+        self.__encapsulation_pillar = Pillar("Encapsulation")
+        self.__inheritance_pillar = Pillar("Inheritance")
+        self.__polymorphism_pillar = Pillar("Polymorphism")
+        self.__pillars = [self.__abstraction_pillar, self.__encapsulation_pillar, self.__inheritance_pillar,
+                          self.__polymorphism_pillar]
+
+        # Place/spawn pillars
+        for pillar in self.__pillars:
+            self.place_pillar(pillar)
+
+        # Controls
+        self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
+        self.interacting, self.left_clicked, self.escaping = False, False, False
+
+        # Game Status
+        self.running, self.playing, self.paused = True, False, False
 
 
 if __name__ == "__main__":
