@@ -202,6 +202,8 @@ class CharacterUnitTests(unittest.TestCase):
         inflicts simple_attack upon Priestess 10 times.
         :return:
         """
+        # self.__priestess_test.set_current_hit_points(self.__priestess_test.get_max_hit_points())
+
         for _ in range(10):
             self.__priestess_test.special()
         priestess_post_healing_hit_points = self.__priestess_test.get_current_hit_points()
@@ -221,15 +223,22 @@ class CharacterUnitTests(unittest.TestCase):
         self.__priestess_test.set_current_hit_points(self.__priestess_test.get_max_hit_points())
 
     def test_rogue_special(self):
-        def call_counter(func):
-            def wrapper(*args, **kwargs):
-                wrapper.calls += 1
-                return func(*args, **kwargs)
-            wrapper.calls = 0
-            return wrapper()
+        """
+        Using a decorator function around DungeonCharacter().simple_attack(enemy), Enumerate the successful executions
+        of simple_attack(enemy) when Rogue executes its special(enemy) method. Rogue().simple_attack(enemy) should be
+        executed more than the number of given iterations.
+        :return:
+        """
+        r = 10
+        simple_attacks_in_special = 0
+        initial_count = self.__rogue_test.simple_attack.special_simple_attack_count
+        for _ in range(r):
+            self.__rogue_test.special(self.__ogre_test)
+        simple_attacks_in_special = self.__rogue_test.simple_attack.special_simple_attack_count - initial_count
+        # return simple_attacks_in_special
+        self.assertGreater(simple_attacks_in_special, r)
 
-        @call_counter(self.__ogre_test.simple_attack(self.__ogre_test))
-        def test_rogue_special(self):
+
 
 
 

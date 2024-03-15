@@ -3,6 +3,14 @@ from abc import ABC, abstractmethod
 import pygame as pg
 
 
+def simple_attack_counter(func):
+    def wrapper(*args, **kwargs):
+        wrapper.special_simple_attack_count += 1
+        return func(*args, **kwargs)
+
+    wrapper.special_simple_attack_count = 0
+    return wrapper
+
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         # Dungeon character needs a name per project specifications
@@ -95,6 +103,7 @@ class DungeonCharacter(ABC):
     def set_maximum_damage(self, maximum_damage):
         self.__maximum_damage = maximum_damage
 
+    @simple_attack_counter
     def simple_attack(self, enemy):
         print(f'{self.__name} tries a simple attack...')
         if random.randint(1, 100) <= self.__chance_to_hit:

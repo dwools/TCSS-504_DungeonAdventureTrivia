@@ -43,3 +43,10 @@ class Rogue(Hero):
                 print("But you got caught! Your second attack failed!")
             else:
                 self.simple_attack(enemy)
+
+    def count_simple_attacks_in_special(self, enemy):
+        initial_count = self.simple_attack.attack_count
+        for _ in range(10):
+            self.special(enemy)
+        attacks_in_special = self.simple_attack.attack_count - initial_count
+        return attacks_in_special
