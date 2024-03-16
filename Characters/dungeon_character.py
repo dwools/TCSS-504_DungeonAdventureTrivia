@@ -16,12 +16,18 @@ class DungeonCharacter(ABC):
         self.__chance_to_hit = chance_to_hit
         self.__minimum_damage = minimum_damage
         self.__maximum_damage = maximum_damage
-        self.__position = [0, 0]
-        self.__minimum_heal_points = 0
-        self.__maximum_heal_points = 0
+        self.__position = [16, 16]
         self.__position_x, self.__position_y = self.__position
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
+        self.__movement = [0, 0]
+        self.__collision_rects = []
+        self.__player_scroll = [0, 0]
+        self.__direction = 0
 
+    def get_movement(self):
+        return self.__movement
+    def set_movement(self, x, y):
+        self.__movement = [x, y]
 
     def get_name(self):
         return self.__name
@@ -59,13 +65,13 @@ class DungeonCharacter(ABC):
     def set_position(self, position):  # ensure that the tile is f before moving it.
         self.__position = position
         self.__position_x, self.__position_y = position
+        self.set_character_rect(self.__position_x, self.__position_y)
 
     def get_character_rect(self):
         return self.__rect
 
     def set_character_rect(self, x, y):
         self.__rect = pg.Rect(y, x, 16, 16)
-
 
         # Mechanic Methods
 
@@ -77,14 +83,6 @@ class DungeonCharacter(ABC):
     def set_character(self, type):
         self.__character = type
 
-    def set_hit_points(self, hit_points):
-        self.__current_hit_points = hit_points
-
-    def get_minimum_heal_points(self):
-        return self.__minimum_heal_points
-
-    def get_maximum_heal_points(self):
-        return self.__maximum_heal_points
 
     def set_attack_speed(self, attack_speed):
         self.__attack_speed = attack_speed
@@ -117,6 +115,8 @@ class DungeonCharacter(ABC):
     @abstractmethod
     def get_sprite_south(self):
         pass
+
+
 
 
 

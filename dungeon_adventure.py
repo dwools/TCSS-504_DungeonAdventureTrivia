@@ -79,7 +79,7 @@ class DungeonAdventure():
 
         # Player setup
         # Player sprite setup, camera scrolling setup
-        self.__player_character = None
+        self.__player_character = None # Set upn character slection in menu
         self.player_movement = [0, 0]
         self.camera_scroll = [0, 0]
         self.player_direction = 0
@@ -140,9 +140,17 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
+    def set_player_position(self, player_position):
+        self.player_position = player_position
+        self.player_x, self.player_y = player_position
+        self.set_player_rect()
+
     def set_player_rect(self):
         self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
                                    self.player_image_current.get_height())
+
+    def get_player_rect(self):
+        return self.player_rect
 
     def get_player_img_size(self):
         return self.player_img_size
@@ -152,6 +160,7 @@ class DungeonAdventure():
 
     def get_volume(self):
         return self.volume
+
 
     def set_player_images(self, north_image, east_image, west_image, south_image):
         self.player_image_north = north_image
@@ -395,7 +404,6 @@ class DungeonAdventure():
 
             # set players movement to 0,0
             # update player movement based on user input
-
             self.player_movement = [0, 0]
             if self.moving_east:
                 self.player_movement[0] += 2
@@ -412,6 +420,23 @@ class DungeonAdventure():
             if self.moving_south:
                 self.player_movement[1] += 2
                 self.player_image_current = self.player_image_south  # pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
+
+            # self.player_movement = [0, 0]
+            # if self.moving_east:
+            #     self.player_movement[0] += 2
+            #     self.player_image_current = self.player_image_east  # pg.transform.scale(pg.image.load(a.east_priestess), self.player_img_size)
+            #
+            # if self.moving_west:
+            #     self.player_movement[0] -= 2
+            #     self.player_image_current = self.player_image_west  # pg.transform.scale(pg.image.load(a.west_priestess), self.player_img_size)
+            #
+            # if self.moving_north:
+            #     self.player_movement[1] -= 2
+            #     self.player_image_current = self.player_image_north  # pg.transform.scale(pg.image.load(a.north_priestess), self.player_img_size)
+            #
+            # if self.moving_south:
+            #     self.player_movement[1] += 2
+            #     self.player_image_current = self.player_image_south  # pg.transform.scale(pg.image.load(a.south_priestess), self.player_img_size)
 
             # adjust player position based on collision with n tiles
 

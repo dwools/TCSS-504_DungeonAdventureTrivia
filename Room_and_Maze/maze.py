@@ -44,33 +44,36 @@ class Maze:
         return neighbors
 
 
-    def create_doors(self, curr, neighbor):
-        """
-        1.Ensure that if a room has a northdoor, the northern neighbor has a complementary southdoor, etc.
-        2.Open complementary doors to neighboring open doors, then run random number generator to open other doors.
-
-        :param curr
-        :param neighbor:
-        :return:
-        """
-        if neighbor.get_column() - curr.get_column() > 0:
-            curr.set_eastdoor(True)
-            neighbor.set_westdoor(True)
-        if neighbor.get_column() - curr.get_column() < 0:
-            curr.set_westdoor(True)
-            neighbor.set_eastdoor(True)
-        if neighbor.get_row() - curr.get_row() > 0:
-            curr.set_southdoor(True)
-            neighbor.set_northdoor(True)
-        if neighbor.get_row() - curr.get_row() < 0:
-            curr.set_northdoor(True)
-            neighbor.set_southdoor(True)
+    
 
     def generate_maze(self):
         """
         Assemble maze
         :return: list
         """
+
+        def create_doors(curr, neighbor):
+            """
+            1.Ensure that if a room has a northdoor, the northern neighbor has a complementary southdoor, etc.
+            2.Open complementary doors to neighboring open doors, then run random number generator to open other doors.
+
+            :param curr
+            :param neighbor:
+            :return:
+            """
+            if neighbor.get_column() - curr.get_column() > 0:
+                curr.set_eastdoor(True)
+                neighbor.set_westdoor(True)
+            if neighbor.get_column() - curr.get_column() < 0:
+                curr.set_westdoor(True)
+                neighbor.set_eastdoor(True)
+            if neighbor.get_row() - curr.get_row() > 0:
+                curr.set_southdoor(True)
+                neighbor.set_northdoor(True)
+            if neighbor.get_row() - curr.get_row() < 0:
+                curr.set_northdoor(True)
+                neighbor.set_southdoor(True)
+                
         self.__maze = []
         for i in range(self.__rows):
             self.__maze.append([])
@@ -89,7 +92,7 @@ class Maze:
                 neighbor = random.choice(neighbors)
                 stack.append(neighbor)
                 visited.append(neighbor)
-                self.create_doors(curr, neighbor)
+                create_doors(curr, neighbor)
             else: stack.pop()
 
         origin = self.__maze[0][0]
@@ -106,7 +109,7 @@ class Maze:
                 neighbor = random.choice(neighbors)
                 stack.append(neighbor)
                 visited.append(neighbor)
-                self.create_doors(curr, neighbor)
+                create_doors(curr, neighbor)
             else:
                 stack.pop()
 

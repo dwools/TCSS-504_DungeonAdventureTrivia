@@ -136,9 +136,7 @@ class Combat:
             self.__game.get_monsters_list().remove(self.__monster)
             self.__game.paused = False
             self.run_display = False
-        # self.__run_display = False
-        # self.__game.paused = False
-        # self.__game.playing = True
+
 
     def check_hero_hit_points(self):
         if self.__hero.get_current_hit_points() <= 0:
