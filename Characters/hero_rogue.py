@@ -42,6 +42,11 @@ class Rogue(Hero):
         return self.__chance_caught
 
     def special(self, enemy):
+        """
+        Rogue's special sneak attack skill
+        :param enemy:
+        :return:
+        """
         self.simple_attack(enemy)
         if random.randint(1, 100) <= self.__chance_for_second_attack:
             print("You try for a second attack!")

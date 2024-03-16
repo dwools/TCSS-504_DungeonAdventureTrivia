@@ -49,6 +49,11 @@ class Knight(Hero):
         return self.__maximum_crushing_damage
 
     def special(self, enemy):
+        """
+        Knight's special attack
+        :param enemy:
+        :return:
+        """
         if random.randint(1, 100) <= self.__minimum_crushing_damage:
             damage = random.randint(self.__minimum_crushing_damage, self.__maximum_crushing_damage)
             enemy.set_current_hit_points(enemy.get_current_hit_points() - damage)

@@ -10,6 +10,7 @@ class Pathfinder:
         to the hero's position
         :param matrix:
         """
+
         # setup
         self.__matrix = matrix
         self.__grid = Grid(matrix=matrix, inverse=True)
@@ -21,6 +22,10 @@ class Pathfinder:
         self.__monster = None
 
     def empty_path(self):
+        """
+        Empty pathfinding list, there is nothing there until we set down monsters
+        :return:
+        """
         self.__path = []
 
     def set_monster(self, monster):

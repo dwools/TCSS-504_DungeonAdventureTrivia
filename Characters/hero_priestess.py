@@ -46,6 +46,10 @@ class Priestess(Hero):
         return self.__maximum_heal_points
 
     def special(self):
+        """
+        Priestess's special skill
+        :return:
+        """
         if random.randint(1, 100) <= self.__chance_to_heal:
             heal_points = random.randint(self.__minimum_heal_points, self.__maximum_heal_points)
             if self.get_current_hit_points() + heal_points > self.__maximum_heal_points:
