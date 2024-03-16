@@ -87,7 +87,7 @@ class DungeonAdventure():
         self.coords_generator = ValidCoordsGenerator()
         self.coords_generator.generate_coords()
 
-        self.player_position = [16, 16]  # self.coords_generator.get_random_coords()
+        self.player_position = [16, 16]
         self.player_x, self.player_y = self.player_position
 
         self.player_img_size = (14, 14)
@@ -103,10 +103,10 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 0
+        self.__monster_count = 5
 
         # Place/spawn monsters
-        for _ in range(self.__monster_count):
+        for _ in range(self.get_monster_count()):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -541,11 +541,11 @@ class DungeonAdventure():
 
                 if event.key == K_e:
                     self.interacting = True
-                    print("Interacting!")
+                    # print("Interacting!")
 
                 if event.key == K_p:
                     self.paused = True
-                    print("The game is paused")
+                    # print("The game is paused")
                     self.current_menu = self.pause_menu
 
                 if event.key == K_h:
@@ -553,7 +553,7 @@ class DungeonAdventure():
 
                 if event.key == K_RETURN:
                     self.interacting = True
-                    print("option selected")
+                    # print("option selected")
 
                 if event.key == K_ESCAPE or event.key == K_BACKSPACE:
                     self.escaping = True
@@ -769,10 +769,10 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 0
+        self.__monster_count = 5
 
         # Place/spawn monsters
-        for _ in range(self.__monster_count):
+        for _ in range(self.get_monster_count()):
             self.place_monsters()
 
         # Item setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

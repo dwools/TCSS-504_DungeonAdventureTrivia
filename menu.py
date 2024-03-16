@@ -498,13 +498,16 @@ class OptionsMenu(Menu):
 
             self.game.draw_text(c.dungeon_font, 'Difficulty', 20, self.difficulty_x, self.difficulty_y,
                                 self.game.menu_font_color)
-            self.game.draw_text(c.system_font, f'{self.game.get_monster_count()}', 12, self.difficulty_x,
+            self.game.draw_text(c.system_font, f'Monster Count: {self.game.get_monster_count()}', 12, self.difficulty_x,
                                 self.difficulty_y + 50,
                                 self.game.menu_font_color)
+            self.game.draw_text(c.system_font, 'difficulty settings are non-functional', 10, self.difficulty_x,
+                                self.difficulty_y + 300,
+                                'yellow')
 
             self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
                                 self.middle_height + 250,
-                                self.game.menu_font_color)
+                                'yellow')
             self.draw_cursor()
 
             self.blit_screen()
