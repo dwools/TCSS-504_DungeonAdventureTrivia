@@ -50,7 +50,7 @@ class Knight(Hero):
 
     def special(self, enemy):
         """
-        Knight's special attack
+        Knight's special attack: Crushing Blow
         :param enemy:
         :return:
         """

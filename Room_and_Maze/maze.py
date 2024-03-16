@@ -15,6 +15,10 @@ class Maze:
 
 
     def new_maze(self):
+        """
+        Generating a new maze by using the dungeon.txt file
+        :return:
+        """
         self.__maze_output_file = open("dungeon.txt", 'w')
         self.generate_maze()
         self.write_maze_output()

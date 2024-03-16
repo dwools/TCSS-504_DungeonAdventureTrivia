@@ -7,6 +7,7 @@ class Pillar():
         and Polymorphism
         :param pillar_name:
         """
+
         self.__pillar_name = pillar_name
         self.__pillar_position = [0, 0]
         self.__pillar_position_x, self.__pillar_position_y = self.__pillar_position

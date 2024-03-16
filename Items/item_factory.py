@@ -4,6 +4,9 @@ from Gameplay.object_coordinates_generator import ValidCoordsGenerator
 from Items.item import Item
 
 class ItemFactory:
+    """
+    Creating items in the maze such as the health potion and the fire traps
+    """
 
     # def get_location(self):
     #     coords = ValidCoordsGenerator()

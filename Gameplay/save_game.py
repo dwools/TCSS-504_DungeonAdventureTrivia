@@ -14,6 +14,7 @@ class SaveGame:
         :param game_data:
         :return:
         """
+
         attributes = {}
         for monster in game_data.get_monsters_list():
             monster.set_monster_sprite_current(None)

@@ -47,7 +47,7 @@ class Priestess(Hero):
 
     def special(self):
         """
-        Priestess's special skill
+        Priestess's special skill: healing
         :return:
         """
         if random.randint(1, 100) <= self.__chance_to_heal:
