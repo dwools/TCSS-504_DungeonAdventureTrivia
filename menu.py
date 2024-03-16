@@ -15,6 +15,9 @@ from Room_and_Maze.maze import Maze
 
 
 class Menu:
+    """
+    Super class of Menu hierarchy.
+    """
 
     def __init__(self, game):
         self.game = game
@@ -40,8 +43,10 @@ class Menu:
 
 
 class MainMenu(Menu):
-    """ Main Menu Class.
-        Displays the main menu and leads to the other menus"""
+    """
+     Main Menu Class.
+        Displays the main menu and leads to the other menus
+    """
 
     def __init__(self, game):
         Menu.__init__(self, game)
@@ -126,7 +131,15 @@ class MainMenu(Menu):
                 self.state = 'Options'
 
     def check_input(self):
-        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
+        Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        Selecting 'Start Game' generates a new maze.
+        Selecting "How To Play" displays gameplay instructions.
+        Selecting "Load Game" sets game's load_game boolean parameter to True to indicate a pickled file of prior saved
+        game info should be unpickled and loaded.
+        Selecting "Credits" displays the names of the computer-savy herpetologists responsible for the presented marvel
+        of entertainment.
+        :return:
         """
 
         self.move_cursor()  # Read cursor position
@@ -157,6 +170,7 @@ class MainMenu(Menu):
 
 
 class CharacterSelectMenu(Menu):
+    """Select the Hero class player character."""
 
     def __init__(self, game):
         Menu.__init__(self, game)
@@ -284,7 +298,11 @@ class CharacterSelectMenu(Menu):
                 self.state = 'Knight'
 
     def check_input(self):
-        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
+         Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        Instantiate an object of the respective character's class using HeroFactory and assign its appropriate sprites
+        and set the player rectangle. Then initiate gameplay.
+        :return:
         """
 
         self.move_cursor()  # Read cursor position
@@ -302,33 +320,7 @@ class CharacterSelectMenu(Menu):
 
             elif self.state == 'Rogue':
                 self.game.set_player_character(HeroFactory().create_rogue())
-            # if self.state == 'Knight':
-            #     self.game.set_player_character(HeroFactory().create_knight())
-            #     self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_knight), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.east_knight), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.west_knight), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.south_knight), self.game.get_player_img_size())
-            #                                 )
-            #     self.game.set_player_rect()
-            #     self.game.playing = True
-            #
-            # elif self.state == 'Priestess':
-            #     self.game.set_player_character(HeroFactory().create_priestess())
-            #     self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_priestess), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.east_priestess), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.west_priestess), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.south_priestess), self.game.get_player_img_size())
-            #                                 )
-            #     self.game.set_player_rect()
-            #     self.game.playing = True
-            #
-            # elif self.state == 'Rogue':
-            #     self.game.set_player_character(HeroFactory().create_rogue())
-            #     self.game.set_player_images(pg.transform.scale(pg.image.load(a.north_rogue), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.east_rogue), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.west_rogue), self.game.get_player_img_size()),
-            #                                 pg.transform.scale(pg.image.load(a.south_rogue), self.game.get_player_img_size())
-            #                                 )
+
             player = self.game.get_player_character()
             self.game.set_player_images(pg.transform.scale(player.get_sprite_north(), self.game.get_player_img_size()),
                                         pg.transform.scale(player.get_sprite_east(), self.game.get_player_img_size()),
@@ -376,7 +368,15 @@ class HowToPlayMenu(Menu):
             clock.tick(12)
 
     def draw_wrapped_text(self, text, size, x, y, font_color):
-        """ Simple helper-function used to write text to the GUI. """
+        """
+         Simple helper-function used to write text to the GUI.
+        :param text:
+        :param size:
+        :param x:
+        :param y:
+        :param font_color:
+        :return:
+        """
         # pg.font.init()
         font = pg.font.Font(c.system_font, size)
         text_surface = font.render(text, True, font_color)
@@ -389,87 +389,6 @@ class HowToPlayMenu(Menu):
         if self.game.escaping:
             self.game.current_menu = self.game.main_menu
             self.run_display = False
-
-
-# class LoadSaveGamesMenu(Menu):  # WIP
-#     def __init__(self, game):
-#         Menu.__init__(self, game)
-#
-#         self.saved_games = [1, 2]  # Populate this from somewhere somehow?
-#
-#         if len(self.saved_games) != 0:  # if there are one or more saves
-#             self.state = "Save One"
-#             self.save_x, self.save_y = self.middle_width, self.middle_height
-#             self.save_rect = None
-#             self.saved_rects = []
-#
-#         else:
-#             self.state = "No Saved Games"
-#
-#     def display_menu(self):
-#         clock = pg.time.Clock()
-#         self.run_display = True
-#
-#         while self.run_display:
-#             self.game.check_events()
-#             self.check_input()
-#             self.mouse_position = pg.mouse.get_pos()
-#
-#             self.game.display.fill(c.PURPLE)
-#
-#             self.game.draw_text(c.dungeon_font, f'Load A Saved Game', 25, self.middle_width, self.middle_height - 200,
-#                                 'forestgreen')
-#
-#             self.game.draw_text(c.dungeon_font, f'Left Click on a save to start that save', 10, self.middle_width,
-#                                 self.middle_height - 150, 'yellow')
-#
-#             if len(self.saved_games) != 0:
-#                 self.save_y = self.middle_height - 12
-#
-#                 for save in self.saved_games:
-#                     self.save_rect = pg.Rect(self.save_x - 100, self.save_y - 50, 200, 50)
-#
-#                     if self.save_rect.collidepoint(self.mouse_position):
-#
-#                         self.game.font_color = 'teal'  # changes the color of the text (applying to the next, but we want it to apply to current
-#
-#                         if self.game.left_clicked:
-#                             # self.game.load_game()
-#
-#                             # self.game.set_maze(Maze(15, 20))
-#                             self.game.playing = True  # Here is where we enter the saved game
-#                             self.run_display = False  # end the current menu screen
-#
-#                         self.game.left_clicked = False
-#
-#                     else:
-#                         self.game.font_color = c.WHITE
-#
-#                     self.game.draw_text(c.dungeon_font, f'Save {self.saved_games[save - 1]}', 20, self.save_x,
-#                                         self.save_y,
-#                                         self.game.font_color)
-#
-#                     self.saved_rects.append(self.save_rect)
-#                     self.save_y += 70
-#
-#             else:
-#                 self.game.draw_text(c.dungeon_font, f'No Saves Found', 15, self.middle_width, self.middle_height,
-#                                     self.game.font_color)
-#
-#             self.game.draw_text(c.dungeon_font, 'Press ESCAPE to go to the main menu', 10, self.middle_width,
-#                                 self.middle_height + 250,
-#                                 c.WHITE)
-#
-#             self.blit_screen()
-#
-#             clock.tick(12)
-#
-#     def check_input(self):
-#
-#         if self.game.escaping:
-#             self.game.current_menu = self.game.main_menu
-#             self.run_display = False
-#
 
 class OptionsMenu(Menu):
     def __init__(self, game):
@@ -548,8 +467,10 @@ class OptionsMenu(Menu):
                     self.game.set_monster_count(0)
 
     def move_cursor(self):
-        """ Adjust cursor position to notify user of their current choice / button.
+        """
+        Adjust cursor position to notify user of their current choice / button.
             Does a full loop through the menu allowing north and south traversal.
+        :return:
         """
 
         if self.game.moving_south:
@@ -610,6 +531,9 @@ class CreditsMenu(Menu):
 
 
 class PauseMenu(Menu):
+    """
+    Pause menu opened during gameplay with options "Save The Game", "Main Menu", "Options", and "Exit Game"
+    """
     # Needs to be able to resume game time
     def __init__(self, game):
         Menu.__init__(self, game)
@@ -697,6 +621,13 @@ class PauseMenu(Menu):
                 self.state = 'Options'
 
     def check_input(self):
+        """
+        If "Save the Game" is selected: execute SaveGame()'s save_game() method to pickle dungeon data.
+        If "Main Menu" is selected: return to Main Menu.
+        If "Options is selected: open Options menu.
+        IF "Exit Game" is selected: exit game using pg.quit() and sys.exit().
+        :return:
+        """
 
         self.move_cursor()
 
@@ -732,6 +663,9 @@ class PauseMenu(Menu):
 
 
 class TriviaUI(Menu):
+    """
+    Displays trivia question corresponding to the theme of the given pillar.
+    """
     def __init__(self, game, pillar):
         Menu.__init__(self, game)
         self.__pillar = self.game.get_pillar(pillar)
@@ -779,7 +713,15 @@ class TriviaUI(Menu):
             clock.tick(12)
 
     def draw_question(self, text, size, x, y, font_color):
-        """ Simple helper-function used to write text to the GUI. """
+        """
+        Simple helper-function used to write text to the GUI.
+        :param text:
+        :param size:
+        :param x:
+        :param y:
+        :param font_color:
+        :return:
+        """
         # pg.font.init()
         font = pg.font.Font(self.question_font, size)
         text_surface = font.render(text, True, font_color)
@@ -808,7 +750,10 @@ class TriviaUI(Menu):
                 self.state = 'TRUE'
 
     def check_input(self):
-        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
+         Select "TRUE" or "FALSE" to guess answer to trivia question. If correct, the given pillar is added to
+         player's pillar inventory. If incorrect, the pillar relocates to a random position in the maze.
+        :return:
         """
 
         self.move_cursor()  # Read cursor position
@@ -816,10 +761,10 @@ class TriviaUI(Menu):
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
 
             if self.state == 'TRUE':
-                print('you have selected true')
+                print('You have selected True')
 
             elif self.state == 'FALSE':
-                print('you have selected false')
+                print('You have selected False')
 
             # if answer == true, add pillar to backpack || else: relocate pillar
             if self.answer == self.state:
@@ -827,7 +772,7 @@ class TriviaUI(Menu):
                 self.game.add_to_backpack(Pillar(self.__pillar))
                 self.game.remove_pillar(self.__pillar)
             else:
-                print('you failed')  # relocate pillar
+                print(f'You failed! The {self.__pillar.get_name()} pillar has vanished and appeared elsewhere!')  # relocate pillar
                 self.game.place_pillar(self.__pillar)
 
             self.run_display = False
@@ -844,6 +789,9 @@ class TriviaUI(Menu):
 
 
 class GameOver(Menu):
+    """
+    Menu displayed when player's current_hit_points drops to <= 0.
+    """
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = "Main Menu"
@@ -915,6 +863,9 @@ class GameOver(Menu):
 
 
 class VictoryScreen(Menu):
+    """
+    Menu displayed when player picks up all four pillars.
+    """
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = "Main Menu"

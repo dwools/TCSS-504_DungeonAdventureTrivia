@@ -132,15 +132,22 @@ class Combat:
         #     pass
 
     def check_monster_hit_points(self):
+        """
+        During combat, if the monster's current hit points drop to <= 0, the monster is removed from the game's
+        monsters list, Combat() UI closes, and the main game loop resumes.
+        :return:
+        """
         if self.__monster.get_current_hit_points() <= 0:
             self.__game.get_monsters_list().remove(self.__monster)
             self.__game.paused = False
             self.run_display = False
-        # self.__run_display = False
-        # self.__game.paused = False
-        # self.__game.playing = True
 
     def check_hero_hit_points(self):
+        """
+        During combat, if the player/hero's current hit points drop to <= 0, the Combat() UI closes, the main game
+        loop terminates, and the Game Over UI opens.
+        :return:
+        """
         if self.__hero.get_current_hit_points() <= 0:
             self.__game.paused = True
             self.__game.current_menu = self.__game.game_over
@@ -269,7 +276,11 @@ class Combat:
         pg.display.update()  # Update the Display
 
     def write_main_text_box(self, text):
-        """ Simple helper-function used to write text to the GUI. """
+        """
+        Simple helper-function used to write text to the GUI.
+        :param text:
+        :return:
+        """
         text_to_write = textwrap.wrap(text, 20)
         vertical_offset = 0
 
@@ -339,8 +350,10 @@ class Combat:
             clock.tick(12)
 
     def move_cursor(self):
-        """ Adjust cursor position to notify user of their current choice / button.
-            Does a full loop through the menu allowing north and south traversal.
+        """
+        Adjust cursor position to notify user of their current choice / button.
+        Does a full loop through the menu allowing north and south traversal.
+        :return:
         """
 
         if self.__game.moving_south:
@@ -362,7 +375,9 @@ class Combat:
                 self.__state = 'Attack'
 
     def check_input(self):
-        """ Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        """
+        Check which menu the user is selecting based on cursor position. Then if user interacts, 'open' that menu.
+        :return:
         """
 
         self.move_cursor()  # Read cursor position
@@ -378,6 +393,11 @@ class Combat:
 
 
 class AttackMenu(Combat):
+    """
+    When player selects "FIGHT" in Combat(), another menu opens with options "Simple Attack", which calls
+    Combat()'s simple_attack_sequence(), and "Special Attack", which calls Combat()'s special_attack_sequence() method.,
+
+    """
     def __init__(self, game):
         Combat.__init__(self, game)
         self.__game = game
@@ -422,25 +442,28 @@ class AttackMenu(Combat):
             self.__game.display.fill('darkgrey')
             self.__game.combat_font_color = c.BLACK
 
-            # Monster
+            # Monster stats
             self.__game.draw_text(c.dungeon_font, f'{self.__monster_name}', 15, self.__monster_name_x,
                                   self.__monster_name_y,
                                   'darkred')
             self.__game.draw_text(c.dungeon_font, f'HP {self.__monster.get_current_hit_points()}', 15, self.__monster_name_x,
                                   self.__monster_name_y + 50,
                                   'white')
-            pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(375, 90, 210, 50))
-            pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(380, 95, 200, 40))
 
-            # Monster Sprite
+            # Monster stage
+            pg.draw.ellipse(self.__game.display, 'darkred', pg.Rect(365, 80, 210, 50))
+            pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(370, 85, 200, 40))
+
+            # Monster sprite
             self.__game.display.blit(pg.transform.scale(self.__monster.get_sprite_south(), (55, 55)), (443, 65))
 
-            # Hero
+            # Hero stats
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
                                   'darkgreen')
             self.__game.draw_text(c.dungeon_font, f'HP {self.__hero.get_current_hit_points()}', 15, self.__hero_name_x,
                                   self.__hero_name_y + 50, 'white')
 
+            # Hero stage
             pg.draw.ellipse(self.__game.display, 'darkslategray', pg.Rect(70, 275, 210, 50))
             pg.draw.ellipse(self.__game.display, 'lightgreen', pg.Rect(75, 280, 200, 40))
 
@@ -535,97 +558,4 @@ class AttackMenu(Combat):
             self.__run_display = False
 
         self.__run_display = False
-
-
-
-
-class InventoryMenu(Combat):
-    def __init__(self, game):
-        Combat.__init__(self, game)
-
-
-class CombatMechanics(Combat):
-    def __init__(self, game):
-        Combat.__init__(self, game)
-        self.__game = game
-        self.__attack_order = []
-
-    def attack_order(self):
-        if self.get_monster_health_curr() != 0:
-            if self.__hero_attack_speed > self.__monster_attack_speed:
-                self.__attack_order.extend(["Hero's Turn", "Hero's Turn", "Monster's Turn"])
-            elif self.__hero_attack_speed < self.__monster_attack_speed:
-                self.__attack_order.extend(["Monster's Turn", "Monster's Turn", "Hero's Turn"])
-            else:
-                random.choice((self.__attack_order.extend(["Hero's Turn"]), self.__attack_order.extend(["Monster's Turn"])))
-        elif self.get_hero_health_curr() <= 0:
-            self.__game.current_menu = self.__game.game_over
-
-    # def simple_attack(self, attacker, opponent):  # Hero's attack
-    #     if random.randint(1, 100) <= self.get_chance_to_hit():
-    #         attacker.set_current_hit_points(random.randint(attacker.get_minimum_damage(), attacker.get_maximum_damage()))
-    #     else:
-    #         if isinstance(attacker, Hero):
-    #             print("Your attack missed!")
-    #         if isinstance(opponent)
-    #         pass
-    #     if opponent.get_current_hit_points() <= 0:
-    #         pass
-
-    def hero_simple_attack(self):  # Hero's attack
-        if random.randint(1, 100) <= self.__hero.get_chance_to_hit():
-            self.__monster.set_current_hit_points(
-                random.randint(self.__hero.get_minimum_damage(), self.__hero.get_maximum_damage()))
-            if self.__monster.get_current_hit_points <= 0:
-                self.__game.get_monsters_list().remove(self.__monster)
-        else:
-            print("Your attack missed!")
-            pass
-
-    def specials(self):
-        # Crushing blow
-        if isinstance(self.__hero, Knight):
-            if random.randint(1, 100) <= self.__hero.get_chance_for_crushing_blow():
-                self.__monster.set_current_hit_points(
-                    random.randint(self.__hero.get_minimum_crushing_damage(), self.__hero.get_maximum_crushing_damage()))
-                if self.__monster.get_current_hit_points <= 0:
-                    self.__game.get_monsters_list().remove(self.__monster)
-            else:
-                print("Your Crushing Blow missed!")
-                pass
-
-
-        if isinstance(self.__hero, Priestess):
-            if random.randint(1, 100) <= self.__hero.get_chance_to_heal():
-                self.__hero.set_current_hit_points(random.randint(self.__hero.get_minimum_heal_points(), self.__hero.get_maximum_heal_points()))
-                if self.__hero.get_current_hit_points() >= self.__hero.get_max_hit_points():
-                    self.__hero.set_current_hit_points(self.__hero.get_max_hit_points())
-            else:
-                print("Your Special Healing Failed!")
-                pass
-
-        if isinstance(self.__hero, Rogue):
-            self.hero_simple_attack()
-            if random.randint(1, 100) <= self.__hero.get_chance_for_second_attack():
-                print("You try for a second attack!")
-                if random.randint(1, 100) <= self.__hero.get_chance_caught():
-                    self.hero_simple_attack()
-                else:
-                    print("But you got caught! Your second attack failed!")
-                    pass
-        #
-        # if isinstance(self.__hero, Rogue):
-        #     self.simple_attack(self.__hero, self.__monster)
-        #     if random.randint(1, 100) <= self.__hero.get_chance_for_second_attack():
-        #         print("You try for a second attack!")
-        #         if random.randint(1, 100) <= self.__hero.get_chance_caught():
-        #             self.simple_attack(self.__hero, self.__monster)
-        #         else:
-        #             print("But you got caught! Your second attack failed!")
-        #             pass
-
-
-
-
-
 

@@ -8,6 +8,10 @@ import pygame as pg
 
 
 class Monster(DungeonCharacter):
+    """
+    A Monster character that moves on an A* Pathfinding path through our dungeon maze toward the player character.
+    Passed into Combat() when player and Monster object rectangles collide.
+    """
 
     def __init__(self,
                  name,
@@ -57,6 +61,10 @@ class Monster(DungeonCharacter):
 
 
     def monster_heal(self):  # Heal Monster
+        """
+        Increases Monster's hit points while ensuring hit points don't exceed the maximum hit point value
+        :return:
+        """
         if self.get_current_hit_points() <= self.get_max_hit_points() // 3: #(self.get_monster_health_max() // 3): # change this to chance to heal
             if random.randint(1, 100) <= self.__chance_to_heal:
                 heal_points = random.randint(self.__minimum_heal_points, self.__maximum_heal_points)
@@ -68,6 +76,10 @@ class Monster(DungeonCharacter):
                 print(f"{self.get_name()} increased its health by {heal_points} hit points!")
 
     def update(self):
+        """
+        Update the Monster's pathfinding position
+        :return:
+        """
         position = self.get_position()
         rectangle = self.get_character_rect()
         self.set_direction()
@@ -79,6 +91,10 @@ class Monster(DungeonCharacter):
         self.check_collisions()
 
     def set_direction(self):
+        """
+        Set the direction in which the Monster will move based on the next element in the pathfinding path.
+        :return: Vector
+        """
         if len(self.__path) > 1:
             self.__path.pop(0)
         # if len(self.__path) > 1:        # If monster and player rectangles don't collide, delete this line and un-indent the lines below
@@ -92,6 +108,10 @@ class Monster(DungeonCharacter):
 
 
     def get_direction(self):
+        """
+        Get the direction of the normalized vector from one GridNode Pathfinding element to the next.
+        :return:
+        """
         if self.__collision_rects:
             if len(self.__collision_rects) > 1:
                 start = pg.math.Vector2(self.get_position())
@@ -143,17 +163,24 @@ class Monster(DungeonCharacter):
     def get_monster_goal(self):
         return self.__monster_goal
 
-
-
     def set_path(self, path):
+        """
+        Sequence of methods to generate collective path from Monster's position to Monster's goal (player position)
+         based on Pathfinding GridNode list
+        :param path:
+        :return:
+        """
+
         self.__path = path
         self.create_collision_rects()
         self.get_direction()
 
     def create_collision_rects(self):
-        """ Create a rectangle over a tile,
+        """
+        Create a rectangle over a tile,
         if the monster collides with that tile.
         Append that collision rect to a list that will be used in the check_collisions method.
+        :return:
         """
 
         if self.__path:
@@ -165,7 +192,9 @@ class Monster(DungeonCharacter):
                 self.__collision_rects.append(rect)
 
     def check_collisions(self):
-        """ Check for collisions, if monster collides, delete that rect and move to the next rect in the path.
+        """
+        Check for collisions, if monster collides, delete that rect and move to the next rect in the path.
+        :return:
         """
 
         if self.__collision_rects:
@@ -214,6 +243,15 @@ class Monster(DungeonCharacter):
         self.__player_scroll = scroll
 
     def simple_attack(self, enemy):
+        """
+        Deliver simple attack to enemy character. If successful, reduce enemy's current_hit_points value by random
+        integer between min and max damage values.
+
+        May fail if randomly-generated integer is <= chance_to hit or <= enemy (hero's) chance_to_block.
+        :param enemy:
+        :return:
+        """
+
         print(f'{self.get_name()} tries a simple attack...')
         if random.randint(1, 100) <= self.get_chance_to_hit():
             if random.randint(1, 100) <= enemy.get_chance_to_block():
@@ -224,29 +262,3 @@ class Monster(DungeonCharacter):
                 print(f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
         else:
             print(f"but {self.get_name()}'s attack missed!")
-
-    # def simple_attack2(self, enemy):
-    #     print(f'{enemy.get_name()} tries a simple attack...')
-    #     if random.randint(1, 100) <= enemy.get_chance_to_hit():
-    #         damage = random.randint(enemy.get_minimum_damage(), enemy.get_maximum_damage())
-    #         self.set_current_hit_points(self.get_current_hit_points() - damage)
-    #         print(f'{self.__name} took {damage} damage! {self.__name} now has {self.get_current_hit_points()} hit points!')
-    #     else:
-    #         print(f"{enemy.get_name}'s attack missed!")
-
-
-
-
-
-# Abstract classes are parent classes. We write them to consolidate information for objects that share characteristic
-# We do it when there isn't enough information to warrant an instance of a class.
-
-
-# Any set methods need to ensure the data being passed in looks okay, and if not, raise an exception.
-if __name__ == '__main__':
-    gremlin = Monster("Gremlin", 70, 70, 5, 80, 15, 30, 40, 20, 40)
-    ogre = Monster("Ogre", 200, 200, 2, 60, 30, 60, 10, 30, 60)
-    for _ in range(10):
-        gremlin.simple_attack(ogre)
-    for _ in range(5):
-        ogre.monster_heal()

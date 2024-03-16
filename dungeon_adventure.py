@@ -140,7 +140,7 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
-    def set_player_rect(self):
+    def set_player_rect(self, ):
         self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
                                    self.player_image_current.get_height())
 
@@ -805,6 +805,14 @@ class DungeonAdventure():
 
         # Game Status
         self.running, self.playing, self.paused = True, False, False
+
+    def set_player_position(self, position):
+        self.player_position = position
+        self.player_x, self.player_y = position
+        self.set_player_rect()
+
+    def get_player_rect(self):
+        return self.player_rect
 
 
 if __name__ == "__main__":

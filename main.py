@@ -4,6 +4,12 @@ import pygame as pg
 
 
 def main():
+    """
+    Game's overall constructor. It initializes and builds the databases to be queried in the game, instantiates the
+    game's view and gameplay controller (and part of the model system) loop, and opens and displays the game's
+    Main Menu to begin gameplay.
+    :return:
+    """
     pg.init()
 
     initialize_databases.main()
