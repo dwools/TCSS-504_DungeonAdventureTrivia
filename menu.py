@@ -361,7 +361,7 @@ class HowToPlayMenu(Menu):
             self.game.draw_text(c.dungeon_font, 'How To Play', 20, self.middle_width, self.middle_height - 250,
                                 'forestgreen')
 
-            text = 'Use WASD or Arrow keys to move your character and navigate menus. \nPress H to use a health potion. \nPick up all four pillars to win the game. Avoid monsters and fire.'
+            text = 'Use WASD or Arrow keys to move your character and navigate menus. \nPress H to use a health potion. Press P to pause the game. \nPick up all four pillars to win the game. Avoid monsters and fire.'
             wrapped_text = textwrap.wrap(text, 35)
 
             for line in wrapped_text:

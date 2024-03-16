@@ -103,7 +103,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 5
+        self.__monster_count = 0
 
         # Place/spawn monsters
         for _ in range(self.__monster_count):
