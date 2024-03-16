@@ -8,6 +8,9 @@ from Characters.hero_rogue import Rogue
 
 class HeroFactory:
     def __init__(self):
+        """
+        Initializes hero database to create priestess, knight and rogue
+        """
         self.__conn1 = sqlite3.connect('Databases/database_heroes.db')
         self.__conn2 = sqlite3.connect('Databases/database_names.db')
 
