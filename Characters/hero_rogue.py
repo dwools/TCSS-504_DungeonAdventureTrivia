@@ -73,3 +73,10 @@ class Rogue(Hero):
 
     def get_sprite_south(self):
         return self.__sprite_south
+
+    def set_character_sprites(self, north_sprite, east_sprite, west_sprite, south_sprite):
+        self.__sprite_north = north_sprite
+        self.__sprite_east = east_sprite
+        self.__sprite_west = west_sprite
+        self.__sprite_south = south_sprite
+        self.__sprite_current = south_sprite

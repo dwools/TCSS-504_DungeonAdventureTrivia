@@ -22,7 +22,6 @@ class DungeonCharacter(ABC):
         self.__position_x, self.__position_y = self.__position
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
 
-
     def get_name(self):
         return self.__name
 
@@ -118,6 +117,9 @@ class DungeonCharacter(ABC):
     def get_sprite_south(self):
         pass
 
+    @abstractmethod
+    def set_character_sprites(self, *args, **kwargs):
+        pass
 
 
     # Here, imagine the instructor gave us this abstract method. What then does its presence tell us?

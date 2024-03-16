@@ -55,16 +55,6 @@ class DungeonAdventure():
         self.display = pg.Surface((640, 480))  # (640w, 480h)
         self.screen = pg.display.set_mode(self.WINDOW_SIZE, 0, 32)
 
-        # Load up base images
-        self.__gremlin_image = pg.image.load(a.south_gremlin)
-        self.__skelly_image = pg.image.load(a.south_skelly)
-        self.__ogre_image = pg.image.load(a.south_ogre)  # to be replaced with Ogre sprite
-        self.__health_potion_image = pg.image.load(a.health_potion)
-        self.__fire_trap_image = pg.image.load(a.fire_trap)
-        self.__abstraction_pillar_image = pg.image.load(a.abstraction_pillar)
-        self.__encapsulation_pillar_image = pg.image.load(a.encapsulation_pillar)
-        self.__inheritance_pillar_image = pg.image.load(a.inheritance_pillar)
-        self.__polymorphism_pillar_image = pg.image.load(a.polymorphism_pillar)
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Config
@@ -278,7 +268,13 @@ class DungeonAdventure():
             return hit_list
 
         def move(rect, movement, tiles):
-            """ Adjusts player position based on collision with n tile. """
+            """
+             Adjusts player position based on collision with n tile.
+            :param rect:
+            :param movement:
+            :param tiles:
+            :return:
+            """
 
             tile_collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
             rect.x += movement[0]
@@ -312,7 +308,7 @@ class DungeonAdventure():
             return rect, tile_collision_types
 
         while self.playing and not self.paused:  # Game Loop
-            """ Dungeon Adventure Gui runs while: game is not paused, game is 'playing'. """
+            #####  Dungeon Adventure Gui runs while: game is not paused, game is 'playing'.  #####
 
             # Check for player input
             self.check_events()
@@ -425,9 +421,9 @@ class DungeonAdventure():
             # Update the sprites for the monsters
 
             for monster in self.__monsters:
-                """ For monster in list of monsters, get monster rect, get monster position, 
-                calculate monster's path to the player, update monster position based on path to the player.
-                """
+                ##### For monster in list of monsters, get monster rect, get monster position, calculate monster's
+                # path to the player, update monster position based on path to the player. #####
+
                 monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
                 monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
                 # pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
@@ -473,9 +469,9 @@ class DungeonAdventure():
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            # Create the Heads Up Display, draw it to the screen, update it with player stats dynamically
+            # Create the Heads-up Display, draw it to the screen, update it with player stats dynamically
 
-            # test health for hud
+            # test health for HUD
 
             # Drawing the HUDisplay
             pg.draw.rect(self.display, 'black', pg.Rect(0, 0, 140, 90))  # outside background
@@ -505,7 +501,10 @@ class DungeonAdventure():
             clock.tick(60)  # set the FPS
 
     def check_events(self):
-        """ Receive user input from Mouse x Keyboard. """
+        """
+         Receive user input from Mouse x Keyboard.
+        :return:
+        """
 
         for event in pg.event.get():  # Event Loop
 
@@ -579,7 +578,17 @@ class DungeonAdventure():
                     self.escaping = False
 
     def draw_text(self, font, text, size, x, y, font_color):
-        """ Simple helper-function used to write text to the GUI. """
+        """
+         Simple helper-function used to write text to the GUI.
+        :param font:
+        :param text:
+        :param size:
+        :param x:
+        :param y:
+        :param font_color:
+        :return:
+        """
+
         pg.font.init()
         font = pg.font.Font(font, size)
         text_surface = font.render(text, True, font_color)
@@ -593,6 +602,10 @@ class DungeonAdventure():
         # self.__dungeon_map = load_new_map()
 
     def load_game(self):
+        """
+        Pickling cannot pickle png objects. So character sprites must be re-loaded.
+        :return:
+        """
         if os.path.exists("dungeon_adventure.pickle"):
             with open("dungeon_adventure.pickle", "rb") as f:
                 game_data = pickle.load(f)[0]
@@ -608,21 +621,22 @@ class DungeonAdventure():
                     monster.set_sprite_north(pg.image.load(a.north_gremlin))
                     monster.set_sprite_east(pg.image.load(a.east_gremlin))
                     monster.set_sprite_west(pg.image.load(a.west_gremlin))
-                    monster.set_monster_sprite_current(pg.image.load(a.south_gremlin))
+                    monster.set_sprite_current(pg.image.load(a.south_gremlin))
 
                 elif monster.get_type() == "Skeleton":
                     monster.set_sprite_south(pg.image.load(a.south_skelly))
                     monster.set_sprite_north(pg.image.load(a.north_skelly))
                     monster.set_sprite_east(pg.image.load(a.east_skelly))
                     monster.set_sprite_west(pg.image.load(a.west_skelly))
-                    monster.set_monster_sprite_current(pg.image.load(a.south_skelly))
+                    monster.set_sprite_current(pg.image.load(a.south_skelly))
 
                 elif monster.get_type() == "Ogre":
                     monster.set_sprite_south(pg.image.load(a.south_ogre))
                     monster.set_sprite_north(pg.image.load(a.north_ogre))
                     monster.set_sprite_east(pg.image.load(a.east_ogre))
                     monster.set_sprite_west(pg.image.load(a.west_ogre))
-                    monster.set_monster_sprite_current(pg.image.load(a.south_ogre))
+                    monster.set_sprite_current(pg.image.load(a.south_ogre))
+
             for pillar in self.__pillars:
                 if pillar.get_pillar_name() == "Abstraction":
                     pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))
@@ -632,29 +646,40 @@ class DungeonAdventure():
                     pillar.set_inheritance_sprite(pg.image.load(a.inheritance_pillar))
                 elif pillar.get_pillar_name() == "Polymorphism":
                     pillar.set_polymorphism_sprite(pg.image.load(a.polymorphism_pillar))
+
             for item in self.__items:
                 if item.get_item_name() == "Health Potion":
                     item.set_health_potion_sprite(pg.image.load(a.health_potion))
                 elif item.get_item_name() == "Fire Trap":
                     item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
+
             if isinstance(self.__player_character, Knight):
-                self.set_player_images(pg.image.load(a.north_knight),
-                                       pg.image.load(a.east_knight),
-                                       pg.image.load(a.west_knight),
-                                       pg.image.load(a.south_knight),
-                                       )
+                self.__player_character.set_character_sprites(
+                    pg.image.load(a.north_knight),
+                    pg.image.load(a.east_knight),
+                    pg.image.load(a.west_knight),
+                    pg.image.load(a.south_knight)
+                )
             elif isinstance(self.__player_character, Priestess):
-                self.set_player_images(pg.image.load(a.north_priestess),
-                                       pg.image.load(a.east_priestess),
-                                       pg.image.load(a.west_priestess),
-                                       pg.image.load(a.south_priestess),
-                                       )
+                self.__player_character.set_character_sprites(
+                    pg.image.load(a.north_priestess),
+                    pg.image.load(a.east_priestess),
+                    pg.image.load(a.west_priestess),
+                    pg.image.load(a.south_priestess)
+                )
             elif isinstance(self.__player_character, Rogue):
-                self.set_player_images(pg.image.load(a.north_rogue),
-                                       pg.image.load(a.east_rogue),
-                                       pg.image.load(a.west_rogue),
-                                       pg.image.load(a.south_rogue),
-                                       )
+                self.__player_character.set_character_sprites(
+                    pg.image.load(a.north_rogue),
+                    pg.image.load(a.east_rogue),
+                    pg.image.load(a.west_rogue),
+                    pg.image.load(a.south_rogue)
+                )
+            self.set_player_images(pg.transform.scale(self.__player_character.get_sprite_north(), self.get_player_img_size()),
+                                   pg.transform.scale(self.__player_character.get_sprite_east(), self.get_player_img_size()),
+                                   pg.transform.scale(self.__player_character.get_sprite_west(), self.get_player_img_size()),
+                                   pg.transform.scale(self.__player_character.get_sprite_south(), self.get_player_img_size())
+                                   )
+            self.set_player_rect()
 
     @staticmethod
     def load_new_map():

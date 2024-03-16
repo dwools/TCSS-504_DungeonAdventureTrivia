@@ -640,6 +640,7 @@ class PauseMenu(Menu):
                 self.game.interacting = False
 
             if self.state == 'Main Menu':
+                self.game.reset_game()
                 self.game.current_menu = MainMenu(self.game)
                 self.game.paused = False
                 self.game.playing = False

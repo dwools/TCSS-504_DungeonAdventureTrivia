@@ -128,3 +128,7 @@ class Hero(DungeonCharacter):
     @abstractmethod
     def get_sprite_south(self):
         pass
+
+    @abstractmethod
+    def set_character_sprites(self, *args, **kwargs):
+        pass
