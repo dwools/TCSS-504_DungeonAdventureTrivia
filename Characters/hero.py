@@ -32,7 +32,6 @@ class Hero(DungeonCharacter, ABC):
 
         self.__player_pillars = []
         self.__player_health_potions = []
-        self.__death = False
 
 
     def get_chance_to_block(self):
@@ -70,13 +69,6 @@ class Hero(DungeonCharacter, ABC):
         if self.get_current_hit_points() <= 0:  # Checking for 0 hit points can go here or in its own section in the game loop
             self.__death = True
         print(f"Ouch! You lost {value} hit points! You now have {self.get_current_hit_points()} hit points.")
-
-
-    def get_death(self):
-        return self.__death
-
-    def set_death(self, value):
-        self.__death = True
 
     def get_player_health_potions(self):
         return self.__player_health_potions

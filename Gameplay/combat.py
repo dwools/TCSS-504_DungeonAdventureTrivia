@@ -97,10 +97,19 @@ class Combat:
         for character in self.__attack_order:
             if character == self.__hero:
                 character.simple_attack(self.__monster)
-                self.check_monster_hit_points()
+                if self.__monster.get_current_hit_points() <= 0:
+                    self.__game.get_monsters_list().remove(self.__monster)
+                    self.__monster.set_death(True)
+                    self.__game.paused = False
+                    self.run_display = False
+                    break
             elif character == self.__monster:
                 character.simple_attack(self.__hero)
-                self.check_hero_hit_points()
+                if self.__hero.get_current_hit_points() <= 0:
+                    self.__hero.set_death(True)
+                    self.__game.paused = True
+                    self.__game.current_menu = self.__game.game_over
+                    break
                 character.monster_heal()
         # else:
         #     pass
@@ -114,15 +123,23 @@ class Combat:
             if character == self.__hero:
                 if isinstance(character, Knight):
                     character.special(self.__monster)
-                    self.check_monster_hit_points()
                 elif isinstance(character, Priestess):
                     character.special()
                 elif isinstance(character, Rogue):
                     character.special(self.__monster)
-                    self.check_monster_hit_points()
+                if self.__monster.get_current_hit_points() <= 0:
+                    self.__game.get_monsters_list().remove(self.__monster)
+                    self.__monster.set_death(True)
+                    self.__game.paused = False
+                    self.run_display = False
+                    break
             elif character == self.__monster:
                 character.simple_attack(self.__hero)
-                self.check_hero_hit_points()
+                if self.__hero.get_current_hit_points() <= 0:
+                    self.__hero.set_death(True)
+                    self.__game.paused = True
+                    self.__game.current_menu = self.__game.game_over
+                    break
                 character.monster_heal()
         # else:
         #     pass
@@ -134,7 +151,7 @@ class Combat:
         :return:
         """
         if self.__monster.get_current_hit_points() <= 0:
-            self.__game.get_monsters_list().remove(self.__monster)
+            self.__monster.set_death(True)
             self.__game.paused = False
             self.run_display = False
 
@@ -145,6 +162,7 @@ class Combat:
         :return:
         """
         if self.__hero.get_current_hit_points() <= 0:
+            self.__hero.set_death(True)
             self.__game.paused = True
             self.__game.current_menu = self.__game.game_over
 

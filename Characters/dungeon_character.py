@@ -20,6 +20,13 @@ class DungeonCharacter(ABC):
         self.__maximum_heal_points = 0
         self.__position_x, self.__position_y = self.__position
         self.__rect = pg.Rect(self.__position_y, self.__position_x, 16, 16)
+        self.__death = False
+
+    def get_death(self):
+        return self.__death
+
+    def set_death(self, param):
+        self.__death = param
 
     def get_name(self):
         return self.__name

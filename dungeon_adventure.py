@@ -222,9 +222,9 @@ class DungeonAdventure():
         TILE_SIZE = bottom_wall_image.get_width()
 
         # # Audio
-        self.background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
-        self.background_audio = pg.mixer.music.play(-1)  # loops indefinitely
-        self.background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
+        background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
+        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -423,7 +423,8 @@ class DungeonAdventure():
             for monster in self.__monsters:
                 ##### For monster in list of monsters, get monster rect, get monster position, calculate monster's
                 # path to the player, update monster position based on path to the player. #####
-
+                if monster.get_death() is True:
+                    self.__monsters.remove(monster)
                 monster.set_monster_goal(self.player_rect)  # Setting monsters goal to player position
                 monster.set_player_scroll(self.camera_scroll)  # adjusting for camera scroll
                 # pathfinder.draw_path(self.display, self.camera_scroll)  # Drawing the path visually, not necessary in gameplay
@@ -838,6 +839,10 @@ class DungeonAdventure():
 
     def get_player_rect(self):
         return self.player_rect
+
+    def set_item_sprites(self, value):
+        Item("Health Potion").set_health_potion_sprite(value)
+        Item("Fire Trap").set_fire_trap_sprite(value)
 
 
 if __name__ == "__main__":

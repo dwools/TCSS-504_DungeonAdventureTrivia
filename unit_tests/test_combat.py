@@ -104,22 +104,26 @@ class CombatTest(unittest.TestCase):
         if len(self.__game1.get_monsters_list()) == 0:
             self.__skeleton = MonsterFactory().create_skeleton()
             self.__game1.set_monster(self.__skeleton)
-            self.__game1.get_monsters_list().append(self.__skeleton)
+        self.__game1.get_monsters_list().insert(0, self.__skeleton)
 
         self.__game1_combat_test.set_hero(self.__rogue)
         self.__game1_combat_test.set_monster(self.__skeleton)
 
-        for _ in range(10):
-            self.__game1_combat_test.simple_attack_sequence()
+        pre_monsters_list = len(self.__game1.get_monsters_list())
+        for _ in range(20):
             if self.__rogue.get_current_hit_points() <= 0:
+                self.assertTrue(self.__rogue.get_death())
                 self.assertTrue(self.__game1.paused)
                 self.assertTrue(self.__game1.current_menu == self.__game1.game_over)
                 break
-            elif self.__skeleton.get_current_hit_points() <= 0:
-                self.assertTrue(len(self.__game1.get_monsters_list()) == 0)
+            elif self.__skeleton not in self.__game1.get_monsters_list():
+                post_monsters_list = len(self.__game1.get_monsters_list())
+                self.assertGreater(post_monsters_list, pre_monsters_list)
+                self.assertFalse(self.__game1.paused)
                 break
             else:
-                continue
+                self.__game1_combat_test.simple_attack_sequence()
+
 
     def test_special_attack_sequence(self):
         """
@@ -130,24 +134,29 @@ class CombatTest(unittest.TestCase):
         Combat().check_hero_hit_points()
         :return:
         """
+        self.setUp()
 
-        if len(self.__game1.get_monsters_list()) == 0:
-            self.__skeleton = MonsterFactory().create_skeleton()
-            self.__game1.set_monster(self.__skeleton)
-            self.__game1.get_monsters_list().append(self.__skeleton)
+        if len(self.__game2.get_monsters_list()) == 0:
+            self.__gremlin = MonsterFactory().create_gremlin()
+            self.__game2.set_monster(self.__gremlin)
+        self.__game2.get_monsters_list().insert(0, self.__gremlin)
+        assert self.__game2.get_monsters_list()[0] == self.__gremlin
 
-        self.__rogue.set_current_hit_points(self.__rogue.get_max_hit_points())
-        self.__skeleton.set_current_hit_points(self.__skeleton.get_max_hit_points())
+        self.__knight.set_current_hit_points(self.__knight.get_max_hit_points())
+        self.__gremlin.set_current_hit_points(self.__gremlin.get_max_hit_points())
 
-        for _ in range(10):
-            self.__game1_combat_test.special_attack_sequence()
-            if self.__rogue.get_current_hit_points() <= 0:
-                self.assertTrue(self.__game1.paused)
-                self.assertTrue(self.__game1.current_menu == self.__game1.game_over)
+        pre_monsters_list = len(self.__game2.get_monsters_list())
+        for _ in range(20):
+            if self.__knight.get_current_hit_points() <= 0:
+                self.assertTrue(self.__knight.get_death())
+                self.assertTrue(self.__game2.paused)
+                self.assertTrue(self.__game2.current_menu == self.__game2.game_over)
                 break
-            elif self.__skeleton.get_current_hit_points() <= 0:
-                self.assertTrue(len(self.__game1.get_monsters_list()) == 0)
+            elif self.__gremlin not in self.__game2.get_monsters_list():
+                post_monsters_list = len(self.__game2.get_monsters_list())
+                self.assertFalse(self.__game2.paused)
                 break
             else:
-                continue
+                self.__game2_combat_test.special_attack_sequence()
+
 
