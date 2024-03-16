@@ -1,8 +1,16 @@
+import random
 from abc import ABC, abstractmethod
 from Characters.dungeon_character import DungeonCharacter
 from Items.item import Item
 from Pillars_and_Trivia.pillar import Pillar
 
+def simple_attack_counter(func):
+    def wrapper(*args, **kwargs):
+        wrapper.special_simple_attack_count += 1
+        return func(*args, **kwargs)
+
+    wrapper.special_simple_attack_count = 0
+    return wrapper
 
 class Hero(DungeonCharacter):
     def __init__(self, name,
@@ -76,13 +84,30 @@ class Hero(DungeonCharacter):
     def get_player_pillars(self):
         return self.__player_pillars
 
-    # def simple_attack(self, enemy):  # Hero's attack
-    #     if random.randint(1, 100) <= self.__chance_to_hit:
-    #         enemy.set_current_hit_points(
-    #             random.randint(self.__minimum_damage, self.__maximum_damage))
+
+
+    @simple_attack_counter
+    def simple_attack(self, enemy):
+        print(f'{self.get_name()} tries a simple attack...')
+        if random.randint(1, 100) <= self.get_chance_to_hit():
+            damage = random.randint(self.get_minimum_damage(), self.get_maximum_damage())
+            enemy.set_current_hit_points(enemy.get_current_hit_points() - damage)
+            print(
+                f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
+        else:
+            print(f"{self.get_name()}'s attack missed!")
+
+    # def simple_attack2(self, enemy):
+    #     print(f'{enemy.get_name()} tries a simple attack...')
+    #     if random.randint(1, 100) <= enemy.get_chance_to_hit():
+    #         if random.randint(1, 100) <= self.get_chance_to_block():
+    #             print(f'but {self.get_name()} blocked the attack!')
+    #         else:
+    #             damage = random.randint(enemy.get_minimum_damage(), enemy.get_maximum_damage())
+    #             self.set_current_hit_points(self.get_current_hit_points() - damage)
+    #             print(f'{self.__name} took {damage} damage! {self.__name} now has {self.get_current_hit_points()} hit points!')
     #     else:
-    #         print("Your attack missed!")
-    #         pass
+    #         print(f"{enemy.get_name}'s attack missed!")
 
     @abstractmethod
     def special(self, *args, **kwargs):

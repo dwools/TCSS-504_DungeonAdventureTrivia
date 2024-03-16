@@ -53,12 +53,14 @@ class ItemsUnitTests(unittest.TestCase):
         """
         Test that Hero().drink_health_potion() replenishes hero character's diminished hit points.
 
-        Test that replenished hit points from Hero().drink_health_potion() do not exceed characters's max hit point
+        Test that replenished hit points from Hero().drink_health_potion() do not exceed character's max hit point
         value.
         :return:
         """
         self.__knight_test.set_current_hit_points(120)
         self.__knight_test.add_to_backpack(self.__health_potion_test)
+        self.assertTrue(len(self.__knight_test.get_player_health_potions()) == 1)
+
         pre_healing_hit_points = self.__knight_test.get_current_hit_points()
         self.assertGreater(self.__knight_test.get_max_hit_points(), pre_healing_hit_points)
 
@@ -66,6 +68,7 @@ class ItemsUnitTests(unittest.TestCase):
         post_healing_hit_points = self.__knight_test.get_current_hit_points()
         self.assertGreater(post_healing_hit_points, pre_healing_hit_points)
         self.assertEqual(post_healing_hit_points, self.__knight_test.get_max_hit_points())
+        self.assertTrue(len(self.__knight_test.get_player_health_potions()) == 0)
 
 
 

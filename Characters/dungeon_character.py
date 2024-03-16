@@ -3,13 +3,7 @@ from abc import ABC, abstractmethod
 import pygame as pg
 
 
-def simple_attack_counter(func):
-    def wrapper(*args, **kwargs):
-        wrapper.special_simple_attack_count += 1
-        return func(*args, **kwargs)
 
-    wrapper.special_simple_attack_count = 0
-    return wrapper
 
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
@@ -104,15 +98,9 @@ class DungeonCharacter(ABC):
     def set_maximum_damage(self, maximum_damage):
         self.__maximum_damage = maximum_damage
 
-    @simple_attack_counter
-    def simple_attack(self, enemy):
-        print(f'{self.__name} tries a simple attack...')
-        if random.randint(1, 100) <= self.__chance_to_hit:
-            damage = random.randint(self.__minimum_damage, self.__maximum_damage)
-            enemy.set_current_hit_points(enemy.get_current_hit_points() - damage)
-            print(f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
-        else:
-            print(f"{self.__name}'s attack missed!")
+    @abstractmethod
+    def simple_attack(self, *args, **kwargs):
+        pass
 
     @abstractmethod
     def get_sprite_north(self):

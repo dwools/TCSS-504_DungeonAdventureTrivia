@@ -213,6 +213,27 @@ class Monster(DungeonCharacter):
     def set_player_scroll(self, scroll):
         self.__player_scroll = scroll
 
+    def simple_attack(self, enemy):
+        print(f'{self.get_name()} tries a simple attack...')
+        if random.randint(1, 100) <= self.get_chance_to_hit():
+            if random.randint(1, 100) <= enemy.get_chance_to_block():
+                print(f'but {enemy.get_name()} blocked the attack!')
+            else:
+                damage = random.randint(self.get_minimum_damage(), self.get_maximum_damage())
+                enemy.set_current_hit_points(enemy.get_current_hit_points() - damage)
+                print(f'{enemy.get_name()} took {damage} damage! {enemy.get_name()} now has {enemy.get_current_hit_points()} hit points!')
+        else:
+            print(f"but {self.get_name()}'s attack missed!")
+
+    # def simple_attack2(self, enemy):
+    #     print(f'{enemy.get_name()} tries a simple attack...')
+    #     if random.randint(1, 100) <= enemy.get_chance_to_hit():
+    #         damage = random.randint(enemy.get_minimum_damage(), enemy.get_maximum_damage())
+    #         self.set_current_hit_points(self.get_current_hit_points() - damage)
+    #         print(f'{self.__name} took {damage} damage! {self.__name} now has {self.get_current_hit_points()} hit points!')
+    #     else:
+    #         print(f"{enemy.get_name}'s attack missed!")
+
 
 
 
