@@ -12,7 +12,7 @@ def simple_attack_counter(func):
     wrapper.special_simple_attack_count = 0
     return wrapper
 
-class Hero(DungeonCharacter):
+class Hero(DungeonCharacter, ABC):
     def __init__(self, name,
                  type,
                  hit_points,

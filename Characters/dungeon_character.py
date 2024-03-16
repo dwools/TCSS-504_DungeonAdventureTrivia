@@ -1,4 +1,4 @@
-import random
+
 from abc import ABC, abstractmethod
 import pygame as pg
 
@@ -7,7 +7,6 @@ import pygame as pg
 
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
-        # Dungeon character needs a name per project specifications
         self.__name = name
         self.__type = type
         self.__max_hit_points = hit_points

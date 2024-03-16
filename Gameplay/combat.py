@@ -69,20 +69,16 @@ class Combat:
         # self.__attack_order = []
         if self.__hero_attack_speed > self.__monster_attack_speed:
             self.__attack_order = [self.__hero, self.__monster]
-            # self.__attack_order.extend([self.__hero, self.__monster])
 
         elif self.__hero_attack_speed < self.__monster_attack_speed:
             self.__attack_order = [self.__monster, self.__hero]
-            # self.__attack_order.extend([self.__monster, self.__hero])
 
         else:
             if random.choice([1, 2]) == 1:
                 self.__attack_order = [self.__hero, self.__monster]
-                # self.__attack_order.extend([self.__hero, self.__monster])
 
             else:
                 self.__attack_order = [self.__monster, self.__hero]
-                # self.__attack_order.extend([self.__monster, self.__hero])
 
         return self.__attack_order
 
@@ -180,7 +176,6 @@ class Combat:
 
     def set_monster(self, monster):
         self.__monster = monster
-        return self.__monster
 
     def get_hero_attack_speed(self):
         return self.__hero_attack_speed
@@ -194,8 +189,8 @@ class Combat:
     def get_hero(self):
         return self.__hero
 
-    def set_hero(self, value):
-        self.__hero = value
+    def set_hero(self, hero):
+        self.__hero = hero
 
     def get_monster_attack_speed(self):
         return self.__monster_attack_speed

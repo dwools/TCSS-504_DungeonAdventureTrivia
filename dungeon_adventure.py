@@ -130,8 +130,8 @@ class DungeonAdventure():
         # Game Status
         self.running, self.playing, self.paused = True, False, False
 
-    def set_player_rect(self, ):
-        self.player_rect = pg.Rect(self.player_x, self.player_y, self.player_image_current.get_width(),
+    def set_player_rect(self):
+        self.player_rect = pg.Rect(self.player_y, self.player_x, self.player_image_current.get_width(),
                                    self.player_image_current.get_height())
 
     def get_player_img_size(self):
@@ -222,9 +222,9 @@ class DungeonAdventure():
         TILE_SIZE = bottom_wall_image.get_width()
 
         # # Audio
-        background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
-        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
-        background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
+        self.background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
+        self.background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        self.background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

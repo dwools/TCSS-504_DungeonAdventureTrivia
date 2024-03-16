@@ -788,6 +788,8 @@ class TriviaUI(Menu):
             # self.run_display = False
             # self.game.paused = False
 
+    def get_trivia_category(self):
+        return self.__pillar
 
 class GameOver(Menu):
     """
