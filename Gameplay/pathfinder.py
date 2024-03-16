@@ -5,7 +5,11 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 class Pathfinder:
     def __init__(self, matrix):
-
+        """
+        Implementing a pathfinding algorithm for the monsters to find the shortest maze path from their position
+        to the hero's position
+        :param matrix:
+        """
         # setup
         self.__matrix = matrix
         self.__grid = Grid(matrix=matrix, inverse=True)

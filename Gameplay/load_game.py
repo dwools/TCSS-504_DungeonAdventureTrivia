@@ -7,6 +7,10 @@ class LoadGame:
 
     @staticmethod
     def load_game():
+        """
+        Loading a saved game from dungeon_adventure.pickle file
+        :return:
+        """
         if os.path.exists("dungeon_adventure.pickle"):
             with open("dungeon_adventure.pickle", "rb") as f:
                 game_data = pickle.load(f)

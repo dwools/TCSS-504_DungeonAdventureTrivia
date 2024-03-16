@@ -9,6 +9,11 @@ class SaveGame:
 
     @staticmethod
     def pickle(game_data):
+        """
+        Save the current state of the game
+        :param game_data:
+        :return:
+        """
         attributes = {}
         for monster in game_data.get_monsters_list():
             monster.set_monster_sprite_current(None)

@@ -2,6 +2,11 @@ import pygame as pg
 from Assets import assets as a
 class Pillar():
     def __init__(self, pillar_name):
+        """
+        placing pillars within the maze, there are 4 pillars: Abstraction, Encapsulation, Inheritance,
+        and Polymorphism
+        :param pillar_name:
+        """
         self.__pillar_name = pillar_name
         self.__pillar_position = [0, 0]
         self.__pillar_position_x, self.__pillar_position_y = self.__pillar_position

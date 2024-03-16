@@ -5,6 +5,10 @@ from Pillars_and_Trivia.trivia_question import TriviaQuestion
 
 class TriviaFactory:
     def __init__(self, pillar):
+        """
+        Reads database to generate trivia questions
+        :param pillar:
+        """
         self.__conn = sqlite3.connect('Databases/database_trivia.db')
         self.__pillar = pillar  # Pillar value triggered by pick-up
         self.__elapids_count = random.randint(1, 10)
