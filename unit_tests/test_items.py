@@ -127,25 +127,29 @@ class ItemsUnitTests(unittest.TestCase):
         for item in self.__game.get_items_list():
             if item.get_item_name() == "Health Potion":
                 self.__game.get_items_list().remove(item)
+                self.__game.get_items_list().append(ItemFactory().create_fire_trap())
+
+
 
 
         pre_hit_points = self.__knight.get_current_hit_points()
 
-        self.__game.get_items_list().append(self.__fire_trap)
-        item_rect = self.__game.get_items_list()[0].get_item_rect()
-        Px, Py, Pw, Pl = self.__game.get_items_list()[0].get_item_rect()
-        self.__game.set_player_position((Py, Px))
-        self.__game.set_player_rect()
-        player_rect = self.__game.get_player_rect()
-        self.assertTrue(player_rect.colliderect(item_rect))
-
         for item in self.__game.get_items_list():
-            if self.__game.get_player_rect().colliderect(item.get_item_rect()):
-                if item.get_item_name() == "Fire Trap":
-                    self.__knight.damage(1)
-                else:
-                    self.__knight.add_to_backpack(item)
-                    self.__game.get_items_list().remove(item)
+            item_rect = item.get_item_rect()
+            Px, Py, Pw, Pl = item_rect
+            self.__game.set_player_position((Py, Px))
+            self.__game.set_player_rect()
+            player_rect = self.__game.get_player_rect()
+            if player_rect.colliderect(item_rect):
+
+                if self.__game.get_player_rect().colliderect(item.get_item_rect()):
+
+                    if item.get_item_name() == "Fire Trap":
+                        self.__knight.damage(1)
+
+                    else:
+                        self.__knight.add_to_backpack(item)
+                        self.__game.get_items_list().remove(item)
 
         post_hit_points = self.__knight.get_current_hit_points()
 

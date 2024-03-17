@@ -42,12 +42,13 @@ class DungeonAdventure():
         self.character_select = CharacterSelectMenu(self)
         self.options = OptionsMenu(self)
         self.how_to_play = HowToPlayMenu(self)
-        # self.load_games = LoadSaveGamesMenu(self)
+        self.trivia_ui = None
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
         self.game_over = GameOver(self)
         self.victory_screen = VictoryScreen(self)
         self.current_menu = self.main_menu  # Default menu is the main menu
+
 
         # Window Setup
         self.WIN_WIDTH, self.WIN_HEIGHT = c.WIN_WIDTH, c.WIN_HEIGHT  # 1280w x 960h
@@ -93,7 +94,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 5
+        self.__monster_count = 0
 
         # Place/spawn monsters
         for _ in range(self.get_monster_count()):
@@ -104,7 +105,7 @@ class DungeonAdventure():
         self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
         self.__items = []
-        self.__item_count = 10
+        self.__item_count = 0
 
         # Place/spawn items
         for item in range(self.__item_count):
@@ -122,6 +123,43 @@ class DungeonAdventure():
         # Place/spawn pillars
         for pillar in self.__pillars:
             self.place_pillar(pillar)
+
+        # PNG objects to ignore
+        # self.snake = 'snake.png'
+        # self.south_knight = 'south_knight.png'
+        # self.north_knight = 'north_knight.png'
+        # self.west_knight = 'west_knight.png'
+        # self.east_knight = 'east_knight.png'
+        # self.south_priestess = 'south_priestess.png'
+        # self.north_priestess = 'north_priestess.png'
+        # self.west_priestess = 'west_priestess.png'
+        # self.east_priestess = 'east_priestess.png'
+        # self.south_rogue = 'south_rogue.png'
+        # self.north_rogue = 'north_rogue.png'
+        # self.west_rogue = 'west_rogue.png'
+        # self.east_rogue = 'east_rogue.png'
+        # self.south_gremlin = 'south_gremlin.png'
+        # self.north_gremlin = 'north_gremlin.png'
+        # self.west_gremlin = 'west_gremlin.png'
+        # self.east_gremlin = 'east_gremlin.png'
+        # self.south_ogre = 'south_ogre.png'
+        # self.north_ogre = 'north_ogre.png'
+        # self.west_ogre = 'west_ogre.png'
+        # self.east_ogre = 'east_ogre.png'
+        # self.south_skelly = 'south_skelly.png'
+        # self.north_skelly = 'north_skelly.png'
+        # self.west_skelly = 'west_skelly.png'
+        # self.east_skelly = 'east_skelly.png'
+        # self.background_music = 'theme_forest.mp3'
+        # self.bottom_wall = 'bottom_wall.png'
+        # self.upper_wall = 'upper_wall.png'
+        # self.floor = 'floor1.png'
+        # self.health_potion = 'HealthPotion.png'
+        # self.fire_trap = 'FireTrap.png'
+        # self.abstraction_pillar = 'AstronomyPillar.png'
+        # self.encapsulation_pillar = 'ElapidPillar.png'
+        # self.inheritance_pillar = 'InternationalPillar.png'
+        # self.polymorphism_pillar = 'PokemonPillar.png'
 
         # Controls
         self.moving_east, self.moving_west, self.moving_north, self.moving_south = False, False, False, False
@@ -602,6 +640,8 @@ class DungeonAdventure():
 
         # self.__dungeon_map = load_new_map()
 
+
+
     def load_game(self):
         """
         Pickling cannot pickle png objects. So character sprites must be re-loaded.
@@ -680,7 +720,21 @@ class DungeonAdventure():
                                    pg.transform.scale(self.__player_character.get_sprite_west(), self.get_player_img_size()),
                                    pg.transform.scale(self.__player_character.get_sprite_south(), self.get_player_img_size())
                                    )
-            self.set_player_rect()
+            # # self.set_item_sprites(self.__health_potion.get_health_potion_sprite(), self.__fire_trap.get_fire_trap_sprite())
+            # self.set_pillar_sprites(self.__abstraction_pillar.get_abstraction_sprite(),
+            #                         self.__encapsulation_pillar.get_encapsulation_sprite(),
+            #                         self.__inheritance_pillar.get_inheritance_sprite(),
+            #                         self.__polymorphism_pillar.get_polymorphism_sprite())
+            # self.character_select.set_menu_images(pg.transform.scale(self.character_select.knight_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)),
+            #                                       pg.transform.scale(self.character_select.priestess_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)),
+            #                                       pg.transform.scale(self.character_select.rogue_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)))
+            # self.trivia_ui = TriviaUI(self, self.__player_character.get_player_pillars()[-1])
+            # self.trivia_ui.set_trivia_ui_images(Pillar("Abstraction").get_abstraction_sprite(),
+            #                                     Pillar("Encapsulation").get_encapsulation_sprite(),
+            #                                     Pillar("Inheritance").get_inheritance_sprite(),
+            #                                     Pillar("Polymorphism").get_polymorphism_sprite())
+
+
 
     @staticmethod
     def load_new_map():
@@ -795,7 +849,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 5
+        self.__monster_count = 0
 
         # Place/spawn monsters
         for _ in range(self.get_monster_count()):
@@ -806,7 +860,7 @@ class DungeonAdventure():
         self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
         self.__items = []
-        self.__item_count = 10
+        self.__item_count = 0
 
         # Place/spawn items
         for item in range(self.__item_count):
@@ -840,9 +894,35 @@ class DungeonAdventure():
     def get_player_rect(self):
         return self.player_rect
 
-    def set_item_sprites(self, value):
-        Item("Health Potion").set_health_potion_sprite(value)
-        Item("Fire Trap").set_fire_trap_sprite(value)
+    def set_item_sprites(self, param1, param2):
+        """
+        Setter for item sprites, especially for saving (set to None) and loading (set to pg.image.load(a.<image>))
+        :param param1:
+        :param param2:
+        :return:
+        """
+
+        Item("Health Potion").set_health_potion_sprite(param1)
+        Item("Fire Trap").set_fire_trap_sprite(param2)
+        self.__health_potion.set_health_potion_sprite(param1)
+        self.__fire_trap.set_fire_trap_sprite(param2)
+
+    def set_pillar_sprites(self, param1, param2, param3, param4):
+        """
+        Setter for pillar sprites, especially for saving (set to None) and loading (set to pg.image.load(a.<image>))
+        :param param1:
+        :param param2:
+        :param param3:
+        :param param4:
+        :return:
+        """
+
+        self.__abstraction_pillar.set_abstraction_sprite(param1)
+        self.__encapsulation_pillar.set_encapsulation_sprite(param2)
+        self.__inheritance_pillar.set_inheritance_sprite(param3)
+        self.__polymorphism_pillar.set_polymorphism_sprite(param4)
+
+
 
 
 if __name__ == "__main__":

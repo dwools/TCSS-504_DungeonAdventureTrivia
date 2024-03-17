@@ -332,6 +332,18 @@ class CharacterSelectMenu(Menu):
 
             self.run_display = False
 
+    def set_menu_images(self, knight_image, priestess_image, rogue_image):
+        """
+        Setter for menu images, especially for saving (set to None)
+        :param param1:
+        :param param2:
+        :param param3:
+        :return:
+        """
+
+        self.knight_image = knight_image
+        self.priestess_image = priestess_image
+        self.rogue_image = rogue_image
 
 class HowToPlayMenu(Menu):
 
@@ -749,6 +761,22 @@ class TriviaUI(Menu):
             elif self.state == 'FALSE':
                 self.cursor_rect.midtop = (self.true_x - 100, self.true_y)
                 self.state = 'TRUE'
+
+    def set_trivia_ui_images(self, abstraction, encapsulation, inheritance, polymorphism):
+        """
+        Setter for TriviaUI pillar attribute images, especially for saving (set to None) and loading.
+        :param param1:
+        :param param2:
+        :param param3:
+        :param param4:
+        :return:
+        """
+        self.__pillar.set_abstraction_sprite(abstraction)
+        self.__pillar.set_encapsulation_sprite(encapsulation)
+        self.__pillar.set_inheritance_sprite(inheritance)
+        self.__pillar.set_polymorphism_sprite(polymorphism)
+
+
 
     def check_input(self):
         """

@@ -3,8 +3,6 @@ from abc import ABC, abstractmethod
 import pygame as pg
 
 
-
-
 class DungeonCharacter(ABC):
     def __init__(self, name, type, hit_points, attack_speed, chance_to_hit, minimum_damage, maximum_damage):
         self.__name = name
