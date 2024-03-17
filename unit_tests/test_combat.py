@@ -118,7 +118,7 @@ class CombatTest(unittest.TestCase):
                 break
             elif self.__skeleton not in self.__game1.get_monsters_list():
                 post_monsters_list = len(self.__game1.get_monsters_list())
-                self.assertGreater(post_monsters_list, pre_monsters_list)
+                self.assertGreater(pre_monsters_list, post_monsters_list)
                 self.assertFalse(self.__game1.paused)
                 break
             else:
@@ -154,6 +154,7 @@ class CombatTest(unittest.TestCase):
                 break
             elif self.__gremlin not in self.__game2.get_monsters_list():
                 post_monsters_list = len(self.__game2.get_monsters_list())
+                self.assertGreater(pre_monsters_list, post_monsters_list)
                 self.assertFalse(self.__game2.paused)
                 break
             else:

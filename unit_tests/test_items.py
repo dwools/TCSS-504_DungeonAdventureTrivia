@@ -22,11 +22,10 @@ class ItemsUnitTests(unittest.TestCase):
         self.__game.set_player_character(self.__knight)
         
         # Player images to set player rect
-        self.__game.set_player_images(
-            pg.transform.scale(self.__knight.get_sprite_north(), self.__game.get_player_img_size()),
-            pg.transform.scale(self.__knight.get_sprite_east(), self.__game.get_player_img_size()),
-            pg.transform.scale(self.__knight.get_sprite_west(), self.__game.get_player_img_size()),
-            pg.transform.scale(self.__knight.get_sprite_south(), self.__game.get_player_img_size())
+        self.__game.set_player_images((self.__knight.get_sprite_north(), self.__game.get_player_img_size()),
+                                      (self.__knight.get_sprite_east(), self.__game.get_player_img_size()),
+                                      (self.__knight.get_sprite_west(), self.__game.get_player_img_size()),
+                                      (self.__knight.get_sprite_south(), self.__game.get_player_img_size())
         )
         self.__game.set_player_rect()
 

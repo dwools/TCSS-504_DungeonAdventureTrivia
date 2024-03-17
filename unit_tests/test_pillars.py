@@ -29,11 +29,10 @@ class PillarsUnitTests(unittest.TestCase):
         self.__inheritance_pillar = self.__game.get_inheritance_pillar()
         self.__polymorphism_pillar = self.__game.get_polymorphism_pillar()
 
-        self.__game.set_player_images(
-            pg.transform.scale(self.__priestess.get_sprite_north(), self.__game.get_player_img_size()),
-            pg.transform.scale(self.__priestess.get_sprite_east(), self.__game.get_player_img_size()),
-            pg.transform.scale(self.__priestess.get_sprite_west(), self.__game.get_player_img_size()),
-            pg.transform.scale(self.__priestess.get_sprite_south(), self.__game.get_player_img_size())
+        self.__game.set_player_images((self.__priestess.get_sprite_north(), self.__game.get_player_img_size()),
+                                      (self.__priestess.get_sprite_east(), self.__game.get_player_img_size()),
+                                      (self.__priestess.get_sprite_west(), self.__game.get_player_img_size()),
+                                      (self.__priestess.get_sprite_south(), self.__game.get_player_img_size())
         )
         self.__game.set_player_rect()
         self.__trivia_ui = TriviaUI(self.__game, "Abstraction")

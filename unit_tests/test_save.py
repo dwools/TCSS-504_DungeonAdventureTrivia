@@ -46,8 +46,8 @@ class MyTestCase(unittest.TestCase):
         Combat(self.__game).simple_attack_sequence()
 
     def test_save_game(self):
-        SaveGame().pickle(self.__game)
-        assert os.path.exists("dungeon_adventure.pickle")
+        SaveGame().save_helper(self.__game)
+        assert os.path.exists("./save_files/attributes_dict.pkl")
 
 
 if __name__ == '__main__':
