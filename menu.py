@@ -156,7 +156,7 @@ class MainMenu(Menu):
                 self.game.current_menu = self.game.how_to_play
 
             elif self.state == 'Load Game':
-                if os.path.isfile('./saved_files/attributes_dict.pkl') and os.path.isfile('./saved_files/saved_dungeon_map.pkl'):
+                if os.path.isfile('./save_files/attributes_dict.pkl') and os.path.isfile('./save_files/saved_dungeon_map.pkl'):
                     self.game.set_loaded_game(True)
                     self.game.playing = True  # Here is where we enter the saved game
                     # self.run_display = False  # end the current menu screen
