@@ -266,10 +266,10 @@ class DungeonAdventure():
         floor_image = pg.image.load(a.floor)
         TILE_SIZE = bottom_wall_image.get_width()
 
-        # # Audio
-        # background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
-        # background_audio = pg.mixer.music.play(-1)  # loops indefinitely
-        # background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
+        # Audio
+        background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
+        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
