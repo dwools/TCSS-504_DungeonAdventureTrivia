@@ -94,7 +94,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 0
+        self.__monster_count = 5
 
         # Place/spawn monsters
         for _ in range(self.get_monster_count()):
@@ -105,7 +105,7 @@ class DungeonAdventure():
         self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
         self.__items = []
-        self.__item_count = 0
+        self.__item_count = 10
 
         # Place/spawn items
         for item in range(self.__item_count):
@@ -169,8 +169,8 @@ class DungeonAdventure():
         self.running, self.playing, self.paused = True, False, False
 
     def set_player_rect(self):
-        self.player_rect = pg.Rect(self.player_y, self.player_x, self.player_image_current.get_width(),
-                                   self.player_image_current.get_height())
+        self.player_rect = pg.Rect(self.player_y, self.player_x, self.player_image_south.get_width(),
+                                   self.player_image_south.get_height())
 
     def get_player_img_size(self):
         return self.player_img_size
@@ -182,11 +182,11 @@ class DungeonAdventure():
         return self.volume
 
     def set_player_images(self, north_image, east_image, west_image, south_image):
-        self.player_image_north = north_image
-        self.player_image_east = east_image
-        self.player_image_west = west_image
-        self.player_image_south = south_image
-        self.player_image_current = south_image
+        self.player_image_north = pg.transform.scale(pg.image.load(north_image[0]), north_image[1])
+        self.player_image_east = pg.transform.scale(pg.image.load(east_image[0]), east_image[1])
+        self.player_image_west = pg.transform.scale(pg.image.load(west_image[0]), west_image[1])
+        self.player_image_south = pg.transform.scale(pg.image.load(south_image[0]), south_image[1])
+        self.player_image_current = pg.transform.scale(pg.image.load(south_image[0]), south_image[1])
 
     def place_items(self, item):
         item.set_item_position(self.coords_generator.get_random_coords())
@@ -248,6 +248,13 @@ class DungeonAdventure():
         Main Gameplay Loop, runs the Main Game GUI and updates screen based on user input.
         :return:
         """
+        if self.__loaded_game is True:
+
+            self.set_dungeon_map(self.load_saved_map())  #
+            self.load_game()
+        else:
+            self.set_dungeon_map(self.load_new_map())  # load_new_map() reads in new dungeon.txt file
+
 
         pg.mixer.pre_init(44100, -16, 2, 512)  # Initializing the audio file to remove its delay
         clock = pg.time.Clock()
@@ -260,19 +267,14 @@ class DungeonAdventure():
         TILE_SIZE = bottom_wall_image.get_width()
 
         # # Audio
-        background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
-        background_audio = pg.mixer.music.play(-1)  # loops indefinitely
-        background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
+        # background_audio = pg.mixer.music.load(a.background_music)  # loading in the audio file
+        # background_audio = pg.mixer.music.play(-1)  # loops indefinitely
+        # background_audio = pg.mixer.music.set_volume(self.volume)  # scale of 0->1
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         # Set up map for new game, test game, or loaded game
-        if self.__loaded_game is True:
-            self.set_dungeon_map(self.load_saved_map())  #
-            self.load_game()
-        else:
-            self.set_dungeon_map(self.load_new_map())  # load_new_map() reads in new dungeon.txt file
 
         def create_matrix(tile_set):
             # Creating a map underneath the visual map that monsters will use in the pathfinding algorithm
@@ -433,11 +435,13 @@ class DungeonAdventure():
             self.player_movement = [0, 0]
             if self.moving_east:
                 self.player_movement[0] += 2
-                self.player_image_current = self.player_image_east  # pg.transform.scale(pg.image.load(a.east_priestess), self.player_img_size)
+
+                self.player_image_current = self.player_image_east
+                # self.player_image_current = pg.transform.scale(pg.image.load(a.east_priestess), self.player_img_size)  # self.player_image_east
 
             if self.moving_west:
                 self.player_movement[0] -= 2
-                self.player_image_current = self.player_image_west  # pg.transform.scale(pg.image.load(a.west_priestess), self.player_img_size)
+                self.player_image_current = self.player_image_west # self.player_image_west  #
 
             if self.moving_north:
                 self.player_movement[1] -= 2
@@ -450,6 +454,7 @@ class DungeonAdventure():
             # adjust player position based on collision with n tiles
 
             self.player_rect, collisions = move(self.player_rect, self.player_movement, tile_rects)
+
             self.display.blit(self.player_image_current,
                               (self.player_rect.x - self.camera_scroll[0], self.player_rect.y - self.camera_scroll[1]))
 
@@ -477,18 +482,19 @@ class DungeonAdventure():
                     self.attack_menu = AttackMenu(self)
                     self.current_menu = self.__combat_ui
 
-                self.display.blit(monster.get_sprite_current(), (
+                self.display.blit(pg.image.load(monster.get_sprite_current()), (
                     rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))  # Draws monster to screen
 
             for item in self.__items:
                 item.set_player_scroll(self.camera_scroll)
                 rect = item.get_item_rect()
                 if item.get_item_name() == "Health Potion":
-                    self.display.blit(item.get_health_potion_sprite(),
+                    self.display.blit(pg.image.load(item.get_health_potion_sprite()),
                                       (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
                 elif item.get_item_name() == "Fire Trap":
-                    self.display.blit(item.get_fire_trap_sprite(),
+                    self.display.blit(pg.image.load(item.get_fire_trap_sprite()),
                                       (rect.x - self.camera_scroll[0], rect.y - self.camera_scroll[1]))
+
             for pillar in self.__pillars:
                 pillar.set_player_scroll(self.camera_scroll)
                 rect = pillar.get_pillar_rect()
@@ -647,92 +653,121 @@ class DungeonAdventure():
         Pickling cannot pickle png objects. So character sprites must be re-loaded.
         :return:
         """
-        if os.path.exists("dungeon_adventure.pickle"):
-            with open("dungeon_adventure.pickle", "rb") as f:
-                game_data = pickle.load(f)[0]
-            self.__player_character = game_data["player_character"]
-            self.player_position = game_data['player_position']
-            self.player_rect = game_data['player_rect']
-            self.__monsters = game_data['monsters']
-            self.__items = game_data['items']
-            self.__pillars = game_data['pillars']
-            for monster in self.__monsters:
-                if monster.get_type() == "Gremlin":
-                    monster.set_sprite_south(pg.image.load(a.south_gremlin))
-                    monster.set_sprite_north(pg.image.load(a.north_gremlin))
-                    monster.set_sprite_east(pg.image.load(a.east_gremlin))
-                    monster.set_sprite_west(pg.image.load(a.west_gremlin))
-                    monster.set_sprite_current(pg.image.load(a.south_gremlin))
+        if os.path.isfile("./save_files/attributes_dict.pkl"):
 
-                elif monster.get_type() == "Skeleton":
-                    monster.set_sprite_south(pg.image.load(a.south_skelly))
-                    monster.set_sprite_north(pg.image.load(a.north_skelly))
-                    monster.set_sprite_east(pg.image.load(a.east_skelly))
-                    monster.set_sprite_west(pg.image.load(a.west_skelly))
-                    monster.set_sprite_current(pg.image.load(a.south_skelly))
+            with open('./save_files/attributes_dict.pkl', 'rb') as f:
+                attributes = pickle.load(f)
 
-                elif monster.get_type() == "Ogre":
-                    monster.set_sprite_south(pg.image.load(a.south_ogre))
-                    monster.set_sprite_north(pg.image.load(a.north_ogre))
-                    monster.set_sprite_east(pg.image.load(a.east_ogre))
-                    monster.set_sprite_west(pg.image.load(a.west_ogre))
-                    monster.set_sprite_current(pg.image.load(a.south_ogre))
+            self.trivia_ui = attributes['trivia_ui']
+            self.player_position = attributes['player_position']
+            self.player_rect = attributes['player_rect']
+            self.__player_character = attributes['player_character']
+            self.set_player_images((self.__player_character.get_sprite_north(), self.get_player_img_size()),
+                                                              (self.__player_character.get_sprite_east(), self.get_player_img_size()),
+                                                              (self.__player_character.get_sprite_west(), self.get_player_img_size()),
+                                                              (self.__player_character.get_sprite_south(), self.get_player_img_size()))
 
-            for pillar in self.__pillars:
-                if pillar.get_pillar_name() == "Abstraction":
-                    pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))
-                elif pillar.get_pillar_name() == "Encapsulation":
-                    pillar.set_encapsulation_sprite(pg.image.load(a.encapsulation_pillar))
-                elif pillar.get_pillar_name() == "Inheritance":
-                    pillar.set_inheritance_sprite(pg.image.load(a.inheritance_pillar))
-                elif pillar.get_pillar_name() == "Polymorphism":
-                    pillar.set_polymorphism_sprite(pg.image.load(a.polymorphism_pillar))
+            self.__pillars = attributes['pillars']
+            self.__items = attributes['items']
+            self.__monsters = attributes['monsters']
 
-            for item in self.__items:
-                if item.get_item_name() == "Health Potion":
-                    item.set_health_potion_sprite(pg.image.load(a.health_potion))
-                elif item.get_item_name() == "Fire Trap":
-                    item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
 
-            if isinstance(self.__player_character, Knight):
-                self.__player_character.set_character_sprites(
-                    pg.image.load(a.north_knight),
-                    pg.image.load(a.east_knight),
-                    pg.image.load(a.west_knight),
-                    pg.image.load(a.south_knight)
-                )
-            elif isinstance(self.__player_character, Priestess):
-                self.__player_character.set_character_sprites(
-                    pg.image.load(a.north_priestess),
-                    pg.image.load(a.east_priestess),
-                    pg.image.load(a.west_priestess),
-                    pg.image.load(a.south_priestess)
-                )
-            elif isinstance(self.__player_character, Rogue):
-                self.__player_character.set_character_sprites(
-                    pg.image.load(a.north_rogue),
-                    pg.image.load(a.east_rogue),
-                    pg.image.load(a.west_rogue),
-                    pg.image.load(a.south_rogue)
-                )
-            self.set_player_images(pg.transform.scale(self.__player_character.get_sprite_north(), self.get_player_img_size()),
-                                   pg.transform.scale(self.__player_character.get_sprite_east(), self.get_player_img_size()),
-                                   pg.transform.scale(self.__player_character.get_sprite_west(), self.get_player_img_size()),
-                                   pg.transform.scale(self.__player_character.get_sprite_south(), self.get_player_img_size())
-                                   )
-            # # self.set_item_sprites(self.__health_potion.get_health_potion_sprite(), self.__fire_trap.get_fire_trap_sprite())
-            # self.set_pillar_sprites(self.__abstraction_pillar.get_abstraction_sprite(),
-            #                         self.__encapsulation_pillar.get_encapsulation_sprite(),
-            #                         self.__inheritance_pillar.get_inheritance_sprite(),
-            #                         self.__polymorphism_pillar.get_polymorphism_sprite())
-            # self.character_select.set_menu_images(pg.transform.scale(self.character_select.knight_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)),
-            #                                       pg.transform.scale(self.character_select.priestess_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)),
-            #                                       pg.transform.scale(self.character_select.rogue_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)))
-            # self.trivia_ui = TriviaUI(self, self.__player_character.get_player_pillars()[-1])
-            # self.trivia_ui.set_trivia_ui_images(Pillar("Abstraction").get_abstraction_sprite(),
-            #                                     Pillar("Encapsulation").get_encapsulation_sprite(),
-            #                                     Pillar("Inheritance").get_inheritance_sprite(),
-            #                                     Pillar("Polymorphism").get_polymorphism_sprite())
+
+        # if os.path.exists("dungeon_adventure.pickle"):
+        #     with open("dungeon_adventure.pickle", "rb") as f:
+        #         game_data = pickle.load(f)[0]
+        #     self.__player_character = game_data["player_character"]
+        #     self.player_position = game_data['player_position']
+        #     self.player_rect = game_data['player_rect']
+        #     self.__monsters = game_data['monsters']
+        #     self.__items = game_data['items']
+        #     self.__pillars = game_data['pillars']
+        #     for monster in self.__monsters:
+        #         if monster.get_type() == "Gremlin":
+        #             monster.set_sprite_south(pg.image.load(a.south_gremlin))
+        #             monster.set_sprite_north(pg.image.load(a.north_gremlin))
+        #             monster.set_sprite_east(pg.image.load(a.east_gremlin))
+        #             monster.set_sprite_west(pg.image.load(a.west_gremlin))
+        #             monster.set_sprite_current(pg.image.load(a.south_gremlin))
+        #
+        #         elif monster.get_type() == "Skeleton":
+        #             monster.set_sprite_south(pg.image.load(a.south_skelly))
+        #             monster.set_sprite_north(pg.image.load(a.north_skelly))
+        #             monster.set_sprite_east(pg.image.load(a.east_skelly))
+        #             monster.set_sprite_west(pg.image.load(a.west_skelly))
+        #             monster.set_sprite_current(pg.image.load(a.south_skelly))
+        #
+        #         elif monster.get_type() == "Ogre":
+        #             monster.set_sprite_south(pg.image.load(a.south_ogre))
+        #             monster.set_sprite_north(pg.image.load(a.north_ogre))
+        #             monster.set_sprite_east(pg.image.load(a.east_ogre))
+        #             monster.set_sprite_west(pg.image.load(a.west_ogre))
+        #             monster.set_sprite_current(pg.image.load(a.south_ogre))
+        #
+        #     for pillar in self.__pillars:
+        #         if pillar.get_pillar_name() == "Abstraction":
+        #             pillar.set_abstraction_sprite(pg.image.load(a.abstraction_pillar))
+        #         elif pillar.get_pillar_name() == "Encapsulation":
+        #             pillar.set_encapsulation_sprite(pg.image.load(a.encapsulation_pillar))
+        #         elif pillar.get_pillar_name() == "Inheritance":
+        #             pillar.set_inheritance_sprite(pg.image.load(a.inheritance_pillar))
+        #         elif pillar.get_pillar_name() == "Polymorphism":
+        #             pillar.set_polymorphism_sprite(pg.image.load(a.polymorphism_pillar))
+        #
+        #     for item in self.__items:
+        #         if item.get_item_name() == "Health Potion":
+        #             item.set_health_potion_sprite(pg.image.load(a.health_potion))
+        #         elif item.get_item_name() == "Fire Trap":
+        #             item.set_fire_trap_sprite(pg.image.load(a.fire_trap))
+        #
+        #     if isinstance(self.__player_character, Knight):
+        #         self.__player_character.set_character_sprites(a.north_knight,
+        #                                                       a.east_knight,
+        #                                                       a.west_knight,
+        #                                                       a.south_knight)
+        #             # pg.image.load(a.north_knight),
+        #             # pg.image.load(a.east_knight),
+        #             # pg.image.load(a.west_knight),
+        #             # pg.image.load(a.south_knight)
+        #         # )
+        #     elif isinstance(self.__player_character, Priestess):
+        #         self.__player_character.set_character_sprites((a.north_priestess,
+        #                                                       a.east_priestess,
+        #                                                       a.west_priestess,
+        #                                                       a.south_priestess)
+        #             # pg.image.load(a.north_priestess),
+        #             # pg.image.load(a.east_priestess),
+        #             # pg.image.load(a.west_priestess),
+        #             # pg.image.load(a.south_priestess)
+        #         )
+        #     elif isinstance(self.__player_character, Rogue):
+        #         self.__player_character.set_character_sprites((a.north_rogue,
+        #                                                       a.east_rogue,
+        #                                                       a.west_rogue,
+        #                                                       a.south_rogue)
+        #             # pg.image.load(a.north_rogue),
+        #             # pg.image.load(a.east_rogue),
+        #             # pg.image.load(a.west_rogue),
+        #             # pg.image.load(a.south_rogue)
+        #         )
+        #     self.set_player_images((self.__player_character.get_sprite_north(), self.get_player_img_size()),
+        #                            (self.__player_character.get_sprite_east(), self.get_player_img_size()),
+        #                            (self.__player_character.get_sprite_west(), self.get_player_img_size()),
+        #                            (self.__player_character.get_sprite_south(), self.get_player_img_size())
+        #                            )
+        #     # # self.set_item_sprites(self.__health_potion.get_health_potion_sprite(), self.__fire_trap.get_fire_trap_sprite())
+        #     # self.set_pillar_sprites(self.__abstraction_pillar.get_abstraction_sprite(),
+        #     #                         self.__encapsulation_pillar.get_encapsulation_sprite(),
+        #     #                         self.__inheritance_pillar.get_inheritance_sprite(),
+        #     #                         self.__polymorphism_pillar.get_polymorphism_sprite())
+        #     # self.character_select.set_menu_images(pg.transform.scale(self.character_select.knight_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)),
+        #     #                                       pg.transform.scale(self.character_select.priestess_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)),
+        #     #                                       pg.transform.scale(self.character_select.rogue_image, (c.WIN_WIDTH / 8, c.WIN_HEIGHT / 4)))
+        #     # self.trivia_ui = TriviaUI(self, self.__player_character.get_player_pillars()[-1])
+        #     # self.trivia_ui.set_trivia_ui_images(Pillar("Abstraction").get_abstraction_sprite(),
+        #     #                                     Pillar("Encapsulation").get_encapsulation_sprite(),
+        #     #                                     Pillar("Inheritance").get_inheritance_sprite(),
+        #     #                                     Pillar("Polymorphism").get_polymorphism_sprite())
 
 
 
@@ -749,29 +784,13 @@ class DungeonAdventure():
             dungeon_map.append((list(row)))
         return dungeon_map
 
-    @staticmethod
-    def load_test_map():
-        file = open('test_maze.txt', 'r')
-        data = file.read()
-        file.close()
-        data = data.split('\n')
-        dungeon_map = []
-        for row in data:
-            dungeon_map.append((list(row)))
-        return dungeon_map
 
     @staticmethod
     def load_saved_map():
-        file = open('dungeon.txt', 'w')
-        saved_maze = pickle.load(open('dungeon_adventure.pickle', 'rb'))[1]
-        file.write(saved_maze)
-        file.close()
-        written_file = open('dungeon.txt', 'r')
-        data = written_file.read()
-        written_file.close()
-        data = data.split('\n')
+        saved_maze = pickle.load(open('./save_files/saved_dungeon_map.pkl', 'rb'))
+        saved_maze = saved_maze.split('\n')
         dungeon_map = []
-        for row in data:
+        for row in saved_maze:
             dungeon_map.append((list(row)))
         return dungeon_map
 
@@ -849,7 +868,7 @@ class DungeonAdventure():
 
         # Monster setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.__monsters = []
-        self.__monster_count = 0
+        self.__monster_count = 5
 
         # Place/spawn monsters
         for _ in range(self.get_monster_count()):
@@ -860,7 +879,7 @@ class DungeonAdventure():
         self.__fire_trap = Item("Fire Trap")
         self.i_factory = item_factory.ItemFactory()
         self.__items = []
-        self.__item_count = 0
+        self.__item_count = 10
 
         # Place/spawn items
         for item in range(self.__item_count):

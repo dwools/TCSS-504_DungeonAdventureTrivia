@@ -1,3 +1,4 @@
+import os
 import textwrap
 
 import pygame as pg
@@ -155,10 +156,15 @@ class MainMenu(Menu):
                 self.game.current_menu = self.game.how_to_play
 
             elif self.state == 'Load Game':
-                self.game.set_loaded_game(True)
-                self.game.playing = True  # Here is where we enter the saved game
-                # self.run_display = False  # end the current menu screen
-                # self.game.current_menu = self.game.load_games
+                if os.path.isfile('./saved_files/attributes_dict.pkl') and os.path.isfile('./saved_files/saved_dungeon_map.pkl'):
+                    self.game.set_loaded_game(True)
+                    self.game.playing = True  # Here is where we enter the saved game
+                    # self.run_display = False  # end the current menu screen
+                    # self.game.current_menu = self.game.load_games
+                else:
+                    print("There's no saved map! Time to begin a new herpetology adventure!")
+                    Maze(15, 20).new_maze()  # create new dungeon.txt file
+                    self.game.current_menu = self.game.character_select
 
             elif self.state == 'Options':
                 self.game.current_menu = self.game.options
@@ -312,6 +318,7 @@ class CharacterSelectMenu(Menu):
             self.run_display = False
 
         if self.game.interacting:  # If user interacts (enter or E) with the cursor's position enter that menu
+
             if self.state == 'Knight':
                 self.game.set_player_character(HeroFactory().create_knight())
 
@@ -322,11 +329,17 @@ class CharacterSelectMenu(Menu):
                 self.game.set_player_character(HeroFactory().create_rogue())
 
             player = self.game.get_player_character()
-            self.game.set_player_images(pg.transform.scale(player.get_sprite_north(), self.game.get_player_img_size()),
-                                        pg.transform.scale(player.get_sprite_east(), self.game.get_player_img_size()),
-                                        pg.transform.scale(player.get_sprite_west(), self.game.get_player_img_size()),
-                                        pg.transform.scale(player.get_sprite_south(), self.game.get_player_img_size())
+
+            self.game.set_player_images((player.get_sprite_north(), self.game.get_player_img_size()),
+                                        (player.get_sprite_east(), self.game.get_player_img_size()),
+                                        (player.get_sprite_west(), self.game.get_player_img_size()),
+                                        (player.get_sprite_south(), self.game.get_player_img_size())
                                         )
+            # self.game.set_player_images(pg.transform.scale(player.get_sprite_north(), self.game.get_player_img_size()),
+            #                             pg.transform.scale(player.get_sprite_east(), self.game.get_player_img_size()),
+            #                             pg.transform.scale(player.get_sprite_west(), self.game.get_player_img_size()),
+            #                             pg.transform.scale(player.get_sprite_south(), self.game.get_player_img_size())
+            #                             )
             self.game.set_player_rect()
             self.game.playing = True
 
@@ -648,7 +661,8 @@ class PauseMenu(Menu):
             if self.state == 'Save The Game':
                 print("SAVING GAME!")
                 # self.set_save_game(True)
-                SaveGame.pickle(self.game)
+                # SaveGame.pickle(self.game)
+                SaveGame.save_helper(self.game)
                 self.game.interacting = False
 
             if self.state == 'Main Menu':
@@ -801,7 +815,7 @@ class TriviaUI(Menu):
                 self.game.add_to_backpack(Pillar(self.__pillar))
                 self.game.remove_pillar(self.__pillar)
             else:
-                print(f'You failed! The {self.__pillar.get_name()} pillar has vanished and appeared elsewhere!')  # relocate pillar
+                print(f'You failed! The {self.__pillar.get_pillar_name()} pillar has vanished and appeared elsewhere!')  # relocate pillar
                 self.game.place_pillar(self.__pillar)
 
             self.run_display = False

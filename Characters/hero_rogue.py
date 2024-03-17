@@ -30,10 +30,10 @@ class Rogue(Hero):
         self.__chance_for_second_attack = chance_for_second_attack
         self.__chance_caught = chance_caught
 
-        self.__sprite_north = pg.image.load(a.north_rogue)
-        self.__sprite_east = pg.image.load(a.east_rogue)
-        self.__sprite_west = pg.image.load(a.west_rogue)
-        self.__sprite_south = pg.image.load(a.south_rogue)
+        self.__sprite_north = a.north_rogue
+        self.__sprite_east = a.east_rogue
+        self.__sprite_west = a.west_rogue
+        self.__sprite_south = a.south_rogue
         
     def get_chance_for_second_attack(self):
         return self.__chance_for_second_attack

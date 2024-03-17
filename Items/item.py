@@ -20,8 +20,8 @@ class Item():
         self.__rect = pg.Rect(self.__item_position_y, self.__item_position_x, 16, 16)
         self.__player_scroll = [0, 0]
         self.__healing_value = random.randint(20, 40)
-        self.__health_potion_sprite = pg.image.load(a.health_potion)
-        self.__fire_trap_sprite = pg.image.load(a.fire_trap)
+        self.__health_potion_sprite = a.health_potion
+        self.__fire_trap_sprite = a.fire_trap
 
 
 

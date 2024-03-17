@@ -31,10 +31,10 @@ class Priestess(Hero):
         self.__minimum_heal_points = minimum_heal_points
         self.__maximum_heal_points = maximum_heal_points
 
-        self.__sprite_north = pg.image.load(a.north_priestess)
-        self.__sprite_east = pg.image.load(a.east_priestess)
-        self.__sprite_west = pg.image.load(a.west_priestess)
-        self.__sprite_south = pg.image.load(a.south_priestess)
+        self.__sprite_north = a.north_priestess
+        self.__sprite_east = a.east_priestess
+        self.__sprite_west = a.west_priestess
+        self.__sprite_south = a.south_priestess
 
     def get_chance_to_heal(self):
         return self.__chance_to_heal

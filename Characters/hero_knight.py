@@ -32,10 +32,10 @@ class Knight(Hero):
         self.__minimum_crushing_damage = minimum_crushing_damage
         self.__maximum_crushing_damage = maximum_crushing_damage
 
-        self.__sprite_north = pg.image.load(a.north_knight)
-        self.__sprite_east = pg.image.load(a.east_knight)
-        self.__sprite_west = pg.image.load(a.west_knight)
-        self.__sprite_south = pg.image.load(a.south_knight)
+        self.__sprite_north = a.north_knight
+        self.__sprite_east = a.east_knight
+        self.__sprite_west = a.west_knight
+        self.__sprite_south = a.south_knight
 
 
     def get_chance_for_crushing_blow(self):

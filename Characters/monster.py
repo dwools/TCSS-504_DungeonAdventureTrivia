@@ -39,25 +39,25 @@ class Monster(DungeonCharacter):
         self.__player_scroll = [0, 0]
         
         if self.get_type() == "Gremlin":
-            self.__sprite_south = pg.image.load(a.south_gremlin)
-            self.__sprite_north = pg.image.load(a.north_gremlin)
-            self.__sprite_east = pg.image.load(a.east_gremlin)
-            self.__sprite_west = pg.image.load(a.west_gremlin)
-            self.__sprite_current = pg.image.load(a.south_gremlin)
+            self.__sprite_south = a.south_gremlin
+            self.__sprite_north = a.north_gremlin
+            self.__sprite_east = a.east_gremlin
+            self.__sprite_west = a.west_gremlin
+            self.__sprite_current = a.south_gremlin
 
         if self.get_type() == "Skeleton":
-            self.__sprite_south = pg.image.load(a.south_skelly)
-            self.__sprite_north = pg.image.load(a.north_skelly)
-            self.__sprite_east = pg.image.load(a.east_skelly)
-            self.__sprite_west = pg.image.load(a.west_skelly)
-            self.__sprite_current = pg.image.load(a.south_skelly)
+            self.__sprite_south = a.south_skelly
+            self.__sprite_north = a.north_skelly
+            self.__sprite_east = a.east_skelly
+            self.__sprite_west = a.west_skelly
+            self.__sprite_current = a.south_skelly
 
         if self.get_type() == "Ogre":
-            self.__sprite_south = pg.image.load(a.south_ogre)
-            self.__sprite_north = pg.image.load(a.north_ogre)
-            self.__sprite_east = pg.image.load(a.east_ogre)
-            self.__sprite_west = pg.image.load(a.west_ogre)
-            self.__sprite_current = pg.image.load(a.south_ogre)
+            self.__sprite_south = a.south_ogre
+            self.__sprite_north = a.north_ogre
+            self.__sprite_east = a.east_ogre
+            self.__sprite_west = a.west_ogre
+            self.__sprite_current = a.south_ogre
 
 
     def monster_heal(self):  # Heal Monster

@@ -330,7 +330,7 @@ class Combat:
             pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(370, 85, 200, 40))
 
             # Monster sprite
-            self.__game.display.blit(pg.transform.scale(self.__monster.get_sprite_south(), (55, 55)), (443, 65))
+            self.__game.display.blit(pg.transform.scale(pg.image.load(self.__monster.get_sprite_south()), (55, 55)), (443, 65))
 
             # Hero stats
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
@@ -343,7 +343,7 @@ class Combat:
             pg.draw.ellipse(self.__game.display, 'lightgreen', pg.Rect(75, 280, 200, 40))
 
             # Hero sprite
-            self.__game.display.blit(pg.transform.scale(self.__hero.get_sprite_north(), (65, 65)), (145, 245))
+            self.__game.display.blit(pg.transform.scale(pg.image.load(self.__hero.get_sprite_north()), (65, 65)), (145, 245))
 
             # In combat actions menu
             pg.draw.rect(self.__game.display, 'black', pg.Rect(5, 330, 630, 150))  # outside background
@@ -468,7 +468,7 @@ class AttackMenu(Combat):
             pg.draw.ellipse(self.__game.display, 'pink', pg.Rect(370, 85, 200, 40))
 
             # Monster sprite
-            self.__game.display.blit(pg.transform.scale(self.__monster.get_sprite_south(), (55, 55)), (443, 65))
+            self.__game.display.blit(pg.transform.scale(pg.image.load(self.__monster.get_sprite_south()), (55, 55)), (443, 65))
 
             # Hero stats
             self.__game.draw_text(c.dungeon_font, f'{self.__hero_name}', 15, self.__hero_name_x, self.__hero_name_y,
@@ -481,7 +481,7 @@ class AttackMenu(Combat):
             pg.draw.ellipse(self.__game.display, 'lightgreen', pg.Rect(75, 280, 200, 40))
 
             # Hero sprite
-            self.__game.display.blit(pg.transform.scale(self.__hero.get_sprite_north(), (65, 65)), (145, 245))
+            self.__game.display.blit(pg.transform.scale(pg.image.load(self.__hero.get_sprite_north()), (65, 65)), (145, 245))
 
             # In combat actions menu
             pg.draw.rect(self.__game.display, 'black', pg.Rect(5, 330, 630, 150))  # outside background
